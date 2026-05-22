@@ -2,17 +2,18 @@
 
 笔记本 Tab 风格 HTML 幻灯片，单文件 `index.html`。
 
-- 线上（当前可用）：https://ymzlsy.github.io/ai-pm-deck/
-- 自定义域（待 DNS）：https://ai-pm.karaithy.com/
+- **主链接（Cloudflare Pages）**：https://ai-pm-deck.pages.dev/
+- **自定义域（绑定中）**：https://ai-pm.karaithy.com/
+- **备用（GitHub Pages）**：https://ymzlsy.github.io/ai-pm-deck/
 
-### 绑定 `ai-pm.karaithy.com`（Cloudflare DNS 一步）
+### 完成 `ai-pm.karaithy.com`（Cloudflare DNS 一步）
 
-在 [Cloudflare DNS](https://dash.cloudflare.com/) 选择 `karaithy.com` → 添加记录：
+Pages 项目已创建并绑定域名，还差 DNS 记录。在 [Cloudflare DNS](https://dash.cloudflare.com/) → `karaithy.com` → 添加：
 
 | 类型 | 名称 | 目标 | 代理 |
 |------|------|------|------|
-| CNAME | `ai-pm` | `ymzlsy.github.io` | **仅 DNS**（灰云，关闭代理） |
+| CNAME | `ai-pm` | `ai-pm-deck.pages.dev` | 已代理（橙云）即可 |
 
-然后在仓库根目录恢复 `CNAME` 文件（内容为 `ai-pm.karaithy.com`），并在 GitHub → Settings → Pages 填写 Custom domain。HTTPS 生效约 10–30 分钟。
+保存后约 2–5 分钟可访问。后续更新：在 `ppt-notebook/` 目录执行 `npx wrangler pages deploy . --project-name=ai-pm-deck --branch=main`
 
 本地预览：`python3 -m http.server 8766 --bind 127.0.0.1`
