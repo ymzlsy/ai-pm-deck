@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI时代产品经理的工作模式 — 如何从需求接收者变成前线构建者</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===========================================
+   NOTEBOOK TABS — AI时代产品经理的工作模式
+   Visually rich edition
+   =========================================== */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --outer: #2d2d2d;
+  --paper: #f8f6f1;
+  --paper-shadow: #ece9e2;
+  --ink: #1a1a1a;
+  --ink-light: #555;
+  --ink-muted: #888;
+  --ink-faint: #aaa;
+  --rule: #ddd;
+  --tab-bg: #98d4bb;
+  --tab-role: #c7b8ea;
+  --tab-local: #f4b8c5;
+  --tab-global: #a8d8ea;
+  --tab-action: #ffe6a7;
+  --accent: #7c6aad;
+  --accent-light: rgba(124,106,173,.10);
+  --danger: #c0564b;
+  --danger-light: rgba(192,86,75,.08);
+  --font-display: 'Bodoni Moda', 'Noto Sans SC', serif;
+  --font-body: 'DM Sans', 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --gap-xs: clamp(4px, .6vh, 8px);
+  --gap-sm: clamp(6px, 1vh, 12px);
+  --gap-md: clamp(12px, 2vh, 22px);
+  --gap-lg: clamp(20px, 3.5vh, 36px);
+}
+
+html, body { height:100%; overflow-x:hidden; background:var(--paper); font-family:var(--font-body); color:var(--ink); -webkit-font-smoothing:antialiased; }
+html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
+
+/* === SLIDE === */
+.slide { width:100vw; height:100vh; height:100dvh; overflow:hidden; scroll-snap-align:start; display:flex; align-items:stretch; justify-content:stretch; padding:0; position:relative; }
+
+/* === PAGE (fullscreen) === */
+.page { background:var(--paper); width:100%; height:100%; position:relative; display:grid; grid-template-rows:auto 1fr auto; padding:clamp(18px,3vh,36px) clamp(56px,6vw,96px) clamp(18px,3vh,36px) clamp(52px,5.5vw,88px); overflow:hidden; }
+
+/* === BINDER === */
+.binder { position:absolute; left:clamp(12px,1.5vw,22px); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:clamp(22px,3.5vh,42px); }
+.hole { width:clamp(10px,1.2vw,14px); height:clamp(10px,1.2vw,14px); border-radius:50%; border:2px solid #ccc; background:var(--paper-shadow); }
+
+/* Left decorative rule line */
+.page::before { content:''; position:absolute; left:clamp(38px,4vw,64px); top:0; bottom:0; width:1px; background:rgba(200,180,180,.2); }
+
+/* === TABS (right edge, inside page) === */
+.tabs { position:absolute; right:0; top:clamp(48px,8vh,80px); display:flex; flex-direction:column; gap:clamp(2px,.3vh,4px); z-index:10; }
+.tab { width:clamp(28px,2.8vw,40px); display:flex; align-items:center; justify-content:center; writing-mode:vertical-rl; text-orientation:mixed; font-size:clamp(8px,.85vh,11px); font-weight:700; letter-spacing:.06em; color:rgba(0,0,0,.3); cursor:pointer; transition:all .3s; border-radius:4px 0 0 4px; }
+.tab:nth-child(1){height:clamp(48px,7.5vh,72px);background:var(--tab-bg)}
+.tab:nth-child(2){height:clamp(56px,8.5vh,80px);background:var(--tab-role)}
+.tab:nth-child(3){height:clamp(42px,6.5vh,64px);background:var(--tab-local)}
+.tab:nth-child(4){height:clamp(50px,7.5vh,72px);background:var(--tab-global)}
+.tab:nth-child(5){height:clamp(36px,5vh,52px);background:var(--tab-action)}
+.tab.active{width:clamp(36px,3.5vw,50px);color:rgba(0,0,0,.7)}
+
+/* === HEADER/FOOTER === */
+.header { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid var(--rule); padding-bottom:clamp(8px,1.2vh,14px); margin-bottom:var(--gap-md); }
+.header-left { font-size:clamp(9px,.9vw,12px); font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted); }
+.header-right { font-family:var(--font-mono); font-size:clamp(9px,.85vw,11px); color:var(--ink-faint); }
+.foot { display:flex; justify-content:space-between; align-items:end; border-top:1px solid var(--rule); padding-top:clamp(8px,1.2vh,14px); }
+.foot-left { font-size:clamp(10px,1vw,14px); color:var(--ink-muted); }
+.foot-left strong { color:var(--ink); display:block; }
+.foot-right { font-family:var(--font-mono); font-size:clamp(8px,.8vw,11px); color:var(--ink-faint); text-align:right; }
+.foot-right .date { font-family:var(--font-display); font-size:clamp(12px,1.2vw,16px); color:var(--ink); display:block; }
+
+/* === CONTENT === */
+.content { display:flex; flex-direction:column; justify-content:center; gap:var(--gap-md); overflow:hidden; }
+
+/* === TYPOGRAPHY === */
+.eyebrow { font-family:var(--font-display); font-size:clamp(11px,1.1vw,15px); font-style:italic; color:var(--ink-muted); letter-spacing:.04em; }
+.title-hero { font-family:var(--font-display); font-size:clamp(26px,4.5vw,64px); font-weight:700; color:var(--ink); line-height:1.08; letter-spacing:-.02em; }
+.title-hero em { font-style:italic; color:var(--accent); }
+.title-lg { font-family:var(--font-display); font-size:clamp(20px,3vw,42px); font-weight:700; color:var(--ink); line-height:1.12; }
+.title-lg em { font-style:italic; color:var(--accent); }
+.subtitle { font-size:clamp(13px,1.3vw,19px); color:var(--ink-light); line-height:1.55; }
+.body-text { font-size:clamp(13px,1.2vw,17px); color:var(--ink-light); line-height:1.6; }
+.meta-text { font-family:var(--font-mono); font-size:clamp(9px,.85vw,11px); color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase; }
+.kicker { font-family:var(--font-mono); font-size:clamp(9px,.9vw,12px); font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+.divider { width:40px; height:2px; background:var(--ink); }
+
+/* === PROGRESS BAR === */
+.progress-bar { position:fixed; top:0; left:0; height:3px; background:var(--accent); z-index:100; transition:width .3s; }
+
+/* === CHAPTER NAV === */
+.chapter-indicator { position:fixed; bottom:clamp(6px,1.2vh,14px); left:50%; transform:translateX(-50%); display:flex; gap:5px; align-items:center; z-index:100; padding:5px 12px; background:rgba(26,26,26,.7); border-radius:16px; backdrop-filter:blur(8px); }
+.chapter-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.2); transition:all .3s; cursor:pointer; }
+.chapter-dot.active { width:18px; border-radius:3px; }
+.chapter-dot[data-part="0"].active{background:rgba(255,255,255,.5)}
+.chapter-dot[data-part="1"].active{background:var(--tab-bg)}
+.chapter-dot[data-part="2"].active{background:var(--tab-role)}
+.chapter-dot[data-part="3"].active{background:var(--tab-local)}
+.chapter-dot[data-part="4"].active{background:var(--tab-global)}
+.chapter-dot[data-part="5"].active{background:var(--tab-action)}
+.chapter-label { font-family:var(--font-mono); font-size:9px; color:rgba(255,255,255,.65); letter-spacing:.05em; margin-left:5px; white-space:nowrap; }
+
+/* === PROGRESSIVE DISCLOSURE === */
+[data-step] { opacity:0; transform:translateY(10px); transition:opacity .45s cubic-bezier(.4,0,.2,1), transform .45s cubic-bezier(.4,0,.2,1); pointer-events:none; }
+[data-step].visible { opacity:1; transform:translateY(0); pointer-events:auto; }
+[data-step="0"] { opacity:1; transform:none; pointer-events:auto; }
+
+/* === REVEAL ANIMATION === */
+.reveal { opacity:0; transform:translateY(16px); transition:opacity .5s cubic-bezier(.4,0,.2,1), transform .5s cubic-bezier(.4,0,.2,1); }
+.slide.active .reveal { opacity:1; transform:translateY(0); }
+.slide.active .reveal:nth-child(2){transition-delay:.08s}
+.slide.active .reveal:nth-child(3){transition-delay:.16s}
+.slide.active .reveal:nth-child(4){transition-delay:.24s}
+.slide.active .reveal:nth-child(5){transition-delay:.32s}
+
+/* === VISUAL COMPONENTS === */
+
+/* Icon circle */
+.icon-circle { width:clamp(36px,3.5vw,52px); height:clamp(36px,3.5vw,52px); border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.icon-circle svg { width:55%; height:55%; }
+.icon-circle.mint { background:var(--tab-bg); }
+.icon-circle.lavender { background:var(--tab-role); }
+.icon-circle.pink { background:var(--tab-local); }
+.icon-circle.sky { background:var(--tab-global); }
+.icon-circle.accent { background:var(--accent-light); }
+.icon-circle.danger { background:var(--danger-light); }
+
+/* Cards */
+.card { background:#fff; border:1px solid var(--rule); padding:clamp(10px,1.5vh,18px) clamp(12px,1.5vw,20px); display:flex; flex-direction:column; gap:var(--gap-xs); }
+.card-h { flex-direction:row; align-items:center; gap:clamp(10px,1.2vw,16px); }
+.card-accent { border-left:3px solid var(--accent); }
+.card-danger { border-left:3px solid var(--danger); }
+.card-mint { border-left:3px solid var(--tab-bg); }
+.card-lavender { border-left:3px solid var(--tab-role); }
+
+/* Grids */
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:var(--gap-sm); }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--gap-sm); }
+.grid-2-1 { display:grid; grid-template-columns:2fr 1fr; gap:var(--gap-md); align-items:start; }
+.grid-1-2 { display:grid; grid-template-columns:1fr 2fr; gap:var(--gap-md); align-items:start; }
+
+/* Big number */
+.big-num { font-family:var(--font-display); font-size:clamp(36px,5vw,72px); font-weight:700; line-height:1; color:var(--accent); }
+.big-num-unit { font-family:var(--font-mono); font-size:clamp(10px,1vw,14px); color:var(--ink-muted); letter-spacing:.05em; text-transform:uppercase; margin-top:4px; }
+
+/* Decorative geometric shapes */
+.geo-accent { position:absolute; pointer-events:none; opacity:.06; }
+
+/* Pipeline / Chain */
+.pipeline { display:flex; align-items:stretch; gap:0; width:100%; }
+.pipe-node { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(4px,.5vh,8px); padding:clamp(8px,1.2vh,14px) clamp(4px,.5vw,8px); position:relative; text-align:center; border-right:1px dashed var(--rule); transition:opacity .4s, background .3s; }
+.pipe-node:last-child { border-right:none; }
+.pipe-node svg { width:clamp(18px,2vw,28px); height:clamp(18px,2vw,28px); stroke:var(--ink-light); stroke-width:1.5; fill:none; }
+.pipe-node .pipe-label { font-size:clamp(10px,1vw,14px); font-weight:600; color:var(--ink); white-space:nowrap; }
+.pipe-node .pipe-sub { font-size:clamp(8px,.7vw,10px); color:var(--ink-faint); max-width:10ch; text-align:center; line-height:1.3; }
+.pipe-node.highlight { background:var(--accent-light); }
+.pipe-node.highlight .pipe-label { color:var(--accent); }
+.pipe-node.highlight svg { stroke:var(--accent); }
+
+/* Info loss gradient bar */
+.loss-bar-wrap { position:relative; height:clamp(20px,2.5vh,32px); background:linear-gradient(90deg, var(--accent) 0%, var(--tab-bg) 25%, var(--tab-action) 55%, var(--rule) 85%, #e8e4df 100%); overflow:hidden; }
+.loss-bar-wrap::after { content:''; position:absolute; top:0; right:0; bottom:0; width:35%; background:repeating-linear-gradient(90deg, transparent 0px, transparent 4px, rgba(255,255,255,.35) 4px, rgba(255,255,255,.35) 8px); }
+.loss-bar-label { position:absolute; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:clamp(8px,.75vw,10px); letter-spacing:.05em; font-weight:600; }
+.loss-bar-label.left { left:8px; color:#fff; }
+.loss-bar-label.right { right:8px; color:var(--danger); }
+
+/* Point-Line-Surface visual */
+.pls-card { display:flex; gap:clamp(12px,1.5vw,20px); align-items:center; padding:clamp(10px,1.5vh,18px) clamp(12px,1.5vw,20px); background:#fff; border:1px solid var(--rule); }
+.pls-badge { width:clamp(44px,4.5vw,64px); height:clamp(44px,4.5vw,64px); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:clamp(20px,2.5vw,32px); font-weight:700; font-style:italic; flex-shrink:0; color:rgba(0,0,0,.65); }
+.pls-badge.dot { background:var(--tab-role); }
+.pls-badge.line { background:var(--tab-local); }
+.pls-badge.surface { background:var(--tab-global); }
+
+/* Danger callout */
+.callout-danger { display:flex; gap:clamp(10px,1.2vw,16px); align-items:flex-start; padding:clamp(10px,1.5vh,18px); background:var(--danger-light); border-left:3px solid var(--danger); }
+.callout-danger svg { width:clamp(20px,2vw,28px); height:clamp(20px,2vw,28px); stroke:var(--danger); stroke-width:1.5; fill:none; flex-shrink:0; margin-top:2px; }
+
+/* Quote block */
+.quote-block { padding:clamp(14px,2vh,24px) clamp(16px,2vw,28px); background:var(--accent-light); border-left:3px solid var(--accent); position:relative; }
+.quote-block p { font-family:var(--font-display); font-size:clamp(14px,1.5vw,22px); font-style:italic; color:var(--accent); line-height:1.45; }
+.quote-block::before { content:'\201C'; position:absolute; top:clamp(4px,.5vh,8px); left:clamp(8px,1vw,14px); font-family:var(--font-display); font-size:clamp(28px,3.5vw,48px); color:var(--accent); opacity:.2; line-height:1; }
+
+/* Stat row */
+.stat-row { display:flex; gap:clamp(16px,2.5vw,36px); }
+.stat-item { text-align:center; }
+.stat-num { font-family:var(--font-display); font-size:clamp(28px,3.5vw,48px); font-weight:700; color:var(--accent); line-height:1; }
+.stat-label { font-size:clamp(10px,1vw,13px); color:var(--ink-muted); margin-top:4px; }
+
+/* Responsive */
+@media(max-height:650px){ .tabs,.binder{display:none} .page{padding-left:clamp(28px,3.5vw,56px)} }
+@media(max-width:700px){ .grid-2,.grid-3,.grid-2-1,.grid-1-2{grid-template-columns:1fr} .pipeline{flex-wrap:wrap} .stat-row{flex-wrap:wrap} .tabs{display:none} }
+@media(prefers-reduced-motion:reduce){ *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.12s!important} html{scroll-behavior:auto} [data-step]{opacity:1;transform:none;pointer-events:auto} }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="chapter-indicator" id="chapterIndicator">
+  <div class="chapter-dot" data-part="0"></div>
+  <div class="chapter-dot" data-part="1"></div>
+  <div class="chapter-dot" data-part="2"></div>
+  <div class="chapter-dot" data-part="3"></div>
+  <div class="chapter-dot" data-part="4"></div>
+  <div class="chapter-dot" data-part="5"></div>
+  <span class="chapter-label" id="chapterLabel"></span>
+</div>
+
+<!-- =============================================
+     SLIDE 0: COVER
+     ============================================= -->
+<div class="slide active" data-part="0" data-chapter="Cover">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <!-- Decorative geometric -->
+    <svg class="geo-accent" style="right:clamp(20px,6vw,100px);top:clamp(10px,4vh,40px);width:clamp(140px,22vw,320px);height:clamp(140px,22vw,320px);" viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" stroke="#7c6aad" stroke-width=".8" fill="none"/><circle cx="100" cy="100" r="60" stroke="#7c6aad" stroke-width=".4" fill="none"/><line x1="10" y1="100" x2="190" y2="100" stroke="#7c6aad" stroke-width=".3"/><line x1="100" y1="10" x2="100" y2="190" stroke="#7c6aad" stroke-width=".3"/></svg>
+
+    <div class="header">
+      <div class="header-left">捷安高科 · 内部分享</div>
+      <div class="header-right">01 / --</div>
+    </div>
+    <div class="content" style="gap:var(--gap-lg);">
+      <!-- Left-right layout: text + stats -->
+      <div class="grid-2-1" style="align-items:end;">
+        <div style="display:flex;flex-direction:column;gap:var(--gap-md);">
+          <div class="eyebrow reveal">From Receiver to Builder</div>
+          <h1 class="title-hero reveal" style="transition-delay:.1s">AI时代<br>产品经理的<em>工作模式</em></h1>
+          <div class="divider reveal" style="transition-delay:.2s"></div>
+          <p class="subtitle reveal" style="transition-delay:.28s">如何从需求接收者变成前线构建者</p>
+        </div>
+        <div class="reveal" style="transition-delay:.35s; display:flex; flex-direction:column; gap:var(--gap-sm); padding-bottom:clamp(4px,1vh,12px);">
+          <div class="meta-text" style="margin-bottom:var(--gap-xs);">Framework</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--tab-role);display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:clamp(11px,1.1vw,15px);color:var(--ink-light);">点 · 岗位角度</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--tab-local);display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:clamp(11px,1.1vw,15px);color:var(--ink-light);">线 · 局部角度</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--tab-global);display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:clamp(11px,1.1vw,15px);color:var(--ink-light);">面 · 全局角度</span>
+          </div>
+          <div style="margin-top:var(--gap-xs);padding-top:var(--gap-xs);border-top:1px solid var(--rule);">
+            <span class="meta-text">问题 → 思考 → 方案 → 沉淀 → 泛化</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>← → 翻页 · Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 1: 分享目的 + 今日路线
+     ============================================= -->
+<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab active" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-bg);">Part 1</span> &nbsp;背景和思路</div>
+      <div class="header-right">02 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Before we start</div>
+        <h2 class="title-lg">这次分享的<em>初衷</em></h2>
+      </div>
+
+      <!-- Step 1: two-column: left text + right visual -->
+      <div data-step="1">
+        <div class="grid-2-1" style="align-items:center;">
+          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+            <div class="card card-h card-accent">
+              <div class="icon-circle accent">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              </div>
+              <div>
+                <p style="font-size:clamp(12px,1.2vw,16px);font-weight:600;color:var(--ink);">入职两个月的观察与实践</p>
+                <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:2px;">在实际项目中遇到的问题和做出的尝试</p>
+              </div>
+            </div>
+            <div class="card card-h" style="border-left:3px solid var(--tab-bg);">
+              <div class="icon-circle mint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--ink-light)" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              <div>
+                <p style="font-size:clamp(12px,1.2vw,16px);font-weight:600;color:var(--ink);">抛砖引玉，交流学习</p>
+                <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:2px;">希望得到各位指点，一起优化工作方式</p>
+              </div>
+            </div>
+          </div>
+          <!-- Right: decorative stacked paper -->
+          <div style="position:relative;height:clamp(100px,16vh,180px);">
+            <svg viewBox="0 0 180 140" style="width:100%;height:100%;" fill="none">
+              <rect x="20" y="16" width="140" height="100" rx="2" fill="#e8e4df" stroke="#ccc" stroke-width=".5"/>
+              <rect x="12" y="8" width="140" height="100" rx="2" fill="#f0ede6" stroke="#ccc" stroke-width=".5"/>
+              <rect x="4" y="0" width="140" height="100" rx="2" fill="var(--paper)" stroke="#bbb" stroke-width=".8"/>
+              <line x1="20" y1="20" x2="120" y2="20" stroke="var(--ink)" stroke-width="2" opacity=".15"/>
+              <line x1="20" y1="32" x2="100" y2="32" stroke="var(--ink)" stroke-width="1" opacity=".08"/>
+              <line x1="20" y1="42" x2="110" y2="42" stroke="var(--ink)" stroke-width="1" opacity=".08"/>
+              <line x1="20" y1="52" x2="90" y2="52" stroke="var(--ink)" stroke-width="1" opacity=".08"/>
+              <circle cx="128" cy="80" r="12" fill="var(--accent)" opacity=".12"/>
+              <text x="122" y="85" font-family="var(--font-display)" font-size="14" fill="var(--accent)" opacity=".5">?</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: 3 route cards -->
+      <div data-step="2">
+        <div class="meta-text" style="margin-bottom:var(--gap-xs);">Today's Route</div>
+        <div class="grid-3">
+          <div class="card" style="border-top:3px solid var(--tab-bg);text-align:center;gap:var(--gap-xs);">
+            <svg viewBox="0 0 24 24" style="width:clamp(22px,2.5vw,32px);height:clamp(22px,2.5vw,32px);margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg>
+            <p style="font-family:var(--font-display);font-size:clamp(22px,2.8vw,36px);font-weight:700;color:var(--ink);line-height:1;">1</p>
+            <p style="font-size:clamp(12px,1.2vw,16px);font-weight:600;color:var(--ink);">背景和思路</p>
+            <p style="font-size:clamp(10px,.9vw,12px);color:var(--ink-muted);">从一个项目说起</p>
+          </div>
+          <div class="card" style="border-top:3px solid var(--tab-role);text-align:center;gap:var(--gap-xs);">
+            <svg viewBox="0 0 24 24" style="width:clamp(22px,2.5vw,32px);height:clamp(22px,2.5vw,32px);margin:0 auto;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <p style="font-family:var(--font-display);font-size:clamp(22px,2.8vw,36px);font-weight:700;color:var(--ink);line-height:1;">2</p>
+            <p style="font-size:clamp(12px,1.2vw,16px);font-weight:600;color:var(--ink);">岗位角度</p>
+            <p style="font-size:clamp(10px,.9vw,12px);color:var(--ink-muted);">我的工作模式变化</p>
+          </div>
+          <div class="card" style="border-top:3px solid var(--tab-global);text-align:center;gap:var(--gap-xs);">
+            <svg viewBox="0 0 24 24" style="width:clamp(22px,2.5vw,32px);height:clamp(22px,2.5vw,32px);margin:0 auto;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            <p style="font-family:var(--font-display);font-size:clamp(22px,2.8vw,36px);font-weight:700;color:var(--ink);line-height:1;">3</p>
+            <p style="font-size:clamp(12px,1.2vw,16px);font-weight:600;color:var(--ink);">局部 → 全局</p>
+            <p style="font-size:clamp(10px,.9vw,12px);color:var(--ink-muted);">对团队和公司的意义</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 2: 痛点故事 — 沈阳客运
+     ============================================= -->
+<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab active" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-bg);">Part 1</span> &nbsp;背景和思路</div>
+      <div class="header-right">03 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Story</div>
+        <h2 class="title-lg">从<em>沈阳客运</em>项目说起</h2>
+      </div>
+
+      <!-- Step 1: project status + callout -->
+      <div data-step="1">
+        <div class="grid-2" style="gap:var(--gap-md);">
+          <!-- Left: project status visual -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+            <div class="callout-danger">
+              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div>
+                <p style="font-size:clamp(13px,1.2vw,17px);font-weight:600;color:var(--danger);">项目严重延期</p>
+                <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:3px;">5月接手时，开发资源一直排不开，客户意见很大</p>
+              </div>
+            </div>
+            <!-- Mini stats -->
+            <div class="stat-row" style="justify-content:center;padding:var(--gap-sm) 0;">
+              <div class="stat-item">
+                <div class="stat-num" style="color:var(--danger);">9</div>
+                <div class="stat-label">经手工位</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-num" style="color:var(--danger);">N+</div>
+                <div class="stat-label">需求变更次数</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-num" style="color:var(--danger);">高</div>
+                <div class="stat-label">定制化程度</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: problem list with icons -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+            <div class="meta-text" style="margin-bottom:2px;">观察到的问题</div>
+            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">需求反复确认 / 变更 / 新增</p>
+            </div>
+            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">多项目并行，产品设计周期长</p>
+            </div>
+            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">产品产出无法直接作为开发依据</p>
+            </div>
+            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">开发资源排不开，项目不断延期</p>
+            </div>
+            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">跨部门协作难度高，KPI 隔离</p>
+            </div>
+            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
+              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">不断重复开发定制化需求</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: root cause quote -->
+      <div data-step="2">
+        <div class="quote-block">
+          <p>这些问题并非某个人的失误，而是链条过长 + 高定制化 带来的系统性挑战。</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 3: 业务链条 + 信息衰减
+     ============================================= -->
+<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab active" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-bg);">Part 1</span> &nbsp;背景和思路</div>
+      <div class="header-right">04 / --</div>
+    </div>
+    <div class="content" style="gap:var(--gap-sm);">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div class="kicker">Business Chain</div>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">公司的<em>业务链条</em>与信息衰减</h2>
+      </div>
+
+      <!-- Step 1: Pipeline diagram with icons -->
+      <div data-step="1">
+        <div class="pipeline" style="background:#fff;border:1px solid var(--rule);">
+          <div class="pipe-node" style="background:rgba(152,212,187,.15);">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span class="pipe-label">销售</span>
+          </div>
+          <div class="pipe-node">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+            <span class="pipe-label">招投标</span>
+          </div>
+          <div class="pipe-node">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <span class="pipe-label">客户沟通</span>
+            <span class="pipe-sub">市场/项目经理</span>
+          </div>
+          <div class="pipe-node highlight">
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <span class="pipe-label">产品设计</span>
+            <span class="pipe-sub">PRD/原型/Demo</span>
+          </div>
+          <div class="pipe-node">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+            <span class="pipe-label">架构设计</span>
+          </div>
+          <div class="pipe-node">
+            <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span class="pipe-label">开发</span>
+            <span class="pipe-sub">定制化部署</span>
+          </div>
+          <div class="pipe-node">
+            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span class="pipe-label">测试</span>
+          </div>
+          <div class="pipe-node">
+            <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+            <span class="pipe-label">部署</span>
+          </div>
+          <div class="pipe-node" style="background:rgba(255,230,167,.2);border-right:none;">
+            <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+            <span class="pipe-label">验收</span>
+            <span class="pipe-sub">逐字核对</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Info loss visualization -->
+      <div data-step="2" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <span class="meta-text">信息完整度</span>
+          <span class="meta-text" style="color:var(--danger);">← 逐层衰减 →</span>
+        </div>
+        <div class="loss-bar-wrap">
+          <span class="loss-bar-label left">100%</span>
+          <span class="loss-bar-label right">???</span>
+        </div>
+        <!-- Visual: opacity gradient boxes -->
+        <div style="display:flex;gap:2px;margin-top:var(--gap-xs);">
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);display:flex;align-items:center;justify-content:center;"><span style="font-size:9px;color:#fff;font-weight:600;">客户需求</span></div>
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);opacity:.8;"></div>
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);opacity:.6;"></div>
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);opacity:.45;display:flex;align-items:center;justify-content:center;"><span style="font-size:9px;color:#fff;font-weight:600;">产品设计</span></div>
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);opacity:.3;"></div>
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);opacity:.2;"></div>
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);opacity:.12;"></div>
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);opacity:.06;"></div>
+          <div style="flex:1;height:clamp(24px,3vh,36px);background:var(--accent);opacity:.03;display:flex;align-items:center;justify-content:center;"><span style="font-size:9px;color:var(--danger);font-weight:600;">交付</span></div>
+        </div>
+      </div>
+
+      <!-- Step 3: Key insight -->
+      <div data-step="3">
+        <div class="grid-2" style="gap:var(--gap-sm);">
+          <div class="card card-accent" style="text-align:center;">
+            <p class="meta-text" style="margin-bottom:2px;">根因 1</p>
+            <svg viewBox="0 0 24 24" style="width:clamp(24px,2.5vw,36px);height:clamp(24px,2.5vw,36px);margin:var(--gap-xs) auto;" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">定制化程度高</p>
+            <p style="font-size:clamp(10px,.9vw,13px);color:var(--ink-muted);">无法快速开发部署</p>
+          </div>
+          <div class="card card-accent" style="text-align:center;">
+            <p class="meta-text" style="margin-bottom:2px;">根因 2</p>
+            <svg viewBox="0 0 24 24" style="width:clamp(24px,2.5vw,36px);height:clamp(24px,2.5vw,36px);margin:var(--gap-xs) auto;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">业务链条过长</p>
+            <p style="font-size:clamp(10px,.9vw,13px);color:var(--ink-muted);">信息逐层衰减</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 4: 点线面框架
+     ============================================= -->
+<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab active" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-bg);">Part 1</span> &nbsp;背景和思路</div>
+      <div class="header-right">05 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div class="kicker">Framework</div>
+        <h2 class="title-lg">我的思考框架：<em>点 · 线 · 面</em></h2>
+        <div class="divider"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr clamp(120px,18vw,220px);gap:var(--gap-md);align-items:center;">
+        <!-- Left: 3 PLS cards -->
+        <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+          <div class="pls-card" data-step="1">
+            <div class="pls-badge dot">点</div>
+            <div style="flex:1;">
+              <p style="font-family:var(--font-display);font-size:clamp(14px,1.4vw,20px);font-weight:700;">岗位角度 — 我自己怎么变了</p>
+              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:3px;">AI时代产品经理的工作模式转变 + 实际案例演示</p>
+            </div>
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;flex-shrink:0;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+
+          <div class="pls-card" data-step="2">
+            <div class="pls-badge line">线</div>
+            <div style="flex:1;">
+              <p style="font-family:var(--font-display);font-size:clamp(14px,1.4vw,20px);font-weight:700;">局部角度 — FDE 模式的可行性</p>
+              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:3px;">借鉴 Palantir 的 FDE 理念解决信息损失问题</p>
+            </div>
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;flex-shrink:0;" fill="none" stroke="var(--tab-local)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+
+          <div class="pls-card" data-step="3">
+            <div class="pls-badge surface">面</div>
+            <div style="flex:1;">
+              <p style="font-family:var(--font-display);font-size:clamp(14px,1.4vw,20px);font-weight:700;">全局角度 — 对公司意味着什么</p>
+              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:3px;">从业务链条和公司战略出发的组织升级思考</p>
+            </div>
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;flex-shrink:0;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <!-- Right: visual concentric diagram -->
+        <div style="display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 160 160" style="width:100%;max-width:200px;">
+            <!-- Surface (outer) -->
+            <circle cx="80" cy="80" r="72" fill="none" stroke="var(--tab-global)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".5"/>
+            <text x="80" y="18" text-anchor="middle" font-family="var(--font-display)" font-size="11" fill="var(--tab-global)" font-style="italic">面</text>
+            <!-- Line (middle) -->
+            <circle cx="80" cy="80" r="48" fill="none" stroke="var(--tab-local)" stroke-width="1.5" opacity=".6"/>
+            <text x="132" y="56" text-anchor="middle" font-family="var(--font-display)" font-size="11" fill="var(--tab-local)" font-style="italic">线</text>
+            <!-- Dot (center) -->
+            <circle cx="80" cy="80" r="24" fill="var(--tab-role)" opacity=".25"/>
+            <circle cx="80" cy="80" r="6" fill="var(--tab-role)"/>
+            <text x="80" y="68" text-anchor="middle" font-family="var(--font-display)" font-size="11" fill="var(--tab-role)" font-weight="700" font-style="italic">点</text>
+            <!-- Connecting lines -->
+            <line x1="80" y1="56" x2="80" y2="32" stroke="var(--ink)" stroke-width=".5" opacity=".2" stroke-dasharray="2 2"/>
+            <line x1="80" y1="32" x2="80" y2="8" stroke="var(--ink)" stroke-width=".5" opacity=".15" stroke-dasharray="2 2"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- =============================================
+     SLIDE 5: Part 2 幕封 — 传统PM工作模式
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">06 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Point · 点</div>
+        <h2 class="title-lg">传统产品经理的<em>工作模式</em></h2>
+        <div class="divider"></div>
+      </div>
+
+      <!-- Step 1: Traditional workflow pipeline -->
+      <div data-step="1" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="meta-text">传统工作流</div>
+        <div style="display:flex;align-items:center;gap:0;background:#fff;border:1px solid var(--rule);padding:clamp(6px,1vh,12px) 0;">
+          <div style="flex:1;text-align:center;padding:clamp(6px,1vh,10px);border-right:1px dashed var(--rule);">
+            <svg viewBox="0 0 24 24" style="width:clamp(20px,2.2vw,30px);height:clamp(20px,2.2vw,30px);margin:0 auto;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <p style="font-size:clamp(10px,1vw,13px);font-weight:600;color:var(--ink);margin-top:3px;">收集需求</p>
+            <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">会议/邮件/口头</p>
+          </div>
+          <div style="flex:1;text-align:center;padding:clamp(6px,1vh,10px);border-right:1px dashed var(--rule);">
+            <svg viewBox="0 0 24 24" style="width:clamp(20px,2.2vw,30px);height:clamp(20px,2.2vw,30px);margin:0 auto;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <p style="font-size:clamp(10px,1vw,13px);font-weight:600;color:var(--ink);margin-top:3px;">写 PRD</p>
+            <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">Word/Confluence</p>
+          </div>
+          <div style="flex:1;text-align:center;padding:clamp(6px,1vh,10px);border-right:1px dashed var(--rule);">
+            <svg viewBox="0 0 24 24" style="width:clamp(20px,2.2vw,30px);height:clamp(20px,2.2vw,30px);margin:0 auto;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            <p style="font-size:clamp(10px,1vw,13px);font-weight:600;color:var(--ink);margin-top:3px;">画原型</p>
+            <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">Axure/Figma</p>
+          </div>
+          <div style="flex:1;text-align:center;padding:clamp(6px,1vh,10px);border-right:1px dashed var(--rule);">
+            <svg viewBox="0 0 24 24" style="width:clamp(20px,2.2vw,30px);height:clamp(20px,2.2vw,30px);margin:0 auto;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            <p style="font-size:clamp(10px,1vw,13px);font-weight:600;color:var(--ink);margin-top:3px;">评审</p>
+            <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">多轮会议</p>
+          </div>
+          <div style="flex:1;text-align:center;padding:clamp(6px,1vh,10px);border-right:1px dashed var(--rule);">
+            <svg viewBox="0 0 24 24" style="width:clamp(20px,2.2vw,30px);height:clamp(20px,2.2vw,30px);margin:0 auto;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            <p style="font-size:clamp(10px,1vw,13px);font-weight:600;color:var(--ink);margin-top:3px;">交付文档</p>
+            <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">给开发</p>
+          </div>
+          <div style="flex:1;text-align:center;padding:clamp(6px,1vh,10px);">
+            <svg viewBox="0 0 24 24" style="width:clamp(20px,2.2vw,30px);height:clamp(20px,2.2vw,30px);margin:0 auto;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            <p style="font-size:clamp(10px,1vw,13px);font-weight:600;color:var(--ink);margin-top:3px;">反复修改</p>
+            <p style="font-size:clamp(8px,.7vw,10px);color:var(--danger);">循环...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Pain points grid -->
+      <div data-step="2">
+        <div class="meta-text" style="margin-bottom:var(--gap-xs);">传统模式的痛点</div>
+        <div class="grid-3" style="gap:var(--gap-xs);">
+          <div class="card card-danger" style="text-align:center;gap:2px;">
+            <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">产出不可执行</p>
+            <p style="font-size:clamp(9px,.8vw,11px);color:var(--ink-muted);">PRD 到开发仍需大量沟通</p>
+          </div>
+          <div class="card card-danger" style="text-align:center;gap:2px;">
+            <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">周期长</p>
+            <p style="font-size:clamp(9px,.8vw,11px);color:var(--ink-muted);">需求→可用 Demo 数周起步</p>
+          </div>
+          <div class="card card-danger" style="text-align:center;gap:2px;">
+            <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">信息损失</p>
+            <p style="font-size:clamp(9px,.8vw,11px);color:var(--ink-muted);">需求在文档传递中不断衰减</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 6: AI 时代 PM 工作模式
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">07 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Shift</div>
+        <h2 class="title-lg">AI 时代的<em>新模式</em></h2>
+      </div>
+
+      <!-- Step 1: Before / After comparison -->
+      <div data-step="1">
+        <div class="grid-2" style="gap:var(--gap-md);">
+          <!-- Before -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--gap-xs);">
+              <span style="width:10px;height:10px;background:var(--danger);display:inline-block;opacity:.6;"></span>
+              <span class="meta-text" style="color:var(--danger);">Before · 传统模式</span>
+            </div>
+            <div class="card" style="border-left:3px solid var(--rule);gap:var(--gap-xs);">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">写 Word PRD → 画 Axure 原型</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">多轮评审会议对齐</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15A9 9 0 115.64 5.64L1 10"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">开发拿到文档还得反复确认</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--danger);font-weight:600;">周期：数周 ~ 数月</span>
+              </div>
+            </div>
+          </div>
+          <!-- After -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--gap-xs);">
+              <span style="width:10px;height:10px;background:var(--accent);display:inline-block;"></span>
+              <span class="meta-text" style="color:var(--accent);">After · AI 驱动模式</span>
+            </div>
+            <div class="card card-accent" style="gap:var(--gap-xs);">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">AI Agent 直接生成可交互 Demo</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">PRD / 验收标准 / 代码同步产出</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">开发拿到的是可运行代码，不是纯文档</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--accent);font-weight:600;">周期：数小时 ~ 数天</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Key shift quote -->
+      <div data-step="2">
+        <div class="quote-block">
+          <p>产品经理的核心产出，从"描述需求的文档"变成"可运行的解决方案"。</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 7: 我的工作流
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">08 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">My Workflow</div>
+        <h2 class="title-lg">我的<em>工作链条</em></h2>
+      </div>
+
+      <!-- Step 1: Full workflow pipeline -->
+      <div data-step="1">
+        <div style="display:flex;flex-direction:column;gap:0;">
+          <!-- Row 1: Input -->
+          <div style="display:flex;align-items:stretch;background:#fff;border:1px solid var(--rule);border-bottom:none;">
+            <div style="width:clamp(60px,7vw,90px);background:var(--tab-role);display:flex;align-items:center;justify-content:center;padding:clamp(8px,1.2vh,14px);">
+              <span style="writing-mode:vertical-rl;font-size:clamp(9px,.85vw,11px);font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.5);">INPUT</span>
+            </div>
+            <div style="flex:1;display:flex;align-items:center;gap:clamp(8px,1.2vw,16px);padding:clamp(10px,1.5vh,16px) clamp(12px,1.5vw,20px);">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;" fill="none" stroke="var(--ink-light)" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <span style="font-size:clamp(11px,1.1vw,14px);font-weight:500;">飞书沟通记录</span>
+              </div>
+              <svg viewBox="0 0 24 24" style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="var(--ink-faint)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                <span style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--accent);">飞书 CLI</span>
+              </div>
+              <svg viewBox="0 0 24 24" style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="var(--ink-faint)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--accent);">Codex / Claude Code</span>
+              </div>
+            </div>
+          </div>
+          <!-- Row 2: Output -->
+          <div style="display:flex;align-items:stretch;background:#fff;border:1px solid var(--rule);border-bottom:none;">
+            <div style="width:clamp(60px,7vw,90px);background:var(--tab-bg);display:flex;align-items:center;justify-content:center;padding:clamp(8px,1.2vh,14px);">
+              <span style="writing-mode:vertical-rl;font-size:clamp(9px,.85vw,11px);font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.5);">OUTPUT</span>
+            </div>
+            <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);">
+              <div style="background:#fff;padding:clamp(8px,1.2vh,14px);text-align:center;">
+                <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+                <p style="font-size:clamp(10px,1vw,13px);font-weight:600;margin-top:4px;">文档沉淀</p>
+                <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-muted);">分项目知识库</p>
+              </div>
+              <div style="background:#fff;padding:clamp(8px,1.2vh,14px);text-align:center;">
+                <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                <p style="font-size:clamp(10px,1vw,13px);font-weight:600;margin-top:4px;">可交互 Demo</p>
+                <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-muted);">前端代码直出</p>
+              </div>
+              <div style="background:#fff;padding:clamp(8px,1.2vh,14px);text-align:center;">
+                <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <p style="font-size:clamp(10px,1vw,13px);font-weight:600;margin-top:4px;">验收标准</p>
+                <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-muted);">对应投标文件</p>
+              </div>
+              <div style="background:#fff;padding:clamp(8px,1.2vh,14px);text-align:center;">
+                <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <p style="font-size:clamp(10px,1vw,13px);font-weight:600;margin-top:4px;">开发用 PRD</p>
+                <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-muted);">可直接使用</p>
+              </div>
+            </div>
+          </div>
+          <!-- Row 3: Loop -->
+          <div style="display:flex;align-items:stretch;background:#fff;border:1px solid var(--rule);">
+            <div style="width:clamp(60px,7vw,90px);background:var(--tab-action);display:flex;align-items:center;justify-content:center;padding:clamp(8px,1.2vh,14px);">
+              <span style="writing-mode:vertical-rl;font-size:clamp(9px,.85vw,11px);font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.5);">LOOP</span>
+            </div>
+            <div style="flex:1;display:flex;align-items:center;gap:clamp(8px,1.2vw,16px);padding:clamp(10px,1.5vh,16px) clamp(12px,1.5vw,20px);">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;" fill="none" stroke="var(--ink-light)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span style="font-size:clamp(11px,1.1vw,14px);">跟进项目群开发进度</span>
+              </div>
+              <svg viewBox="0 0 24 24" style="width:14px;height:14px;flex-shrink:0;" fill="none" stroke="var(--ink-faint)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;" fill="none" stroke="var(--ink-light)" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                <span style="font-size:clamp(11px,1.1vw,14px);">及时更新产品设计和输出</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Key point -->
+      <div data-step="2">
+        <div class="card card-accent" style="margin-top:var(--gap-xs);">
+          <p style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);">
+            <strong>核心目标：</strong>产出的内容能否可以直接用？研发拿到后能否直接开发？不只是"生成文档"，而是"生成可执行的解决方案"。
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 8: 案例展示-1
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">09 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Case Study</div>
+        <h2 class="title-lg">案例：<em>沈阳南电子班牌</em>方案</h2>
+      </div>
+
+      <!-- Step 1: Process + screenshot placeholders -->
+      <div data-step="1">
+        <div class="grid-2" style="gap:var(--gap-md);">
+          <!-- Left: process -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+            <div class="meta-text">工作流程</div>
+            <!-- Vertical timeline -->
+            <div style="display:flex;flex-direction:column;gap:0;border-left:2px solid var(--accent);margin-left:8px;padding-left:clamp(12px,1.5vw,20px);">
+              <div style="position:relative;padding:var(--gap-xs) 0;">
+                <div style="position:absolute;left:calc(-1 * clamp(12px,1.5vw,20px) - 5px);top:clamp(6px,.8vh,10px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+                <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">飞书群沟通记录</p>
+                <p style="font-size:clamp(9px,.85vw,12px);color:var(--ink-muted);">客户需求讨论、会议纪要</p>
+              </div>
+              <div style="position:relative;padding:var(--gap-xs) 0;">
+                <div style="position:absolute;left:calc(-1 * clamp(12px,1.5vw,20px) - 5px);top:clamp(6px,.8vh,10px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+                <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">飞书 CLI 提取结构化信息</p>
+                <p style="font-size:clamp(9px,.85vw,12px);color:var(--ink-muted);">自动抓取群消息和文档</p>
+              </div>
+              <div style="position:relative;padding:var(--gap-xs) 0;">
+                <div style="position:absolute;left:calc(-1 * clamp(12px,1.5vw,20px) - 5px);top:clamp(6px,.8vh,10px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+                <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">Claude Code 生成方案底稿</p>
+                <p style="font-size:clamp(9px,.85vw,12px);color:var(--ink-muted);">PRD + 技术方案 + Demo</p>
+              </div>
+              <div style="position:relative;padding:var(--gap-xs) 0;">
+                <div style="position:absolute;left:calc(-1 * clamp(12px,1.5vw,20px) - 5px);top:clamp(6px,.8vh,10px);width:8px;height:8px;border-radius:50%;background:var(--tab-bg);"></div>
+                <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">输出完整讨论底稿</p>
+                <p style="font-size:clamp(9px,.85vw,12px);color:var(--ink-muted);">直接用于客户对接和内部评审</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: screenshot placeholders -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+            <div class="meta-text">产出展示</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-xs);">
+              <div style="aspect-ratio:4/3;background:var(--paper-shadow);border:1px dashed var(--rule);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;" fill="none" stroke="var(--ink-faint)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">方案截图 1</span>
+              </div>
+              <div style="aspect-ratio:4/3;background:var(--paper-shadow);border:1px dashed var(--rule);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;" fill="none" stroke="var(--ink-faint)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">方案截图 2</span>
+              </div>
+              <div style="aspect-ratio:4/3;background:var(--paper-shadow);border:1px dashed var(--rule);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;" fill="none" stroke="var(--ink-faint)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">Demo 截图</span>
+              </div>
+              <div style="aspect-ratio:4/3;background:var(--paper-shadow);border:1px dashed var(--rule);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
+                <svg viewBox="0 0 24 24" style="width:24px;height:24px;" fill="none" stroke="var(--ink-faint)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">文档截图</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Result highlight -->
+      <div data-step="2">
+        <div class="stat-row" style="justify-content:center;padding:var(--gap-xs) 0;background:#fff;border:1px solid var(--rule);">
+          <div class="stat-item">
+            <div class="stat-num">1</div>
+            <div class="stat-label">天内完成底稿</div>
+          </div>
+          <div style="width:1px;background:var(--rule);align-self:stretch;margin:0 clamp(12px,2vw,28px);"></div>
+          <div class="stat-item">
+            <div class="stat-num">4</div>
+            <div class="stat-label">份产出文档</div>
+          </div>
+          <div style="width:1px;background:var(--rule);align-self:stretch;margin:0 clamp(12px,2vw,28px);"></div>
+          <div class="stat-item">
+            <div class="stat-num" style="font-size:clamp(22px,2.8vw,38px);">可直接用</div>
+            <div class="stat-label">研发无需二次翻译</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 9: 飞书 CLI 能力介绍
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">10 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Tool Deep-dive</div>
+        <h2 class="title-lg">关键工具：<em>飞书 CLI</em></h2>
+      </div>
+
+      <!-- Step 1: What + capabilities -->
+      <div data-step="1">
+        <div class="grid-2" style="gap:var(--gap-md);">
+          <!-- Left: What is it -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+            <div class="card card-accent">
+              <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">让 AI Agent 操作飞书的命令行接口</p>
+              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:2px;">Codex / Claude Code 通过 CLI 直接读写飞书数据，实现办公自动化</p>
+            </div>
+            <div class="meta-text" style="margin-top:var(--gap-xs);">核心能力</div>
+            <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+              <div class="card card-h" style="border-left:3px solid var(--tab-bg);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);">读取 / 创建 / 更新飞书文档</span>
+              </div>
+              <div class="card card-h" style="border-left:3px solid var(--tab-role);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);">抓取群消息和会议纪要</span>
+              </div>
+              <div class="card card-h" style="border-left:3px solid var(--tab-local);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--tab-local)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);">日程和任务管理</span>
+              </div>
+              <div class="card card-h" style="border-left:3px solid var(--tab-global);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span style="font-size:clamp(11px,1.05vw,14px);">被 Agent Coding 工具直接调用</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Why CLI not 智能体 -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+            <div class="meta-text">为什么用 CLI，而不是飞书智能体？</div>
+            <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+              <!-- Comparison table -->
+              <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:0;border:1px solid var(--rule);font-size:clamp(10px,.95vw,13px);">
+                <div style="padding:clamp(6px,.8vh,10px) clamp(8px,1vw,14px);background:var(--paper-shadow);font-weight:700;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);"></div>
+                <div style="padding:clamp(6px,.8vh,10px) clamp(8px,1vw,14px);background:var(--paper-shadow);font-weight:700;text-align:center;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);color:var(--accent);">CLI</div>
+                <div style="padding:clamp(6px,.8vh,10px) clamp(8px,1vw,14px);background:var(--paper-shadow);font-weight:700;text-align:center;border-bottom:1px solid var(--rule);">智能体</div>
+
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);font-weight:500;">项目隔离</div>
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);color:var(--accent);font-weight:600;">分项目管理</div>
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);color:var(--ink-muted);">全局共享</div>
+
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);font-weight:500;">上下文</div>
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);color:var(--accent);font-weight:600;">相对隔离</div>
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);color:var(--ink-muted);">混合上下文</div>
+
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);font-weight:500;">扩展性</div>
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);color:var(--accent);font-weight:600;">接入外部工具链</div>
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);color:var(--ink-muted);">飞书生态内</div>
+
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);border-right:1px solid var(--rule);font-weight:500;">定位</div>
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-right:1px solid var(--rule);color:var(--accent);font-weight:600;">生产力工具</div>
+                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;color:var(--ink-muted);">协作自动化</div>
+              </div>
+            </div>
+            <div class="card" style="border-left:3px solid var(--tab-bg);margin-top:var(--gap-xs);">
+              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink);">
+                <strong>互补关系：</strong>CLI 做"从 0 到 1 写出可用东西"，智能体做流程自动化和团队协作。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Code example visual -->
+      <div data-step="2">
+        <div style="background:var(--ink);padding:clamp(10px,1.5vh,18px) clamp(14px,1.5vw,22px);overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:clamp(6px,.8vh,10px);">
+            <span style="width:8px;height:8px;border-radius:50%;background:#ff5f57;"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:#febc2e;"></span>
+            <span style="width:8px;height:8px;border-radius:50%;background:#28c840;"></span>
+            <span style="font-family:var(--font-mono);font-size:clamp(9px,.8vw,11px);color:rgba(255,255,255,.4);margin-left:8px;">terminal</span>
+          </div>
+          <pre style="font-family:var(--font-mono);font-size:clamp(10px,1vw,13px);color:rgba(255,255,255,.85);line-height:1.6;white-space:pre-wrap;margin:0;"><span style="color:#28c840;">$</span> lark-cli docs +fetch --doc "沈阳南项目文档" --format markdown
+<span style="color:rgba(255,255,255,.4);"># 自动提取飞书文档内容，输出结构化 Markdown</span>
+
+<span style="color:#28c840;">$</span> lark-cli chat +read --group "沈阳南项目群" --since 7d
+<span style="color:rgba(255,255,255,.4);"># 读取项目群最近 7 天消息</span></pre>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===========================================
+     JAVASCRIPT
+     =========================================== -->
+<script>
+(function(){
+  'use strict';
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  const bar=document.getElementById('progressBar');
+  const label=document.getElementById('chapterLabel');
+  const dots=[...document.querySelectorAll('.chapter-dot')];
+  const chapters={'0':'COVER','1':'PART 1 · 背景和思路','2':'PART 2 · 岗位角度','3':'PART 3 · 局部角度','4':'PART 4 · 全局角度','5':'行动'};
+  let cur=0, step=0;
+
+  function maxSteps(s){return parseInt(s.dataset.steps||'0',10)}
+  function showTo(s,n){
+    for(let i=0;i<=maxSteps(s);i++){
+      s.querySelectorAll(`[data-step="${i}"]`).forEach(el=>{
+        i<=n?el.classList.add('visible'):el.classList.remove('visible');
+      });
+    }
+  }
+  function updateNums(){
+    slides.forEach((s,i)=>{
+      const el=s.querySelector('.header-right');
+      if(el)el.textContent=`${String(i+1).padStart(2,'0')} / ${String(total).padStart(2,'0')}`;
+    });
+  }
+  function updateTabs(s){
+    const p=s.dataset.part;
+    s.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===p));
+    if(p==='0')s.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  }
+  function updateUI(){
+    const s=slides[cur];
+    slides.forEach((x,i)=>x.classList.toggle('active',i===cur));
+    s.scrollIntoView({behavior:'smooth',block:'start'});
+    bar.style.width=(cur/(total-1))*100+'%';
+    const p=s.dataset.part;
+    dots.forEach(d=>d.classList.toggle('active',d.dataset.part===p));
+    label.textContent=chapters[p]||'';
+    updateTabs(s);
+    showTo(s,step);
+  }
+  function goTo(i){if(i<0||i>=total)return;cur=i;step=0;showTo(slides[cur],0);updateUI();}
+  function next(){
+    const s=slides[cur],m=maxSteps(s);
+    if(step<m){step++;showTo(s,step);}
+    else if(cur<total-1)goTo(cur+1);
+  }
+  function prev(){
+    if(step>0){step--;showTo(slides[cur],step);}
+    else if(cur>0){cur--;step=maxSteps(slides[cur]);showTo(slides[cur],step);updateUI();}
+  }
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight',' ','ArrowDown'].includes(e.key)){e.preventDefault();next();}
+    if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();prev();}
+    if(e.key==='Home'){e.preventDefault();goTo(0);}
+    if(e.key==='End'){e.preventDefault();goTo(total-1);}
+  });
+  document.querySelectorAll('.page').forEach(p=>p.addEventListener('click',e=>{if(!e.target.closest('.tab,.chapter-dot,a,button'))next();}));
+  dots.forEach(d=>d.addEventListener('click',()=>{const i=slides.findIndex(s=>s.dataset.part===d.dataset.part);if(i>=0)goTo(i);}));
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{const i=slides.findIndex(s=>s.dataset.part===t.dataset.tab);if(i>=0)goTo(i);}));
+  let locked=false;
+  document.addEventListener('wheel',e=>{if(locked)return;locked=true;e.deltaY>0?next():prev();setTimeout(()=>locked=false,400);},{passive:true});
+  let ty=0;
+  document.addEventListener('touchstart',e=>{ty=e.touches[0].clientY},{passive:true});
+  document.addEventListener('touchend',e=>{const d=ty-e.changedTouches[0].clientY;if(Math.abs(d)>50){d>0?next():prev();}},{passive:true});
+  updateNums();updateUI();
+})();
+</script>
+</body>
+</html>
