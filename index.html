@@ -768,6 +768,31 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
   font-size:.9em;
 }
 
+/* === PHONE MOCKUP (for mobile H5 embeds) === */
+.phone-mockup {
+  width:clamp(220px,22vw,300px); height:clamp(400px,62vh,540px);
+  border:3px solid #1a1a1a; border-radius:28px;
+  background:#000; overflow:hidden; position:relative;
+  box-shadow:0 8px 32px rgba(0,0,0,.18), inset 0 0 0 2px #333;
+  flex-shrink:0;
+}
+.phone-mockup::before {
+  content:""; position:absolute; top:6px; left:50%; transform:translateX(-50%);
+  width:60px; height:5px; background:#333; border-radius:4px; z-index:5;
+}
+.phone-mockup iframe {
+  width:100%; height:100%; border:none; background:#fff; border-radius:24px;
+}
+.phone-mockup-label {
+  display:flex; align-items:center; gap:6px;
+  font-family:var(--font-mono); font-size:var(--text-mini);
+  color:var(--ink-muted); text-transform:uppercase; letter-spacing:.05em;
+}
+.phone-click-overlay {
+  position:absolute; inset:0; z-index:10; cursor:pointer; border-radius:24px;
+}
+.phone-click-overlay:hover { background:rgba(0,0,0,.04); }
+
 /* === AI COST SLIDE === */
 .cost-grid {
   display:grid; grid-template-columns:repeat(3, 1fr);
@@ -2449,7 +2474,215 @@ img.cost-logo { display:block; }
 
 
 <!-- =============================================
-     SLIDE 19: Part 4 幕封 — 全局角度
+     SLIDE 19: FDE 实践案例-1 — 基地导览 H5
+     ============================================= -->
+<div class="slide" data-part="3" data-chapter="局部角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab active" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-right">19 / --</div>
+    </div>
+    <div class="content" style="display:grid;grid-template-columns:1fr clamp(230px,24vw,310px);gap:var(--gap-md);align-items:start;">
+      <!-- Left: case description -->
+      <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+          <div class="kicker">FDE 实践 · Echo + Delta</div>
+          <h2 class="title-lg" style="font-size:clamp(20px,2.6vw,34px);">沈阳基地<em>全局导览 H5</em></h2>
+          <p class="caption-sm">客户现场需求 → 独立开发 → 当天部署上线 → 微信扫码即用</p>
+        </div>
+
+        <div data-step="1" class="frost-panel" style="padding:clamp(12px,1.4vh,18px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-xs);">需求背景</div>
+          <p style="font-size:clamp(12px,1.1vw,15px);color:var(--ink-light);line-height:1.6;">王老师提出：来访人员需要一个<strong>扫码即用的基地导览</strong>——覆盖两层楼 17 个实训模块，每个点位有介绍、图片和语音讲解，支持楼层切换和 3D 平面交互。</p>
+        </div>
+
+        <div data-step="2" class="frost-panel" style="padding:clamp(12px,1.4vh,18px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-xs);">FDE 执行路径</div>
+          <div style="display:flex;flex-direction:column;gap:0;border-left:2px solid var(--tab-local);margin-left:6px;padding-left:clamp(12px,1.2vw,18px);">
+            <div style="position:relative;padding:var(--gap-xs) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(12px,1.2vw,18px) - 5px);top:clamp(6px,.7vh,10px);width:8px;height:8px;border-radius:50%;background:var(--tab-local);"></div>
+              <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;">Echo · 听需求</p>
+              <p class="caption-sm">现场对接王老师，明确点位清单、图片素材、讲解文案</p>
+            </div>
+            <div style="position:relative;padding:var(--gap-xs) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(12px,1.2vw,18px) - 5px);top:clamp(6px,.7vh,10px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+              <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;">Delta · 做产出</p>
+              <p class="caption-sm">Claude Code 生成全部前端 + 语音合成 + Cloudflare 部署</p>
+            </div>
+            <div style="position:relative;padding:var(--gap-xs) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(12px,1.2vw,18px) - 5px);top:clamp(6px,.7vh,10px);width:8px;height:8px;border-radius:50%;background:var(--tab-bg);"></div>
+              <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;">交付</p>
+              <p class="caption-sm">生成二维码，来访人微信扫码直接使用</p>
+            </div>
+          </div>
+        </div>
+
+        <div data-step="3">
+          <div class="stat-bar frost-panel" style="border-radius:12px;overflow:hidden;">
+            <div class="stat-item">
+              <div class="stat-num">17</div>
+              <div class="stat-label">实训点位</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-num">2</div>
+              <div class="stat-label">楼层导览</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-num stat-num-text">扫码即用</div>
+              <div class="stat-label">零安装 · 微信原生</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: phone mockup with live H5 -->
+      <div data-step="0" style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-xs);">
+        <div class="phone-mockup-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+          移动端实时预览
+        </div>
+        <div class="phone-mockup">
+          <a class="phone-click-overlay" href="https://show.karaithy.com/shenyang-tour/" target="_blank" rel="noopener" title="点击在新窗口打开导览"></a>
+          <iframe src="https://show.karaithy.com/shenyang-tour/" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups" style="pointer-events:auto;"></iframe>
+        </div>
+        <a href="https://show.karaithy.com/shenyang-tour/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-size:var(--text-mini);color:var(--accent);text-decoration:none;padding:4px 10px;border:1px solid var(--accent);border-radius:6px;transition:all .2s;" onmouseenter="this.style.background='var(--accent)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.color='var(--accent)'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          新窗口打开
+        </a>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 20: FDE 实践案例-2 — 个人能力图谱
+     ============================================= -->
+<div class="slide" data-part="3" data-chapter="局部角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab active" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-right">20 / --</div>
+    </div>
+    <div class="content" style="display:grid;grid-template-columns:1fr clamp(280px,32vw,420px);gap:var(--gap-md);align-items:start;">
+      <!-- Left: case description -->
+      <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+          <div class="kicker">FDE 实践 · Echo + Delta</div>
+          <h2 class="title-lg" style="font-size:clamp(20px,2.6vw,34px);">个人<em>能力地图</em>重构</h2>
+          <p class="caption-sm">客户对雷达图不满意 → 拉取前端代码 → 现场分析改造 → 部署验证</p>
+        </div>
+
+        <div data-step="1" class="frost-panel" style="padding:clamp(12px,1.4vh,18px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-xs);">需求背景</div>
+          <p style="font-size:clamp(12px,1.1vw,15px);color:var(--ink-light);line-height:1.6;">培训综合管理平台中，学员<strong>个人能力图谱</strong>（技能画像）使用常规雷达图展示——客户在验收时提出：当前展示方式不够直观，要求优化为更具辨识度的可视化形式。</p>
+        </div>
+
+        <div data-step="2" class="frost-panel" style="padding:clamp(12px,1.4vh,18px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-xs);">FDE 执行路径</div>
+          <div style="display:flex;flex-direction:column;gap:0;border-left:2px solid var(--tab-local);margin-left:6px;padding-left:clamp(12px,1.2vw,18px);">
+            <div style="position:relative;padding:var(--gap-xs) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(12px,1.2vw,18px) - 5px);top:clamp(6px,.7vh,10px);width:8px;height:8px;border-radius:50%;background:var(--tab-local);"></div>
+              <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;">Echo · 听反馈</p>
+              <p class="caption-sm">客户现场验收时提出雷达图不够直观，记录具体改进方向</p>
+            </div>
+            <div style="position:relative;padding:var(--gap-xs) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(12px,1.2vw,18px) - 5px);top:clamp(6px,.7vh,10px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+              <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;">Delta · 改代码</p>
+              <p class="caption-sm">拉取 smartmag-system 前端分支，分析 ECharts 图表组件，重构可视化方案</p>
+            </div>
+            <div style="position:relative;padding:var(--gap-xs) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(12px,1.2vw,18px) - 5px);top:clamp(6px,.7vh,10px);width:8px;height:8px;border-radius:50%;background:var(--tab-bg);"></div>
+              <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;">交付 · 进行中</p>
+              <p class="caption-sm">本地开发调试 → 现场部署验证 → 客户确认效果</p>
+            </div>
+          </div>
+        </div>
+
+        <div data-step="3" class="quote-block" style="font-size:clamp(12px,1.1vw,15px);">
+          <p>传统流程：客户反馈 → PM 写需求 → 排期 → 开发 → 测试 → 部署（数周）<br>FDE 模式：客户反馈 → 现场拉代码 → 分析改造 → 当天可演示（数小时）</p>
+        </div>
+      </div>
+
+      <!-- Right: live preview of ability map -->
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);height:clamp(380px,64vh,580px);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="phone-mockup-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            平台前端预览
+          </span>
+          <span style="font-size:var(--text-mini);color:var(--ink-faint);background:rgba(255,180,0,.12);padding:2px 8px;border-radius:4px;">🔧 开发中</span>
+        </div>
+        <div style="flex:1;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:#fff;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,1.6vh,20px);padding:clamp(16px,2vw,28px);text-align:center;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);">
+            <!-- Placeholder radar chart SVG -->
+            <svg viewBox="0 0 200 200" width="clamp(140px,18vw,200px)" height="clamp(140px,18vw,200px)" style="opacity:.85;">
+              <!-- Grid -->
+              <polygon points="100,20 168,55 168,145 100,180 32,145 32,55" fill="none" stroke="#dee2e6" stroke-width="1"/>
+              <polygon points="100,40 152,65 152,135 100,160 48,135 48,65" fill="none" stroke="#dee2e6" stroke-width=".8"/>
+              <polygon points="100,60 136,75 136,125 100,140 64,125 64,75" fill="none" stroke="#dee2e6" stroke-width=".6"/>
+              <!-- Axes -->
+              <line x1="100" y1="20" x2="100" y2="180" stroke="#dee2e6" stroke-width=".5"/>
+              <line x1="32" y1="55" x2="168" y2="145" stroke="#dee2e6" stroke-width=".5"/>
+              <line x1="168" y1="55" x2="32" y2="145" stroke="#dee2e6" stroke-width=".5"/>
+              <!-- Data shape (old) -->
+              <polygon points="100,35 155,68 148,138 100,165 52,128 55,62" fill="rgba(192,57,43,.1)" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <!-- Data shape (new/target) -->
+              <polygon points="100,28 160,60 150,142 100,170 48,135 45,58" fill="rgba(52,152,219,.15)" stroke="#3498db" stroke-width="2"/>
+              <!-- Labels -->
+              <text x="100" y="14" text-anchor="middle" font-size="9" fill="#666">安全操作</text>
+              <text x="175" y="52" text-anchor="start" font-size="9" fill="#666">应急处置</text>
+              <text x="175" y="150" text-anchor="start" font-size="9" fill="#666">客运服务</text>
+              <text x="100" y="195" text-anchor="middle" font-size="9" fill="#666">设备管理</text>
+              <text x="22" y="150" text-anchor="end" font-size="9" fill="#666">规章制度</text>
+              <text x="22" y="52" text-anchor="end" font-size="9" fill="#666">业务素养</text>
+              <!-- Dots -->
+              <circle cx="100" cy="28" r="3" fill="#3498db"/>
+              <circle cx="160" cy="60" r="3" fill="#3498db"/>
+              <circle cx="150" cy="142" r="3" fill="#3498db"/>
+              <circle cx="100" cy="170" r="3" fill="#3498db"/>
+              <circle cx="48" cy="135" r="3" fill="#3498db"/>
+              <circle cx="45" cy="58" r="3" fill="#3498db"/>
+            </svg>
+            <div style="display:flex;gap:clamp(8px,1vw,14px);font-size:clamp(10px,.9vw,12px);">
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:3px;background:#c0392b;border-radius:1px;display:inline-block;opacity:.6;"></span> 当前（雷达图）</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:3px;background:#3498db;border-radius:1px;display:inline-block;"></span> 目标（重构中）</span>
+            </div>
+            <p style="font-size:clamp(11px,1vw,13px);color:var(--ink-muted);max-width:280px;line-height:1.5;">正在基于 smartmag-system 前端代码重构学员技能画像的可视化展现方式，完成后将替换此占位</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 21: Part 4 幕封 — 全局角度
      ============================================= -->
 <div class="slide" data-part="4" data-chapter="全局角度" data-steps="1">
   <div class="page">
