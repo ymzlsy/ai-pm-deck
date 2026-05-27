@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ppt-notebook",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8766", "--directory", "/Users/apple/Desktop/ja_project/project_on/260517-AI应用分享/ppt-notebook"],
+      "port": 8766
+    }
+  ]
+}

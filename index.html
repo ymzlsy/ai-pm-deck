@@ -2259,21 +2259,21 @@ img.cost-logo { display:block; }
       <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">15 / --</div>
     </div>
-    <div class="content" style="display:grid;grid-template-columns:clamp(240px,30vw,380px) 1fr;gap:var(--gap-md);align-items:start;">
-      <!-- Left: text content (compact) -->
+    <div class="content" style="display:grid;grid-template-columns:clamp(260px,32vw,420px) 1fr;gap:var(--gap-md);align-items:stretch;">
+      <!-- Left: text content -->
       <div style="display:flex;flex-direction:column;gap:var(--gap-sm);justify-content:center;">
         <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
           <div class="kicker">一条链</div>
-          <h2 class="title-lg" style="font-size:clamp(20px,2.8vw,36px);">这个变化让 <em>FDE 模式</em>在我们公司变得可行</h2>
-          <p style="font-size:clamp(13px,1.2vw,17px);color:var(--ink-light);line-height:1.55;">解决链条前半段「信息逐层损失」——把 Palantir 的前线部署理念，对照捷安高科的交付链路来理解。</p>
+          <h2 class="title-lg" style="font-size:clamp(18px,2.4vw,32px);line-height:1.3;">这个变化让<br><em class="title-nowrap">FDE 模式</em>变得可行</h2>
+          <p style="font-size:clamp(13px,1.15vw,16px);color:var(--ink-light);line-height:1.6;">解决链条前半段「信息逐层损失」——把 Palantir 的前线部署理念，对照捷安高科的交付链路来理解。</p>
         </div>
-        <div data-step="1" class="quote-block" style="font-size:clamp(13px,1.2vw,17px);">
+        <div data-step="1" class="quote-block" style="font-size:clamp(13px,1.15vw,16px);">
           <p>一条链：不是换工具，而是让「听懂客户」的人更早坐在现场，并把洞察喂回平台。</p>
         </div>
       </div>
-      <!-- Right: embedded research article (wider) -->
-      <div data-step="0" class="embed-research" style="display:flex;flex-direction:column;gap:var(--gap-xs);height:clamp(380px,64vh,580px);">
-        <div style="display:flex;align-items:center;justify-content:space-between;">
+      <!-- Right: embedded research article -->
+      <div data-step="0" class="embed-research" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
           <span style="font-family:var(--font-mono);font-size:var(--text-mini);color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;">Deep Dive 调研</span>
           <a href="https://research.karaithy.com/articles/fde-deep-dive/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-size:var(--text-mini);color:var(--accent);text-decoration:none;padding:4px 10px;border:1px solid var(--accent);border-radius:6px;transition:all .2s;" onmouseenter="this.style.background='var(--accent)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.color='var(--accent)'">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -2490,7 +2490,7 @@ img.cost-logo { display:block; }
       <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">19 / --</div>
     </div>
-    <div class="content" style="display:grid;grid-template-columns:1fr clamp(230px,24vw,310px);gap:var(--gap-md);align-items:start;">
+    <div class="content" style="display:grid;grid-template-columns:1fr clamp(260px,26vw,340px);gap:var(--gap-md);align-items:stretch;">
       <!-- Left: case description -->
       <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
         <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
@@ -2545,18 +2545,13 @@ img.cost-logo { display:block; }
         </div>
       </div>
 
-      <!-- Right: phone mockup with live H5 -->
-      <div data-step="0" style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-xs);">
-        <div class="phone-mockup-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-          移动端实时预览
-        </div>
-        <div class="phone-mockup">
-          <a class="phone-click-overlay" href="https://show.karaithy.com/shenyang-tour/" target="_blank" rel="noopener" title="点击在新窗口打开导览"></a>
+      <!-- Right: phone mockup with live H5 + side button -->
+      <div data-step="0" style="display:flex;align-items:stretch;gap:clamp(6px,.6vw,10px);">
+        <div class="phone-mockup" style="width:100%;height:auto;flex:1;">
           <iframe src="https://show.karaithy.com/shenyang-tour/" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups" style="pointer-events:auto;"></iframe>
         </div>
-        <a href="https://show.karaithy.com/shenyang-tour/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-size:var(--text-mini);color:var(--accent);text-decoration:none;padding:4px 10px;border:1px solid var(--accent);border-radius:6px;transition:all .2s;" onmouseenter="this.style.background='var(--accent)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.color='var(--accent)'">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <a href="https://show.karaithy.com/shenyang-tour/" target="_blank" rel="noopener" style="writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--text-mini);color:var(--accent);text-decoration:none;padding:8px 6px;border:1px solid var(--accent);border-radius:6px;transition:all .2s;white-space:nowrap;letter-spacing:.08em;" onmouseenter="this.style.background='var(--accent)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.color='var(--accent)'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           新窗口打开
         </a>
       </div>
