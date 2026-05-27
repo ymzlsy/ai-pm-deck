@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>实训室全景管控 + 数字人「小安」· 沈阳铁路培训基地</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { font-family: 'Noto Sans SC', system-ui, sans-serif; }
+  body { margin: 0; padding: 0; overflow: hidden; background: #020a1a; color: #fff; }
+  .main-bg { background: linear-gradient(180deg, #030d1f 0%, #071428 50%, #020a1a 100%); }
+
+  .tech-border {
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: rgba(10, 25, 50, 0.85);
+    position: relative;
+  }
+  .tech-border::before {
+    content: ''; position: absolute; top: -1px; left: 10px;
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, #3b82f6, transparent);
+  }
+  .section-title {
+    background: linear-gradient(90deg, rgba(59,130,246,0.3), transparent);
+    border-left: 3px solid #3b82f6;
+    padding: 4px 12px; font-size: 12px; font-weight: 600; color: #93c5fd;
+  }
+  .tab-btn {
+    padding: 5px 16px; font-size: 12px; cursor: pointer;
+    border: 1px solid rgba(59,130,246,0.2);
+    background: rgba(15,23,42,0.6); color: #94a3b8; transition: all 0.3s;
+  }
+  .tab-btn.active {
+    background: linear-gradient(180deg, rgba(59,130,246,0.3), rgba(59,130,246,0.1));
+    border-color: #3b82f6; color: #93c5fd;
+  }
+  .tab-btn:hover:not(.active) { border-color: rgba(59,130,246,0.4); color: #bfdbfe; }
+  .data-table th {
+    background: rgba(30,58,138,0.3); padding: 6px 10px; font-size: 11px;
+    color: #93c5fd; font-weight: 500; text-align: left;
+    border-bottom: 1px solid rgba(59,130,246,0.2);
+  }
+  .data-table td {
+    padding: 6px 10px; font-size: 11px;
+    border-bottom: 1px solid rgba(30,58,138,0.15); vertical-align: middle;
+  }
+  @keyframes alertPulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+  .alert-dot { animation: alertPulse 1.5s infinite; }
+  .video-feed {
+    background: linear-gradient(135deg, #0a1628, #0f1f3a);
+    border: 1px solid rgba(59,130,246,0.2); position: relative; overflow: hidden;
+  }
+  .nice-scroll::-webkit-scrollbar { width: 4px; }
+  .nice-scroll::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.4); border-radius: 2px; }
+  .device-switch {
+    width: 36px; height: 18px; border-radius: 9px;
+    background: #1e293b; border: 1px solid #334155;
+    position: relative; cursor: pointer; transition: all 0.3s;
+  }
+  .device-switch.on { background: rgba(34,197,94,0.3); border-color: #22c55e; }
+  .device-switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #64748b; transition: all 0.3s;
+  }
+  .device-switch.on::after { left: 20px; background: #22c55e; }
+
+  /* === 数字人动画 === */
+  @keyframes humanLife {
+    0%   { transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(0); }
+    18%  { transform: perspective(900px) rotateY(-2.6deg) rotateX(0.6deg) translateY(-1px); }
+    35%  { transform: perspective(900px) rotateY(-1.4deg) rotateX(-1.0deg) translateY(-2.5px); }
+    52%  { transform: perspective(900px) rotateY(1.8deg) rotateX(-0.3deg) translateY(-2.5px); }
+    72%  { transform: perspective(900px) rotateY(3.0deg) rotateX(0.4deg) translateY(-1px); }
+    88%  { transform: perspective(900px) rotateY(1.0deg) rotateX(-0.2deg) translateY(0); }
+    100% { transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(0); }
+  }
+  @keyframes chestRise { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
+  @keyframes glowPulse {
+    0%,100% { opacity: 0.55; transform: translateX(-50%) scaleX(1); }
+    50%     { opacity: 0.85; transform: translateX(-50%) scaleX(1.15); }
+  }
+  @keyframes bubbleInOut {
+    0%   { opacity: 0; transform: translateY(4px); }
+    10%  { opacity: 1; transform: translateY(0); }
+    80%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-4px); }
+  }
+  .human-life {
+    animation: humanLife 9s cubic-bezier(.5,.05,.5,.95) infinite;
+    transform-origin: 50% 100%; transform-style: preserve-3d;
+  }
+  .chest-rise { animation: chestRise 4.5s ease-in-out infinite; }
+  @keyframes humanTalk {
+    0%   { transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(0); }
+    25%  { transform: perspective(900px) rotateY(-1.5deg) rotateX(1.6deg) translateY(-2px); }
+    50%  { transform: perspective(900px) rotateY(0.8deg) rotateX(-1.2deg) translateY(0); }
+    75%  { transform: perspective(900px) rotateY(1.6deg) rotateX(2.0deg) translateY(-1.5px); }
+    100% { transform: perspective(900px) rotateY(0deg) rotateX(0deg) translateY(0); }
+  }
+  .speaking-wrap .human-life { animation: humanTalk 2.6s ease-in-out infinite; }
+  .speaking-wrap img.avatar-img {
+    filter: drop-shadow(0 0 10px rgba(255,200,120,0.30));
+  }
+
+  /* 玻璃面板 */
+  .glass {
+    background: rgba(15, 23, 42, 0.82);
+    backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid rgba(96,165,250,0.28);
+  }
+  @keyframes slideIn { from { opacity:0; transform: translateY(-8px) scale(0.97); } to { opacity:1; transform:none; } }
+  .panel-in { animation: slideIn 0.35s cubic-bezier(0.16,1,0.3,1); }
+  .caret::after { content: '▎'; animation: caret 0.7s infinite; color: #60a5fa; }
+  @keyframes caret { 50% { opacity: 0; } }
+  @keyframes wave1 { 0%,100% { height: 4px; } 50% { height: 16px; } }
+  @keyframes wave2 { 0%,100% { height: 8px; } 50% { height: 22px; } }
+  @keyframes wave3 { 0%,100% { height: 12px; } 50% { height: 18px; } }
+  .wave-bar { width: 3px; background: #60a5fa; border-radius: 2px; }
+  .wave-bar:nth-child(1) { animation: wave1 0.9s ease-in-out infinite; }
+  .wave-bar:nth-child(2) { animation: wave2 0.7s ease-in-out infinite; }
+  .wave-bar:nth-child(3) { animation: wave3 0.8s ease-in-out infinite; }
+  .wave-bar:nth-child(4) { animation: wave1 0.6s ease-in-out infinite; }
+  .wave-bar:nth-child(5) { animation: wave2 0.85s ease-in-out infinite; }
+  .ring-track { stroke: rgba(96,165,250,0.2); }
+  .ring-progress { stroke: #60a5fa; transition: stroke-dashoffset 1s linear; }
+  @keyframes wake-pulse { 0% { box-shadow: 0 0 0 0 rgba(96,165,250,0.7); } 100% { box-shadow: 0 0 0 35px rgba(96,165,250,0); } }
+  .waking { animation: wake-pulse 1s ease-out 3; }
+</style>
+</head>
+<body>
+<div class="main-bg w-screen h-screen flex flex-col overflow-hidden relative">
+
+  <!-- ===== 页面切换导航 ===== -->
+  <div class="absolute top-3 left-4 z-50 flex gap-1 bg-slate-900/80 backdrop-blur-md border border-blue-500/30 rounded-full px-1 py-1">
+    <a href="index.html" class="px-4 py-1.5 rounded-full text-xs font-medium text-slate-400 hover:text-blue-200 hover:bg-blue-500/10 transition-all">数字人交互</a>
+    <a href="monitor.html" class="px-4 py-1.5 rounded-full text-xs font-medium bg-blue-500/30 text-blue-200 border border-blue-400/40">监控预警</a>
+  </div>
+
+  <!-- ===== 顶部标题栏 ===== -->
+  <header class="flex items-center justify-between px-5 py-2.5 border-b border-blue-500/20 flex-shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+      <h1 class="text-base font-bold tracking-wide" style="background: linear-gradient(90deg, #93c5fd, #60a5fa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        实训室/教室全景管控
+      </h1>
+    </div>
+    <div class="flex items-center gap-5 text-xs text-slate-400">
+      <button class="px-2.5 py-1 border border-blue-500/30 rounded text-blue-300 hover:bg-blue-500/10 text-[11px]">派网</button>
+      <button class="px-2.5 py-1 border border-blue-500/30 rounded text-blue-300 hover:bg-blue-500/10 text-[11px]">退出全屏</button>
+      <span id="datetime" class="text-blue-200 font-mono text-[11px]"></span>
+    </div>
+  </header>
+
+  <!-- ===== 统计指标条 ===== -->
+  <div class="flex items-center justify-center gap-10 py-2 border-b border-blue-500/10 flex-shrink-0 text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      <span class="text-slate-400">实训室状态</span>
+      <span class="font-semibold text-emerald-300">使用中</span>
+    </div>
+    <div class="text-center"><div class="text-slate-500 text-[10px]">工位数量</div><div class="text-sm font-bold text-blue-300">12</div></div>
+    <div class="text-center"><div class="text-slate-500 text-[10px]">当前培训人数</div><div class="text-sm font-bold text-blue-300">8</div></div>
+    <div class="text-center"><div class="text-slate-500 text-[10px]">实训室年度利用率</div><div class="text-sm font-bold text-blue-300">67.5%</div></div>
+  </div>
+
+  <!-- ===== 主内容区 ===== -->
+  <div class="flex-1 flex overflow-hidden p-2 gap-2">
+
+    <!-- 左侧面板 -->
+    <aside class="w-[210px] flex flex-col gap-2 flex-shrink-0">
+      <div class="tech-border rounded-lg p-2.5 flex-1 overflow-y-auto nice-scroll">
+        <div class="section-title rounded mb-2 text-[11px]">实训室/教室使用详情</div>
+        <div class="space-y-1.5 text-[11px]">
+          <div class="flex justify-between"><span class="text-slate-400">实训设备数量</span><span class="text-blue-300 font-semibold">12 套</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">培训中设备</span><span class="text-emerald-300 font-semibold">8 套</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">空闲设备</span><span class="text-slate-300">4 套</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">不可交互设备</span><span class="text-slate-500">0 套</span></div>
+          <hr class="border-blue-500/10 my-1" />
+          <div class="text-slate-400">• 实训室：<span class="text-blue-200">铁路接发列车实训区</span></div>
+          <div class="text-slate-400">• 班级：<span class="text-blue-200">2026春季第3期</span></div>
+          <div class="text-slate-400">• 课程：<span class="text-blue-200">动车组驾驶基础</span></div>
+        </div>
+      </div>
+      <div class="tech-border rounded-lg p-2.5 flex-1 overflow-y-auto nice-scroll">
+        <div class="section-title rounded mb-2 text-[11px]">在线实训学生详情</div>
+        <div class="space-y-1.5 text-[11px]">
+          <div class="flex items-center gap-1">
+            <span class="text-slate-400 whitespace-nowrap">设备：</span>
+            <select class="flex-1 bg-slate-800/60 border border-blue-500/20 rounded px-1.5 py-0.5 text-slate-200 text-[10px]">
+              <option>铁路接发列车仿真实训系统</option>
+              <option>动车组模拟驾驶系统</option>
+            </select>
+          </div>
+          <div class="text-slate-400">• 培训状态：<span class="text-emerald-300">进行中</span></div>
+          <div class="text-slate-400">• 今日在线：<span class="text-blue-200">2h 15min</span></div>
+          <div class="text-slate-400">• 班级：<span class="text-blue-200">2026春季第3期</span></div>
+          <div class="text-slate-400">• 教师：<span class="text-blue-200">张培训</span></div>
+          <div class="text-slate-400">• 课程：<span class="text-blue-200">动车组驾驶基础</span></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 中间主区域 -->
+    <main class="flex-1 flex flex-col gap-2 min-w-0">
+      <!-- 仿真画面 -->
+      <div class="tech-border rounded-lg flex-1 relative flex items-center justify-center min-h-[120px]">
+        <div class="absolute top-2 left-3 text-[10px] text-slate-500">实训画面：25#铁路接发列车</div>
+        <div class="video-feed w-full h-full rounded-lg flex items-center justify-center">
+          <div class="text-center">
+            <div class="text-slate-600 text-2xl mb-1">🖥️</div>
+            <div class="text-[11px] text-blue-400/60">加载中...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部Tab区域 -->
+      <div class="tech-border rounded-lg flex flex-col" style="height: 240px;">
+        <div class="flex gap-0 border-b border-blue-500/20 px-2 pt-1.5">
+          <button class="tab-btn active rounded-t" data-tab="device">设备控制</button>
+          <button class="tab-btn rounded-t" data-tab="analysis">课堂分析</button>
+          <button class="tab-btn rounded-t" data-tab="attendance">课堂考勤</button>
+        </div>
+        <div class="flex-1 overflow-hidden">
+          <!-- 设备控制 -->
+          <div id="tab-device" class="tab-content h-full p-2 overflow-y-auto nice-scroll">
+            <div class="grid grid-cols-3 gap-2">
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">1# 动车仿真</div><div class="text-[9px] text-emerald-400 mt-0.5">● 运行中</div></div>
+                <div class="device-switch on" data-device="1"></div>
+              </div>
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">2# 动车仿真</div><div class="text-[9px] text-emerald-400 mt-0.5">● 运行中</div></div>
+                <div class="device-switch on" data-device="2"></div>
+              </div>
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">3# 动车仿真</div><div class="text-[9px] text-emerald-400 mt-0.5">● 运行中</div></div>
+                <div class="device-switch on" data-device="3"></div>
+              </div>
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">4# 接发列车</div><div class="text-[9px] text-emerald-400 mt-0.5">● 运行中</div></div>
+                <div class="device-switch on" data-device="4"></div>
+              </div>
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">5# 接发列车</div><div class="text-[9px] text-slate-500 mt-0.5">○ 已关闭</div></div>
+                <div class="device-switch" data-device="5"></div>
+              </div>
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">6# 接发列车</div><div class="text-[9px] text-slate-500 mt-0.5">○ 已关闭</div></div>
+                <div class="device-switch" data-device="6"></div>
+              </div>
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">投影仪</div><div class="text-[9px] text-emerald-400 mt-0.5">● 运行中</div></div>
+                <div class="device-switch on" data-device="proj"></div>
+              </div>
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">空调 24°C</div><div class="text-[9px] text-emerald-400 mt-0.5">● 运行中</div></div>
+                <div class="device-switch on" data-device="ac"></div>
+              </div>
+              <div class="flex items-center justify-between bg-slate-800/40 rounded px-3 py-2 border border-blue-500/10">
+                <div><div class="text-[11px] text-slate-300">照明系统</div><div class="text-[9px] text-emerald-400 mt-0.5">● 运行中</div></div>
+                <div class="device-switch on" data-device="light"></div>
+              </div>
+            </div>
+          </div>
+          <!-- 课堂分析 -->
+          <div id="tab-analysis" class="tab-content h-full p-2 overflow-y-auto nice-scroll hidden">
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="text-[10px] text-slate-400">AI 摄像头行为检测 · 实时更新</div>
+              <div class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span class="text-[9px] text-emerald-300">监测中</span></div>
+            </div>
+            <table class="data-table w-full"><thead><tr><th>时间</th><th>照片</th><th>学员</th><th>工位</th><th>行为分析</th><th>复核确认</th></tr></thead><tbody id="analysisBody"></tbody></table>
+          </div>
+          <!-- 课堂考勤 -->
+          <div id="tab-attendance" class="tab-content h-full p-2 overflow-y-auto nice-scroll hidden">
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-[180px]">
+                <div class="text-[11px] text-slate-400 mb-1">教室考勤</div>
+                <div class="bg-slate-800/50 rounded p-2 border border-blue-500/10">
+                  <div class="flex items-center gap-2 mb-2">
+                    <div class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center"><span class="text-emerald-400 text-xs">✓</span></div>
+                    <div><div class="text-[11px] text-slate-300">陈小英 <span class="text-emerald-400">正常</span></div><div class="text-[9px] text-slate-500">08:20 签到</div></div>
+                  </div>
+                  <div class="flex items-center gap-3 text-center">
+                    <div><div class="text-base font-bold text-blue-300">100%</div><div class="text-[9px] text-slate-500">出勤率</div></div>
+                    <div><div class="text-base font-bold text-emerald-300">50</div><div class="text-[9px] text-slate-500">应到</div></div>
+                    <div><div class="text-base font-bold text-emerald-300">50</div><div class="text-[9px] text-slate-500">实到</div></div>
+                    <div><div class="text-base font-bold text-slate-500">0</div><div class="text-[9px] text-slate-500">缺勤</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[10px] text-slate-400 mb-1">节次时间：08:00~10:00</div>
+                <div><div class="text-[11px] font-semibold text-blue-300 mb-0.5">出勤明细</div><div class="text-[10px] text-slate-300 leading-relaxed" id="attendList"></div></div>
+                <div class="mt-2"><div class="text-[11px] font-semibold text-amber-300 mb-0.5">缺勤明细</div><div class="text-[10px] text-slate-500">无</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 右侧视频监控 -->
+    <aside class="w-[180px] flex flex-col gap-1.5 flex-shrink-0">
+      <div class="section-title rounded text-[10px]">视频监控</div>
+      <div class="flex-1 flex flex-col gap-1.5 overflow-y-auto nice-scroll">
+        <div class="video-feed rounded h-[80px] flex items-center justify-center relative">
+          <span class="text-[9px] text-blue-400/50">25#铁路接发列车</span>
+          <span class="absolute top-1 right-1 text-[8px] text-emerald-400">● LIVE</span>
+        </div>
+        <div class="video-feed rounded h-[80px] flex items-center justify-center relative">
+          <span class="text-[9px] text-blue-400/50">22#接发行车调度</span>
+          <span class="absolute top-1 right-1 text-[8px] text-emerald-400">● LIVE</span>
+        </div>
+        <div class="video-feed rounded h-[80px] flex items-center justify-center relative">
+          <span class="text-[9px] text-blue-400/50">教室全景</span>
+          <span class="absolute top-1 right-1 text-[8px] text-emerald-400">● LIVE</span>
+        </div>
+        <div class="video-feed rounded h-[80px] flex items-center justify-center relative">
+          <span class="text-[9px] text-blue-400/50">19#轨道异物检测</span>
+          <span class="absolute top-1 right-1 text-[8px] text-emerald-400">● LIVE</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- digital human placeholder (moved outside main-bg) -->
+
+</div><!-- /main-bg -->
+
+<!-- ============== 数字人「小安」overlay（body 直属，不受 overflow 裁剪） ============== -->
+<div id="digitalHuman" class="fixed top-16 right-[200px] z-[999] flex items-start gap-3" style="cursor:grab;">
+  <!-- 唤起提示气泡 -->
+  <div id="idleBubble" class="hidden absolute pointer-events-none" style="top:-46px; right:0; width:160px; text-align:center; text-shadow: 0 1px 4px rgba(15,23,42,0.95), 0 0 12px rgba(96,165,250,0.55);">
+    <div class="text-[11px] font-medium leading-snug" style="word-break: break-word;">
+      <span class="text-blue-300/85">有问题随时呼叫：</span><span class="text-white tracking-wide whitespace-nowrap">「小安小安」</span>
+    </div>
+    <div class="mx-auto mt-1" style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid rgba(255,255,255,0.85);"></div>
+  </div>
+
+  <!-- 形象 -->
+  <div id="avatarCollapsed" class="cursor-pointer relative" style="width:120px;height:170px;overflow:visible;" title="点击唤起小安">
+      <div class="absolute left-1/2 -translate-x-1/2 bottom-1 w-20 h-2 rounded-full pointer-events-none" style="background: radial-gradient(closest-side, rgba(96,165,250,0.4), rgba(96,165,250,0)); animation: glowPulse 3s ease-in-out infinite;"></div>
+      <div class="absolute inset-0 human-life" style="z-index:2;">
+        <div class="absolute inset-0 chest-rise">
+          <img src="assets/avatar.png" alt="小安" class="avatar-img absolute inset-0 w-full h-full object-contain object-bottom select-none pointer-events-none" draggable="false" />
+        </div>
+      </div>
+      <span class="absolute right-2 bottom-2 w-1.5 h-1.5 rounded-full bg-emerald-400" style="box-shadow: 0 0 6px #34d399; z-index:3;"></span>
+    </div>
+
+    <!-- 对话面板 -->
+    <div id="panel" class="hidden glass rounded-2xl overflow-hidden order-first panel-in" style="width: 320px;">
+      <div class="flex items-center gap-2 p-2.5 border-b border-blue-500/20">
+        <div class="flex-1 min-w-0"><div id="statusText" class="text-[11px] text-blue-300/80">在线 · 待命中</div></div>
+        <div id="idleRing" class="hidden relative w-6 h-6" title="静默自动收起倒计时">
+          <svg class="w-6 h-6 -rotate-90" viewBox="0 0 28 28"><circle class="ring-track" cx="14" cy="14" r="12" stroke-width="2" fill="none"/><circle id="ringProgress" class="ring-progress" cx="14" cy="14" r="12" stroke-width="2" fill="none" stroke-dasharray="75.4" stroke-dashoffset="0" stroke-linecap="round"/></svg>
+          <span id="ringText" class="absolute inset-0 flex items-center justify-center text-[9px] text-blue-300" style="display:none">30</span>
+        </div>
+        <button id="closeBtn" class="w-6 h-6 hover:bg-slate-700/60 rounded-full flex items-center justify-center text-slate-400 text-sm">×</button>
+      </div>
+      <div class="px-3 pt-2 pb-2">
+        <div id="userQuestion" class="hidden mb-1 text-[13px] font-medium text-blue-200 bg-blue-500/10 border border-blue-400/20 rounded-lg px-3 py-1.5"></div>
+        <div id="textArea" class="text-[12px] leading-relaxed text-slate-100 max-h-32 overflow-y-auto nice-scroll min-h-[2rem]"><span id="streamText"></span></div>
+      </div>
+      <!-- 预设问题下拉 -->
+      <div class="px-3 py-1.5 border-t border-blue-500/20 bg-slate-900/30">
+        <select id="presetQuestions" class="w-full bg-slate-800/80 border border-blue-500/20 rounded px-2 py-1 text-[10px] text-slate-200 cursor-pointer">
+          <option value="">💬 选择预设问题向小安提问...</option>
+          <option value="0">制动操作的要点是什么？</option>
+          <option value="1">信号灯怎么确认？</option>
+          <option value="2">超速了怎么处理？</option>
+          <option value="3">雨雪天气需要注意什么？</option>
+          <option value="4">紧急情况怎么处置？</option>
+          <option value="5">出发前需要检查什么？</option>
+          <option value="6">安检作业的标准流程是什么？</option>
+          <option value="7">站台保洁作业要注意什么？</option>
+          <option value="8">客运服务有哪些注意事项？</option>
+          <option value="9">发现火情怎么处理？</option>
+          <option value="10">行车调度的基本原则是什么？</option>
+          <option value="11">实训考核怎么评分？</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-1 px-2 py-1.5 border-t border-blue-500/20 bg-slate-900/40">
+        <button id="pauseBtn" class="text-[10px] px-2 py-1 rounded hover:bg-blue-500/20 text-slate-300">⏸ 暂停</button>
+        <button id="repeatBtn" class="text-[10px] px-2 py-1 rounded hover:bg-blue-500/20 text-slate-300">🔄 复述</button>
+        <button id="askBtn" class="text-[10px] px-2 py-1 rounded hover:bg-blue-500/20 text-slate-300">🎤 语音提问</button>
+        <div class="ml-auto flex items-end gap-0.5 h-5" id="voiceWave" style="display:none;">
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// ===== 时钟 =====
+function updateClock() {
+  const now = new Date();
+  const days = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+  const pad = n => String(n).padStart(2, '0');
+  $('datetime').textContent = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${days[now.getDay()]}`;
+}
+setInterval(updateClock, 1000); updateClock();
+
+// ===== Tab 切换 =====
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    $('tab-' + btn.dataset.tab).classList.remove('hidden');
+  });
+});
+
+// ===== 设备开关 =====
+document.querySelectorAll('.device-switch').forEach(sw => {
+  sw.addEventListener('click', () => {
+    sw.classList.toggle('on');
+    const s = sw.parentElement.querySelector('[class*="text-\\[9px\\]"]');
+    if (s) s.innerHTML = sw.classList.contains('on') ? '<span class="text-emerald-400">● 运行中</span>' : '<span class="text-slate-500">○ 已关闭</span>';
+  });
+});
+
+// ===== 课堂分析 - 模拟检测 =====
+const STUDENTS = [
+  {name:'王浩然',seat:'1-3'},{name:'李明辉',seat:'2-1'},{name:'张思远',seat:'1-5'},
+  {name:'陈佳琪',seat:'3-2'},{name:'刘宇航',seat:'2-4'},{name:'赵晓雪',seat:'1-2'},
+  {name:'周子涵',seat:'3-5'},{name:'吴思凡',seat:'2-6'}
+];
+const BEHAVIORS = [{text:'睡觉',level:'danger'},{text:'玩手机',level:'danger'},{text:'玩手机',level:'danger'},{text:'交头接耳',level:'warn'},{text:'走神',level:'warn'},{text:'离位',level:'warn'}];
+const records = [];
+function addRecord() {
+  const now = new Date(), pad = n => String(n).padStart(2,'0');
+  const time = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  const s = STUDENTS[Math.floor(Math.random()*STUDENTS.length)];
+  const b = BEHAVIORS[Math.floor(Math.random()*BEHAVIORS.length)];
+  records.unshift({time,student:s,behavior:b,confirmed:false});
+  if (records.length > 15) records.pop();
+  renderRecords();
+}
+function renderRecords() {
+  $('analysisBody').innerHTML = records.map((r,i) => {
+    const c = r.behavior.level==='danger'?'text-red-400':'text-amber-400';
+    const d = r.behavior.level==='danger'?'bg-red-500':'bg-amber-500';
+    const btns = r.confirmed ? '<span class="text-[9px] text-emerald-400">已确认</span>' : `<button class="px-1.5 py-0.5 text-[9px] bg-blue-500/20 border border-blue-400/30 rounded text-blue-300 mr-0.5" onclick="records[${i}].confirmed=true;renderRecords()">计包</button><button class="px-1.5 py-0.5 text-[9px] bg-amber-500/20 border border-amber-400/30 rounded text-amber-300" onclick="records[${i}].confirmed=true;renderRecords()">疑问</button>`;
+    return `<tr><td class="text-slate-400">${r.time}</td><td><div class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-[9px]">${r.student.name[0]}</div></td><td class="text-slate-200">${r.student.name}</td><td class="text-slate-400">${r.student.seat}</td><td><span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ${d} alert-dot"></span><span class="${c}">${r.behavior.text}</span></span></td><td>${btns}</td></tr>`;
+  }).join('');
+}
+for (let i=0;i<4;i++) addRecord();
+(function loop(){setTimeout(()=>{addRecord();loop();},8000+Math.random()*7000)})();
+
+// 考勤名单
+const names=['张三','李四','王五','赵六','孙七','周八','吴九','郑十','王浩然','李明辉','张思远','陈佳琪','刘宇航','赵晓雪','周子涵','吴思凡','钱一','孙二','马三','朱四'];
+$('attendList').textContent = names.sort(()=>Math.random()-0.5).join('、');
+
+// ===== 数字人交互逻辑 =====
+const state = { expanded: false, speaking: false, paused: false, cancelToken: 0, rate: 0.95, streamMs: 42, idleTimer: null, idleSeconds: 0, idleSecondsMax: 30 };
+
+const FOLLOWUP_REPLIES = [
+  { keywords: /制动|刹车|停车/, question: '制动操作的要点是什么？', answer: '制动操作要点：先将司控级置于惰行，观察速度变化，必要时使用常用制动。紧急情况才使用紧急制动。', source: 'KB-制动操作' },
+  { keywords: /信号|红灯|绿灯|黄灯/, question: '信号灯怎么确认？', answer: '信号确认要求：距信号机800米处必须呼唤复诵，主副司机双重确认。绿灯允许通过，黄灯减速，红灯停车。', source: 'KB-信号规程' },
+  { keywords: /超速|限速|速度/, question: '超速了怎么处理？', answer: '限速处置：立即将司控级置于惰行，5秒内无减速则使用常用制动。进入限速区前必须降至规定速度以下。', source: 'KB-限速规程' },
+  { keywords: /天气|雨|雪|冰/, question: '雨雪天气需要注意什么？', answer: '雨雪天气运行要点：速度不超过允许速度80%，制动距离按1.3倍预留，加强瞭望观察接触网和道岔。', source: 'KB-不利天气' },
+  { keywords: /紧急|应急|事故/, question: '紧急情况怎么处置？', answer: '紧急处置六步：按安全警示灯、广播通报旅客、联系值班员报告位置、放置防护信号、检查列车状态、确认安全后请求恢复。', source: 'KB-应急处置' },
+  { keywords: /出发|发车|启动/, question: '出发前需要检查什么？', answer: '出发前检查：确认制动试验完成、列车管压力600kPa、信号显示正确、车门关闭确认灯亮。', source: 'KB-出发作业' },
+  { keywords: /安检|X光|检查|违禁/, question: '安检作业的标准流程是什么？', answer: '安检标准流程：引导旅客放置行李至传送带，X光机判图识别违禁品，可疑物品需开包检查并登记，人身检查使用手持探测仪，重点检查腰部、腿部区域。', source: 'KB-安检流程' },
+  { keywords: /保洁|清扫|卫生|扶梯/, question: '站台保洁作业要注意什么？', answer: '站台保洁要点：列车到站前完成站台清扫，扶梯区域每2小时巡查一次，雨雪天气加铺防滑垫，垃圾桶满2/3时及时更换。', source: 'KB-保洁规范' },
+  { keywords: /客运|服务|旅客|问询/, question: '客运服务有哪些注意事项？', answer: '客运服务要点：使用标准服务用语，主动帮助老幼病残孕旅客，问询台保持微笑服务，广播通知需提前15分钟播报。', source: 'KB-客运服务' },
+  { keywords: /消防|灭火|火灾|烟雾/, question: '发现火情怎么处理？', answer: '火情处置：立即按下火灾报警按钮，使用对应类型灭火器，疏散周围旅客，报告车站值班员并拨打119。', source: 'KB-消防安全' },
+  { keywords: /调度|行车|运行图|时刻/, question: '行车调度的基本原则是什么？', answer: '行车调度原则：严格按运行图组织行车，安全第一、正点运行，优先保证旅客列车，调度命令必须复诵确认后执行。', source: 'KB-行车调度' },
+  { keywords: /培训|考试|成绩|实训/, question: '实训考核怎么评分？', answer: '实训考核评分：操作规范性占40%，完成时间占20%，安全意识占25%，应急处置能力占15%。总分90分以上为优秀，80分以上为合格。', source: 'KB-考核标准' },
+];
+
+function setStatus(text, cls) {
+  const el = $('statusText');
+  el.textContent = text;
+  el.className = `text-[11px] ${cls || 'text-blue-300/80'}`;
+}
+
+function expandPanel() {
+  if (state.expanded) return;
+  state.expanded = true;
+  $('panel').classList.remove('hidden');
+  $('panel').classList.add('panel-in');
+  $('idleBubble').classList.add('hidden');
+  clearIdleTimer();
+}
+
+function collapsePanel() {
+  state.expanded = false;
+  state.cancelToken++;
+  stopSpeaking();
+  $('panel').classList.add('hidden');
+  $('streamText').textContent = '';
+  $('userQuestion').classList.add('hidden');
+  setStatus('在线 · 待命中');
+  clearIdleTimer();
+}
+
+function clearIdleTimer() { if (state.idleTimer) { clearInterval(state.idleTimer); state.idleTimer = null; } }
+
+function resetIdleCountdown() {
+  clearIdleTimer();
+  state.idleSeconds = 0;
+  $('idleRing').classList.remove('hidden');
+  const total = state.idleSecondsMax;
+  const circ = 75.4;
+  state.idleTimer = setInterval(() => {
+    state.idleSeconds++;
+    const pct = state.idleSeconds / total;
+    $('ringProgress').setAttribute('stroke-dashoffset', (circ * pct).toFixed(1));
+    if (state.idleSeconds >= total) collapsePanel();
+  }, 1000);
+}
+
+function stopSpeaking() {
+  state.speaking = false;
+  speechSynthesis.cancel();
+  $('avatarCollapsed').classList.remove('speaking-wrap');
+  $('voiceWave').style.display = 'none';
+}
+
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function streamAnswer(scenario, onFinish) {
+  const myToken = ++state.cancelToken;
+  state.paused = false;
+  clearIdleTimer();
+  $('idleRing').classList.add('hidden');
+
+  if (scenario.question) {
+    $('userQuestion').textContent = '🗣 我的提问：' + scenario.question;
+    $('userQuestion').classList.remove('hidden');
+  }
+  $('streamText').textContent = '';
+  $('streamText').classList.add('caret');
+
+  setStatus(`回答中...`, 'text-emerald-300');
+  await wait(400);
+  if (myToken !== state.cancelToken) return;
+
+  state.speaking = true;
+  $('avatarCollapsed').classList.add('speaking-wrap');
+  $('voiceWave').style.display = 'flex';
+  speakTTS(scenario.answer, onFinish);
+
+  const text = scenario.answer;
+  for (let i = 0; i < text.length; i++) {
+    if (myToken !== state.cancelToken) return;
+    while (state.paused) await wait(100);
+    $('streamText').textContent = text.slice(0, i + 1);
+    $('textArea').scrollTop = $('textArea').scrollHeight;
+    await wait(text[i] === '\n' ? 80 : state.streamMs);
+  }
+  $('streamText').classList.remove('caret');
+}
+
+function speakTTS(text, onDone) {
+  if (!('speechSynthesis' in window)) { if (onDone) onDone(); return; }
+  speechSynthesis.cancel();
+  // Chrome 需要 resume 才能在非用户手势下播放
+  speechSynthesis.resume();
+  const u = new SpeechSynthesisUtterance(text.replace(/\n/g, '。'));
+  u.lang = 'zh-CN'; u.rate = state.rate; u.pitch = 1.05;
+  const voices = speechSynthesis.getVoices();
+  const chosen = voices.find(v => v.lang.startsWith('zh') && /female|女|xiao/i.test(v.name)) || voices.find(v => v.lang.startsWith('zh'));
+  if (chosen) u.voice = chosen;
+  let _done = false;
+  function finishOnce() {
+    if (_done) return; _done = true;
+    state.speaking = false; $('avatarCollapsed').classList.remove('speaking-wrap'); $('voiceWave').style.display = 'none'; setStatus('回答完毕'); resetIdleCountdown(); if (onDone) onDone();
+  }
+  u.onend = finishOnce;
+  u.onerror = finishOnce;
+  speechSynthesis.speak(u);
+  const keepAlive = setInterval(() => { if (_done || !state.speaking) { clearInterval(keepAlive); return; } speechSynthesis.resume(); }, 5000);
+}
+
+// 预加载语音列表
+if ('speechSynthesis' in window) {
+  speechSynthesis.getVoices();
+  speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+}
+
+function wakeUpWithVoice() {
+  $('avatarCollapsed').classList.add('waking');
+  setTimeout(() => $('avatarCollapsed').classList.remove('waking'), 3000);
+  setTimeout(() => {
+    expandPanel();
+    setStatus('已识别唤醒词「小安小安」', 'text-emerald-300');
+    setTimeout(() => {
+      state.speaking = true;
+      $('avatarCollapsed').classList.add('speaking-wrap');
+      $('voiceWave').style.display = 'flex';
+      $('streamText').textContent = '在，你说。';
+      setStatus('回答中...', 'text-emerald-300');
+      speakTTS('在，你说。', () => {
+        setStatus('🎤 请说出您的问题...', 'text-amber-300');
+        if (voiceWakeEnabled && state.expanded) startFollowUpListening();
+      });
+    }, 400);
+  }, 600);
+}
+
+// 事件绑定 — 拖动时不触发唤醒
+let _dragMoved = false;
+$('avatarCollapsed').addEventListener('click', () => { if (_dragMoved) { _dragMoved = false; return; } if (!state.expanded) wakeUpWithVoice(); });
+$('closeBtn').addEventListener('click', collapsePanel);
+$('pauseBtn').addEventListener('click', () => { state.paused = !state.paused; if (state.paused) speechSynthesis.pause(); else speechSynthesis.resume(); });
+$('repeatBtn').addEventListener('click', () => { if (state.currentScene) { stopSpeaking(); streamAnswer(state.currentScene); } });
+$('askBtn').addEventListener('click', () => { if (recognition) startFollowUpListening(); });
+
+$('presetQuestions').addEventListener('change', (e) => {
+  const idx = e.target.value;
+  if (idx === '') return;
+  const item = FOLLOWUP_REPLIES[parseInt(idx)];
+  if (!item) return;
+  e.target.value = '';
+  if (!state.expanded) expandPanel();
+  setTimeout(() => streamAnswer({ source: item.source, triggerType: 'voice', question: item.question, answer: item.answer, media: null }), 300);
+});
+
+// 10秒气泡
+let bubbleInterval;
+function startIdleBubble() {
+  bubbleInterval = setInterval(() => {
+    if (state.expanded) return;
+    const b = $('idleBubble');
+    b.classList.remove('hidden');
+    b.style.animation = 'bubbleInOut 5s ease forwards';
+    setTimeout(() => { b.classList.add('hidden'); b.style.animation = ''; }, 5000);
+  }, 10000);
+}
+startIdleBubble();
+
+// ===== 语音唤醒 =====
+let voiceWakeEnabled = false, recognition = null, listenMode = 'wake';
+let _answering = false;
+
+function startFollowUpListening() {
+  if (!recognition) return;
+  if (state.speaking || _answering) return;
+  listenMode = 'followup';
+  setStatus('🎤 请说出您的问题...', 'text-amber-300');
+  try { recognition.stop(); } catch(e) {}
+  setTimeout(() => {
+    if (state.speaking || _answering) return;
+    try { recognition.start(); } catch(e) {}
+  }, 600);
+}
+
+function matchFollowUp(text) {
+  for (const item of FOLLOWUP_REPLIES) { if (item.keywords.test(text)) return item; }
+  return { question: text, answer: '好的，我已记录您的问题。正式版本中会接入知识库检索答案。还有其他问题吗？', source: 'KB-全量' };
+}
+
+function startVoiceWake() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  recognition = new SR();
+  recognition.lang = 'zh-CN'; recognition.continuous = true; recognition.interimResults = true;
+
+  recognition.onresult = (event) => {
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      const isFinal = event.results[i].isFinal;
+      if (listenMode === 'wake') {
+        if (state.expanded || state.speaking) return;
+        if (/小安/.test(t)) { wakeUpWithVoice(); recognition.stop(); return; }
+      } else if (listenMode === 'followup') {
+        if (state.speaking || _answering) return;
+        if (t.trim().length > 0) {
+          $('userQuestion').textContent = '🎤 正在听：' + t.trim() + (isFinal ? '' : '...');
+          $('userQuestion').classList.remove('hidden');
+        }
+        if (isFinal && t.trim().length > 1 && !/^小安+$/.test(t.trim())) {
+          if (_answering) return;
+          _answering = true;
+          $('userQuestion').textContent = '🗣 我的提问：' + t.trim();
+          const m = matchFollowUp(t.trim());
+          listenMode = 'wake';
+          try { recognition.stop(); } catch(e) {}
+          streamAnswer({ source: m.source, triggerType: 'voice', question: m.question || t.trim(), answer: m.answer, media: null }, () => {
+            _answering = false;
+            if (voiceWakeEnabled && state.expanded) setTimeout(() => startFollowUpListening(), 800);
+          });
+          return;
+        }
+      }
+    }
+  };
+  recognition.onerror = (e) => { if (e.error === 'not-allowed') voiceWakeEnabled = false; };
+  recognition.onend = () => {
+    if (!voiceWakeEnabled) return;
+    if (state.speaking || _answering) return;
+    if (!state.expanded) { listenMode = 'wake'; try { recognition.start(); } catch(e) {} }
+  };
+  try { recognition.start(); voiceWakeEnabled = true; } catch(e) {}
+}
+
+setTimeout(startVoiceWake, 1500);
+setTimeout(() => setStatus(voiceWakeEnabled ? '在线 · 语音待命（说"小安小安"唤醒）' : '在线 · 待命中'), 2000);
+
+// ===== 拖动数字人位置 =====
+(function() {
+  const el = $('digitalHuman');
+  let dragging = false, hasMoved = false, startX, startY, origX, origY;
+
+  el.addEventListener('mousedown', (e) => {
+    if (e.target.closest('button, select, a, input')) return;
+    dragging = true; hasMoved = false;
+    el.style.cursor = 'grabbing';
+    startX = e.clientX; startY = e.clientY;
+    const rect = el.getBoundingClientRect();
+    origX = rect.left; origY = rect.top;
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!dragging) return;
+    hasMoved = true; _dragMoved = true;
+    const dx = e.clientX - startX, dy = e.clientY - startY;
+    el.style.left = (origX + dx) + 'px';
+    el.style.top = (origY + dy) + 'px';
+    el.style.right = 'auto';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (dragging) { dragging = false; el.style.cursor = 'grab'; }
+  });
+
+  // 触屏支持
+  el.addEventListener('touchstart', (e) => {
+    if (e.target.closest('button, select, a, input')) return;
+    dragging = true;
+    const t = e.touches[0];
+    startX = t.clientX; startY = t.clientY;
+    const rect = el.getBoundingClientRect();
+    origX = rect.left; origY = rect.top;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    const t = e.touches[0];
+    const dx = t.clientX - startX, dy = t.clientY - startY;
+    el.style.left = (origX + dx) + 'px';
+    el.style.top = (origY + dy) + 'px';
+    el.style.right = 'auto';
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => { dragging = false; });
+})();
+</script>
+</body>
+</html>

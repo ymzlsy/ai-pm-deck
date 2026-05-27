@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI时代产品经理的工作模式 — 如何从需求接收者变成前线构建者</title>
+<link rel="prefetch" href="demo/digital-human-doc/index.html?deck=1" as="document">
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ===========================================
@@ -22,11 +23,17 @@
   --ink-muted: #888;
   --ink-faint: #aaa;
   --rule: #ddd;
-  --tab-bg: #98d4bb;
-  --tab-role: #c7b8ea;
-  --tab-local: #f4b8c5;
-  --tab-global: #a8d8ea;
-  --tab-action: #ffe6a7;
+  --tab-bg: rgba(152,212,187,.55);
+  --tab-role: rgba(199,184,234,.5);
+  --tab-local: rgba(244,184,197,.45);
+  --tab-global: rgba(168,216,234,.5);
+  --tab-action: rgba(255,230,167,.55);
+  --tab-ink: rgba(26,26,26,.72);
+  --text-caption: clamp(12px, 1.2vw, 16px);
+  --text-small: clamp(13px, 1.3vw, 17px);
+  --text-body: clamp(14px, 1.4vw, 19px);
+  --text-mini: clamp(11px, 1.05vw, 14px);
+  --ease-spring: cubic-bezier(.4, 0, .2, 1);
   --accent: #7c6aad;
   --accent-light: rgba(124,106,173,.10);
   --danger: #c0564b;
@@ -58,45 +65,64 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 
 /* === TABS (right edge, inside page) === */
 .tabs { position:absolute; right:0; top:clamp(48px,8vh,80px); display:flex; flex-direction:column; gap:clamp(2px,.3vh,4px); z-index:10; }
-.tab { width:clamp(28px,2.8vw,40px); display:flex; align-items:center; justify-content:center; writing-mode:vertical-rl; text-orientation:mixed; font-size:clamp(8px,.85vh,11px); font-weight:700; letter-spacing:.06em; color:rgba(0,0,0,.3); cursor:pointer; transition:all .3s; border-radius:4px 0 0 4px; }
-.tab:nth-child(1){height:clamp(48px,7.5vh,72px);background:var(--tab-bg)}
-.tab:nth-child(2){height:clamp(56px,8.5vh,80px);background:var(--tab-role)}
-.tab:nth-child(3){height:clamp(42px,6.5vh,64px);background:var(--tab-local)}
-.tab:nth-child(4){height:clamp(50px,7.5vh,72px);background:var(--tab-global)}
-.tab:nth-child(5){height:clamp(36px,5vh,52px);background:var(--tab-action)}
-.tab.active{width:clamp(36px,3.5vw,50px);color:rgba(0,0,0,.7)}
+.tab { width:clamp(34px,3.2vw,46px); display:flex; align-items:center; justify-content:center; writing-mode:vertical-rl; text-orientation:mixed; font-size:clamp(12px,1.2vh,15px); font-weight:600; letter-spacing:.08em; color:var(--tab-ink); cursor:pointer; transition:all .35s var(--ease-spring); border-radius:6px 0 0 6px; border:1px solid rgba(0,0,0,.06); border-right:none; background:var(--paper-shadow); }
+.tab:hover { background:#fff; color:var(--ink); transform:translateX(-2px); }
+.tab:nth-child(1){height:clamp(52px,7.8vh,76px);border-left:3px solid rgba(152,212,187,.9)}
+.tab:nth-child(2){height:clamp(58px,8.8vh,84px);border-left:3px solid rgba(199,184,234,.9)}
+.tab:nth-child(3){height:clamp(46px,6.8vh,68px);border-left:3px solid rgba(244,184,197,.85)}
+.tab:nth-child(4){height:clamp(54px,7.8vh,76px);border-left:3px solid rgba(168,216,234,.9)}
+.tab:nth-child(5){height:clamp(40px,5.5vh,56px);border-left:3px solid rgba(255,200,120,.85)}
+.tab.active{width:clamp(38px,3.6vw,52px);background:#fff;color:var(--ink);box-shadow:-4px 0 16px rgba(0,0,0,.06)}
 
 /* === HEADER/FOOTER === */
-.header { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid var(--rule); padding-bottom:clamp(8px,1.2vh,14px); margin-bottom:var(--gap-md); }
-.header-left { font-size:clamp(9px,.9vw,12px); font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted); }
-.header-right { font-family:var(--font-mono); font-size:clamp(9px,.85vw,11px); color:var(--ink-faint); }
-.foot { display:flex; justify-content:space-between; align-items:end; border-top:1px solid var(--rule); padding-top:clamp(8px,1.2vh,14px); }
-.foot-left { font-size:clamp(10px,1vw,14px); color:var(--ink-muted); }
-.foot-left strong { color:var(--ink); display:block; }
-.foot-right { font-family:var(--font-mono); font-size:clamp(8px,.8vw,11px); color:var(--ink-faint); text-align:right; }
-.foot-right .date { font-family:var(--font-display); font-size:clamp(12px,1.2vw,16px); color:var(--ink); display:block; }
+.header { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid var(--rule); padding-bottom:clamp(8px,1.2vh,14px); margin-bottom:var(--gap-md); flex-shrink:0; position:relative; z-index:2; }
+.header-left { font-size:var(--text-mini); font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-muted); }
+.header-right { font-family:var(--font-mono); font-size:var(--text-mini); color:var(--ink-faint); }
+.foot { display:flex; justify-content:space-between; align-items:end; border-top:1px solid var(--rule); padding-top:clamp(8px,1.2vh,14px); flex-shrink:0; position:relative; z-index:2; }
+.foot-left { font-size:var(--text-small); color:var(--ink-muted); }
+.foot-left strong { color:var(--ink); display:block; font-size:var(--text-body); }
+.foot-right { font-family:var(--font-mono); font-size:var(--text-mini); color:var(--ink-faint); text-align:right; }
+.foot-right .date { font-family:var(--font-display); font-size:clamp(14px,1.35vw,18px); color:var(--ink); display:block; }
 
 /* === CONTENT === */
-.content { display:flex; flex-direction:column; justify-content:center; gap:var(--gap-md); overflow:hidden; }
+.content {
+  display:flex; flex-direction:column; justify-content:flex-start; align-items:stretch;
+  gap:var(--gap-md); min-height:0;
+  padding-top:clamp(4px,.5vh,8px);
+  overflow-x:hidden; overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin; scrollbar-color:rgba(124,106,173,.35) transparent;
+}
+.page .content > [data-step]:not(.visible) { display:none; }
+.content > [data-step].visible { flex-shrink:0; }
+/* 多步页标题常驻顶部，避免被 flex 居中或滚动裁切 */
+.page:not(.page-case) .content > [data-step="0"].visible {
+  position:sticky; top:0; z-index:3;
+  background:var(--paper);
+  padding:clamp(2px,.3vh,6px) 0 var(--gap-xs);
+  margin-bottom:var(--gap-xs);
+  box-shadow:0 10px 18px -14px var(--paper);
+}
 
 /* === TYPOGRAPHY === */
-.eyebrow { font-family:var(--font-display); font-size:clamp(11px,1.1vw,15px); font-style:italic; color:var(--ink-muted); letter-spacing:.04em; }
-.title-hero { font-family:var(--font-display); font-size:clamp(26px,4.5vw,64px); font-weight:700; color:var(--ink); line-height:1.08; letter-spacing:-.02em; }
+.eyebrow { font-family:var(--font-display); font-size:clamp(13px,1.25vw,17px); font-style:italic; color:var(--ink-muted); letter-spacing:.04em; }
+.title-hero { font-family:var(--font-display); font-size:clamp(28px,4.8vw,68px); font-weight:700; color:var(--ink); line-height:1.08; letter-spacing:-.02em; word-break:keep-all; overflow-wrap:normal; }
 .title-hero em { font-style:italic; color:var(--accent); }
-.title-lg { font-family:var(--font-display); font-size:clamp(20px,3vw,42px); font-weight:700; color:var(--ink); line-height:1.12; }
+.title-lg { font-family:var(--font-display); font-size:clamp(22px,3.2vw,44px); font-weight:700; color:var(--ink); line-height:1.12; word-break:keep-all; overflow-wrap:normal; }
 .title-lg em { font-style:italic; color:var(--accent); }
-.subtitle { font-size:clamp(13px,1.3vw,19px); color:var(--ink-light); line-height:1.55; }
-.body-text { font-size:clamp(13px,1.2vw,17px); color:var(--ink-light); line-height:1.6; }
-.meta-text { font-family:var(--font-mono); font-size:clamp(9px,.85vw,11px); color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase; }
-.kicker { font-family:var(--font-mono); font-size:clamp(9px,.9vw,12px); font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+.title-nowrap { white-space:nowrap; }
+.subtitle { font-size:var(--text-body); color:var(--ink-light); line-height:1.55; }
+.body-text { font-size:var(--text-body); color:var(--ink-light); line-height:1.6; }
+.meta-text { font-family:var(--font-mono); font-size:var(--text-mini); color:var(--ink-muted); letter-spacing:.06em; text-transform:uppercase; }
+.kicker { font-family:var(--font-mono); font-size:var(--text-mini); font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); line-height:1.4; }
 .divider { width:40px; height:2px; background:var(--ink); }
 
 /* === PROGRESS BAR === */
 .progress-bar { position:fixed; top:0; left:0; height:3px; background:var(--accent); z-index:100; transition:width .3s; }
 
-/* === CHAPTER NAV === */
+/* === CHAPTER NAV（章节点 · 点击跳转） === */
 .chapter-indicator { position:fixed; bottom:clamp(6px,1.2vh,14px); left:50%; transform:translateX(-50%); display:flex; gap:5px; align-items:center; z-index:100; padding:5px 12px; background:rgba(26,26,26,.7); border-radius:16px; backdrop-filter:blur(8px); }
-.chapter-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.2); transition:all .3s; cursor:pointer; }
+.chapter-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.2); transition:all .3s; cursor:pointer; border:none; padding:0; }
 .chapter-dot.active { width:18px; border-radius:3px; }
 .chapter-dot[data-part="0"].active{background:rgba(255,255,255,.5)}
 .chapter-dot[data-part="1"].active{background:var(--tab-bg)}
@@ -104,7 +130,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 .chapter-dot[data-part="3"].active{background:var(--tab-local)}
 .chapter-dot[data-part="4"].active{background:var(--tab-global)}
 .chapter-dot[data-part="5"].active{background:var(--tab-action)}
-.chapter-label { font-family:var(--font-mono); font-size:9px; color:rgba(255,255,255,.65); letter-spacing:.05em; margin-left:5px; white-space:nowrap; }
+.chapter-label { font-family:var(--font-mono); font-size:11px; color:rgba(255,255,255,.75); letter-spacing:.05em; margin-left:5px; white-space:nowrap; }
 
 /* === PROGRESSIVE DISCLOSURE === */
 [data-step] { opacity:0; transform:translateY(10px); transition:opacity .45s cubic-bezier(.4,0,.2,1), transform .45s cubic-bezier(.4,0,.2,1); pointer-events:none; }
@@ -131,9 +157,28 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 .icon-circle.accent { background:var(--accent-light); }
 .icon-circle.danger { background:var(--danger-light); }
 
-/* Cards */
-.card { background:#fff; border:1px solid var(--rule); padding:clamp(10px,1.5vh,18px) clamp(12px,1.5vw,20px); display:flex; flex-direction:column; gap:var(--gap-xs); }
+/* Cards — global interactive surface */
+.card {
+  background:linear-gradient(135deg, #fff 0%, rgba(252,250,246,.98) 100%);
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:clamp(8px,1vw,12px);
+  padding:clamp(12px,1.6vh,20px) clamp(14px,1.6vw,22px);
+  display:flex; flex-direction:column; gap:var(--gap-xs);
+  box-shadow:0 2px 12px rgba(26,26,26,.04);
+  transition:transform .35s var(--ease-spring), box-shadow .35s, border-color .3s;
+}
+.card:hover { transform:translateX(5px); box-shadow:0 8px 28px rgba(124,106,173,.1); border-color:rgba(124,106,173,.2); }
+.slide.active .content .card { animation:card-in .5s var(--ease-spring) both; }
+@media(prefers-reduced-motion:reduce){ .slide.active .content .card{animation:none} .pls-card:hover,.card:hover{transform:none} }
+@keyframes card-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 .card-h { flex-direction:row; align-items:center; gap:clamp(10px,1.2vw,16px); }
+.frost-panel {
+  background:rgba(255,255,255,.9);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.6);
+  box-shadow:0 8px 32px rgba(26,26,26,.08);
+}
 .card-accent { border-left:3px solid var(--accent); }
 .card-danger { border-left:3px solid var(--danger); }
 .card-mint { border-left:3px solid var(--tab-bg); }
@@ -147,7 +192,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 
 /* Big number */
 .big-num { font-family:var(--font-display); font-size:clamp(36px,5vw,72px); font-weight:700; line-height:1; color:var(--accent); }
-.big-num-unit { font-family:var(--font-mono); font-size:clamp(10px,1vw,14px); color:var(--ink-muted); letter-spacing:.05em; text-transform:uppercase; margin-top:4px; }
+.big-num-unit { font-family:var(--font-mono); font-size:var(--text-caption); color:var(--ink-muted); letter-spacing:.05em; text-transform:uppercase; margin-top:4px; }
 
 /* Decorative geometric shapes */
 .geo-accent { position:absolute; pointer-events:none; opacity:.06; }
@@ -157,8 +202,9 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 .pipe-node { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(4px,.5vh,8px); padding:clamp(8px,1.2vh,14px) clamp(4px,.5vw,8px); position:relative; text-align:center; border-right:1px dashed var(--rule); transition:opacity .4s, background .3s; }
 .pipe-node:last-child { border-right:none; }
 .pipe-node svg { width:clamp(18px,2vw,28px); height:clamp(18px,2vw,28px); stroke:var(--ink-light); stroke-width:1.5; fill:none; }
-.pipe-node .pipe-label { font-size:clamp(10px,1vw,14px); font-weight:600; color:var(--ink); white-space:nowrap; }
-.pipe-node .pipe-sub { font-size:clamp(8px,.7vw,10px); color:var(--ink-faint); max-width:10ch; text-align:center; line-height:1.3; }
+.pipe-node .pipe-label { font-size:var(--text-small); font-weight:600; color:var(--ink); white-space:nowrap; }
+.pipe-node .pipe-sub { font-size:var(--text-caption); color:var(--ink-muted); max-width:12ch; text-align:center; line-height:1.35; }
+.pipe-node:hover { background:rgba(124,106,173,.06); }
 .pipe-node.highlight { background:var(--accent-light); }
 .pipe-node.highlight .pipe-label { color:var(--accent); }
 .pipe-node.highlight svg { stroke:var(--accent); }
@@ -166,16 +212,264 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 /* Info loss gradient bar */
 .loss-bar-wrap { position:relative; height:clamp(20px,2.5vh,32px); background:linear-gradient(90deg, var(--accent) 0%, var(--tab-bg) 25%, var(--tab-action) 55%, var(--rule) 85%, #e8e4df 100%); overflow:hidden; }
 .loss-bar-wrap::after { content:''; position:absolute; top:0; right:0; bottom:0; width:35%; background:repeating-linear-gradient(90deg, transparent 0px, transparent 4px, rgba(255,255,255,.35) 4px, rgba(255,255,255,.35) 8px); }
-.loss-bar-label { position:absolute; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:clamp(8px,.75vw,10px); letter-spacing:.05em; font-weight:600; }
+.loss-bar-label { position:absolute; top:50%; transform:translateY(-50%); font-family:var(--font-mono); font-size:var(--text-mini); letter-spacing:.05em; font-weight:600; }
 .loss-bar-label.left { left:8px; color:#fff; }
 .loss-bar-label.right { right:8px; color:var(--danger); }
 
 /* Point-Line-Surface visual */
-.pls-card { display:flex; gap:clamp(12px,1.5vw,20px); align-items:center; padding:clamp(10px,1.5vh,18px) clamp(12px,1.5vw,20px); background:#fff; border:1px solid var(--rule); }
-.pls-badge { width:clamp(44px,4.5vw,64px); height:clamp(44px,4.5vw,64px); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:clamp(20px,2.5vw,32px); font-weight:700; font-style:italic; flex-shrink:0; color:rgba(0,0,0,.65); }
+.pls-card {
+  display:flex; gap:clamp(12px,1.5vw,20px); align-items:center;
+  padding:clamp(12px,1.6vh,20px) clamp(14px,1.6vw,22px);
+  background:linear-gradient(135deg, #fff 0%, rgba(248,246,241,.95) 100%);
+  border:1px solid rgba(124,106,173,.14);
+  border-radius:clamp(10px,1.2vw,14px);
+  box-shadow:0 4px 24px rgba(26,26,26,.05);
+  transition:transform .4s cubic-bezier(.4,0,.2,1), box-shadow .4s, border-color .3s;
+  position:relative; overflow:hidden;
+}
+.pls-card::before {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(105deg, transparent 40%, rgba(124,106,173,.04) 100%);
+  pointer-events:none;
+}
+.pls-card:hover { transform:translateX(6px); box-shadow:0 8px 32px rgba(124,106,173,.12); border-color:rgba(124,106,173,.28); }
+.slide.active .pls-card { animation:pls-in .55s cubic-bezier(.4,0,.2,1) both; }
+.slide.active .pls-card:nth-child(1){animation-delay:.1s}
+.slide.active .pls-card:nth-child(2){animation-delay:.2s}
+.slide.active .pls-card:nth-child(3){animation-delay:.3s}
+@keyframes pls-in { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:translateX(0)} }
+.pls-card .pls-title { font-family:var(--font-display); font-size:clamp(15px,1.55vw,22px); font-weight:700; line-height:1.25; }
+.pls-card .pls-desc { font-size:var(--text-caption); color:var(--ink-light); margin-top:4px; line-height:1.45; }
+.pls-badge {
+  width:clamp(44px,4.5vw,60px); height:clamp(44px,4.5vw,60px);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:clamp(18px,2.2vw,28px);
+  font-weight:700; font-style:italic; flex-shrink:0; color:rgba(0,0,0,.55);
+  border-radius:12px;
+}
 .pls-badge.dot { background:var(--tab-role); }
 .pls-badge.line { background:var(--tab-local); }
 .pls-badge.surface { background:var(--tab-global); }
+
+/* Case slide — 常驻图库：默认右下角缩略 · 悬浮放大置顶 */
+.page.page-case { display:block; padding:0; overflow:hidden; }
+.page-case .page-bg {
+  position:absolute; inset:0; z-index:1;
+  opacity:1; pointer-events:none;
+  transition:z-index 0s;
+}
+.page-case.is-gallery-focus .page-bg { z-index:50; }
+.page-case .page-bg .bg-shade {
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(90deg,
+    rgba(248,246,241,.42) 0%,
+    rgba(248,246,241,.18) 32%,
+    transparent 48%);
+  transition:opacity .4s ease, background .45s var(--ease-spring);
+}
+.page-case.is-gallery-focus .page-bg .bg-shade {
+  opacity:1;
+  background:linear-gradient(90deg,
+    rgba(248,246,241,.62) 0%,
+    rgba(248,246,241,.28) 34%,
+    transparent 52%);
+}
+.page-case .page-bg .bg-stage {
+  position:absolute; z-index:10;
+  pointer-events:auto;
+  border-radius:10px;
+  overflow:hidden;
+  isolation:isolate;
+  contain:paint;
+  transition:left .5s var(--ease-spring), right .5s var(--ease-spring),
+    top .5s var(--ease-spring), bottom .5s var(--ease-spring),
+    width .5s var(--ease-spring), height .5s var(--ease-spring),
+    border-radius .4s ease, box-shadow .45s var(--ease-spring);
+}
+/* 案例图库：默认占满右侧内容区；悬浮向左扩至近全屏纯图 */
+.page-case--gallery .page-bg .bg-stage {
+  left:clamp(38vw,42%,46%); right:clamp(52px,5.5vw,88px);
+  top:clamp(52px,7.5vh,84px); bottom:clamp(56px,8vh,96px);
+  width:auto; height:auto;
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(0,0,0,.06);
+  box-shadow:0 4px 20px rgba(26,26,26,.08);
+}
+.page-case.is-gallery-focus.page-case--gallery .page-bg .bg-stage {
+  left:clamp(150px,20vw,340px); right:clamp(20px,2vw,40px);
+  top:clamp(14px,2vh,24px); bottom:clamp(14px,2vh,24px);
+  width:auto !important; height:auto !important;
+  background:transparent; border:none; box-shadow:none; border-radius:0;
+}
+.page-case .page-bg .bg-photo {
+  position:absolute; inset:0;
+  opacity:0; transform:scale(.98);
+  transition:opacity .35s var(--ease-spring), transform .45s var(--ease-spring);
+  pointer-events:none; z-index:1;
+}
+.page-case .page-bg .bg-photo.is-active {
+  opacity:1; transform:scale(1); z-index:3;
+}
+.page-case.is-gallery-focus.page-case--gallery .page-bg .bg-photo.is-active {
+  transform:none;
+}
+.page-case--gallery .page-bg .bg-photo {
+  display:flex; align-items:center; justify-content:center;
+  padding:clamp(4px,.5vh,8px);
+  background:#fff;
+}
+.page-case--gallery .page-bg .bg-photo img {
+  width:auto; height:auto;
+  max-width:100%; max-height:100%;
+  object-fit:contain; object-position:center center;
+  display:block;
+  filter:drop-shadow(0 4px 16px rgba(26,26,26,.1));
+  transition:filter .35s ease;
+}
+.page-case.is-gallery-focus.page-case--gallery .page-bg .bg-photo {
+  padding:0; background:transparent;
+}
+.page-case.is-gallery-focus.page-case--gallery .page-bg .bg-photo img {
+  width:100%; height:100%;
+  max-width:100%; max-height:100%;
+  object-fit:contain;
+  filter:none;
+}
+.page-case.is-gallery-focus.page-case--gallery .bg-pager {
+  display:none;
+}
+.page-case .page-bg .bg-nav {
+  position:absolute; inset:0; z-index:8;
+  display:flex; pointer-events:none;
+  opacity:0; transition:opacity .25s ease;
+}
+.page-case.is-gallery-focus .page-bg .bg-nav { pointer-events:auto; opacity:1; }
+.page-case .bg-nav-prev,
+.page-case .bg-nav-next {
+  flex:1; border:none; background:transparent; cursor:pointer;
+  transition:background .2s;
+}
+.page-case.is-gallery-focus .bg-nav-prev:hover { background:linear-gradient(90deg, rgba(124,106,173,.12), transparent); }
+.page-case.is-gallery-focus .bg-nav-next:hover { background:linear-gradient(270deg, rgba(124,106,173,.12), transparent); }
+.page-case .bg-pager {
+  position:absolute; z-index:10;
+  right:8px; bottom:6px;
+  font-family:var(--font-mono); font-size:var(--text-mini);
+  color:var(--ink-muted); background:rgba(255,255,255,.88);
+  padding:4px 10px; border-radius:16px; backdrop-filter:blur(8px);
+  pointer-events:none;
+  box-shadow:0 2px 10px rgba(26,26,26,.06);
+  opacity:0;
+  transition:opacity .25s ease, right .45s var(--ease-spring), bottom .45s var(--ease-spring);
+}
+.page-case.is-gallery-focus .bg-pager {
+  right:clamp(32px,4vw,64px); bottom:clamp(40px,6vh,72px);
+  opacity:1;
+}
+.page-case .page-foreground {
+  position:relative; z-index:4; height:100%;
+  display:grid; grid-template-rows:auto 1fr auto;
+  padding:clamp(18px,3vh,36px) clamp(56px,6vw,96px) clamp(18px,3vh,36px) clamp(52px,5.5vw,88px);
+  pointer-events:none;
+  transition:opacity .35s ease;
+}
+.page-case .page-foreground .header {
+  position:relative; z-index:2; flex-shrink:0;
+  background:var(--paper);
+}
+.page-case.is-gallery-focus .page-foreground .content,
+.page-case.is-gallery-focus .page-foreground .header,
+.page-case.is-gallery-focus .page-foreground .foot {
+  opacity:.75;
+}
+.page-case .page-foreground > * { pointer-events:auto; }
+.page-case .content {
+  max-width:min(38vw, 480px); pointer-events:none;
+  justify-content:flex-start;
+  overflow-x:hidden; overflow-y:auto; min-height:0;
+  position:relative; z-index:1;
+}
+.page-case .content > [data-step] { pointer-events:auto; }
+.page-case .case-title-block { pointer-events:auto; margin-top:var(--gap-xs); }
+.page-case .timeline-item p:first-child { font-size:var(--text-small); font-weight:600; color:var(--ink); }
+
+/* 数字人文档：与案例图库共用右侧竖长面板 + 悬浮顶底铺满 */
+.page-case--doc .bg-doc-shell {
+  display:flex; flex-direction:column; width:100%; height:100%; min-height:0;
+  position:relative;
+  background:var(--paper); overflow:hidden; isolation:isolate;
+}
+.page-case--doc .bg-doc-shell::before {
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:var(--paper);
+  opacity:1; transition:opacity .28s ease;
+}
+.page-case--doc .bg-doc-shell.is-iframe-ready::before {
+  opacity:0;
+}
+.page-case--doc .bg-doc-shell iframe {
+  position:relative; z-index:2;
+  flex:1; width:100%; min-height:0; border:none; background:var(--paper);
+  opacity:0; transition:opacity .2s ease;
+}
+.page-case--doc .bg-doc-shell.is-iframe-ready iframe {
+  opacity:1;
+}
+.page-case--doc .demo-chrome {
+  display:flex; align-items:center; gap:6px; flex-shrink:0;
+  padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);
+  background:var(--paper-shadow); border-bottom:1px solid var(--rule);
+}
+.page-case--doc .demo-chrome .dot { width:8px; height:8px; border-radius:50%; }
+.page-case--doc .demo-chrome .url {
+  flex:1; font-family:var(--font-mono); font-size:var(--text-mini);
+  color:var(--ink-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  margin-left:6px;
+}
+/* 数字人文档：默认占满右侧；悬浮向左扩展 */
+.page-case--doc .page-bg .bg-stage {
+  left:clamp(38vw,42%,46%); right:clamp(52px,5.5vw,88px);
+  top:clamp(52px,7.5vh,84px); bottom:clamp(56px,8vh,96px);
+  width:auto; height:auto;
+  background:var(--paper);
+  border:1px solid var(--rule);
+  box-shadow:0 4px 20px rgba(26,26,26,.08);
+}
+.page-case.is-gallery-focus.page-case--doc .page-bg .bg-stage {
+  left:clamp(150px,20vw,340px); right:clamp(20px,2vw,40px);
+  top:clamp(14px,2vh,24px); bottom:clamp(14px,2vh,24px);
+  width:auto !important; height:auto !important;
+  background:var(--paper); border:none; box-shadow:0 8px 32px rgba(26,26,26,.12);
+}
+.page-case.is-gallery-focus.page-case--doc .demo-chrome,
+.page-case.is-gallery-focus.page-case--doc .bg-doc-hint {
+  display:none;
+}
+.page-case.is-gallery-focus.page-case--doc .bg-doc-shell {
+  background:#fff;
+}
+.page-case.is-gallery-focus.page-case--doc .page-bg .bg-pager {
+  display:none;
+}
+.page-case--doc .bg-doc-hint {
+  flex-shrink:0; font-size:var(--text-caption); color:var(--ink-muted);
+  padding:clamp(5px,.6vh,8px) clamp(10px,1.2vw,14px);
+  background:var(--paper-shadow); border-top:1px solid var(--rule);
+}
+.page-case--doc:not(.is-gallery-focus) .bg-doc-hint,
+.page-case--doc:not(.is-gallery-focus) .page-bg .bg-pager {
+  display:none;
+}
+.page-case.is-gallery-focus.page-case--doc .page-bg .bg-pager {
+  display:block;
+  right:clamp(28px,3.5vw,52px); bottom:clamp(28px,4vh,44px);
+  opacity:1;
+}
+
+.pls-diagram svg { filter:drop-shadow(0 4px 12px rgba(124,106,173,.12)); }
+.slide.active .pls-diagram circle:nth-child(1) { animation:ring-pulse 3s ease-in-out infinite; }
+.slide.active .pls-diagram circle:nth-child(3) { animation:ring-pulse 3s ease-in-out infinite .4s; }
+@keyframes ring-pulse { 0%,100%{opacity:.5} 50%{opacity:.85} }
 
 /* Danger callout */
 .callout-danger { display:flex; gap:clamp(10px,1.2vw,16px); align-items:flex-start; padding:clamp(10px,1.5vh,18px); background:var(--danger-light); border-left:3px solid var(--danger); }
@@ -183,31 +477,378 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 
 /* Quote block */
 .quote-block { padding:clamp(14px,2vh,24px) clamp(16px,2vw,28px); background:var(--accent-light); border-left:3px solid var(--accent); position:relative; }
-.quote-block p { font-family:var(--font-display); font-size:clamp(14px,1.5vw,22px); font-style:italic; color:var(--accent); line-height:1.45; }
+.quote-block p { font-family:var(--font-display); font-size:clamp(16px,1.65vw,24px); font-style:italic; color:var(--accent); line-height:1.45; }
 .quote-block::before { content:'\201C'; position:absolute; top:clamp(4px,.5vh,8px); left:clamp(8px,1vw,14px); font-family:var(--font-display); font-size:clamp(28px,3.5vw,48px); color:var(--accent); opacity:.2; line-height:1; }
 
+/* 沈阳客运痛点页：纵向满宽，无占位提示 */
+.slide-pain .content { gap:clamp(14px,2vh,22px); }
+.slide-pain .pain-intro {
+  display:flex; flex-direction:column; gap:clamp(14px,1.8vh,20px); width:100%;
+}
+.slide-pain .callout-danger { padding:clamp(14px,1.8vh,22px) clamp(16px,1.6vw,24px); }
+.slide-pain .callout-danger svg { width:clamp(24px,2.2vw,32px); height:clamp(24px,2.2vw,32px); }
+.slide-pain .callout-danger .callout-title {
+  font-size:clamp(16px,1.45vw,22px); font-weight:600; color:var(--danger); line-height:1.35;
+}
+.slide-pain .callout-danger .callout-desc {
+  font-size:var(--text-body); color:var(--ink-light); margin-top:6px; line-height:1.45;
+}
+.slide-pain .pain-stat-row {
+  display:flex; gap:0; background:#fff; border:1px solid var(--rule); border-radius:10px; overflow:hidden;
+}
+.slide-pain .pain-stat-row .stat-item { padding:clamp(14px,1.8vh,22px) clamp(12px,1.2vw,18px); }
+.slide-pain .pain-stat-row .stat-num { font-size:clamp(32px,3.6vw,52px); }
+.slide-pain .pain-stat-row .stat-label { font-size:var(--text-small); margin-top:8px; }
+.slide-pain .pain-chain-wrap {
+  padding:clamp(12px,1.4vh,18px) clamp(14px,1.4vw,20px);
+  background:#fff; border:1px solid var(--rule); border-radius:10px;
+}
+.slide-pain .pain-chain-mini { display:block; width:100%; height:auto; min-height:clamp(80px,11vh,108px); }
+.slide-pain .pain-problems-head {
+  font-size:var(--text-body); font-weight:600; color:var(--ink); margin-bottom:clamp(8px,1vh,12px);
+}
+.slide-pain .pain-problems {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(10px,1.2vh,14px); width:100%;
+}
+.slide-pain .pain-problems .card-h {
+  padding:clamp(12px,1.4vh,16px) clamp(14px,1.2vw,18px); gap:10px; align-items:flex-start;
+}
+.slide-pain .pain-problems .card-h svg { width:20px; height:20px; flex-shrink:0; margin-top:2px; }
+.slide-pain .pain-problems .card-h p { font-size:clamp(15px,1.28vw,18px); line-height:1.4; }
+.slide-pain .content > [data-step="3"] .quote-block {
+  padding:clamp(14px,1.8vh,22px) clamp(18px,2vw,28px);
+}
+.slide-pain .content > [data-step="3"] .quote-block p {
+  font-size:clamp(17px,1.55vw,24px); line-height:1.45;
+}
+@media(max-width:900px){
+  .slide-pain .pain-problems { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:600px){
+  .slide-pain .pain-problems { grid-template-columns:1fr; }
+}
+
+/* Hermes 页：一屏展示，禁止左侧滚动误触翻页 */
+.slide-hermes .content {
+  gap:clamp(6px,.9vh,10px);
+  overflow:hidden;
+  overscroll-behavior:contain;
+}
+.slide-hermes .case-title-block .title-lg { font-size:clamp(17px,2.2vw,30px) !important; }
+.slide-hermes .case-title-block .caption-sm { line-height:1.35; }
+.slide-hermes .hermes-panel {
+  padding:clamp(8px,1vh,12px) clamp(10px,1vw,14px);
+  border-radius:10px;
+}
+.slide-hermes .hermes-use-row {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px;
+}
+.slide-hermes .hermes-use-row span {
+  display:block; padding:6px 8px; font-size:clamp(12px,1.05vw,15px);
+  line-height:1.35; color:var(--ink-light); background:#fff;
+  border:1px solid var(--rule); border-radius:6px;
+  border-left:3px solid var(--accent);
+}
+.slide-hermes .hermes-use-row span:nth-child(1) { border-left-color:var(--tab-role); }
+.slide-hermes .hermes-use-row span:nth-child(3) { border-left-color:var(--tab-bg); }
+.slide-hermes .hermes-use-row strong { color:var(--ink); font-weight:600; }
+.slide-hermes .hermes-flow {
+  display:flex; flex-direction:column; gap:2px;
+  border-left:2px solid var(--accent);
+  margin:6px 0 0 6px; padding-left:12px;
+}
+.slide-hermes .hermes-flow li {
+  font-size:clamp(13px,1.1vw,16px); line-height:1.38; color:var(--ink);
+  padding:2px 0; list-style:none;
+}
+.slide-hermes .hermes-flow li em { font-style:normal; color:var(--ink-muted); font-size:.92em; }
+.slide-hermes .hermes-flow li.is-core { font-weight:600; color:var(--tab-role); }
+.slide-hermes .hermes-foot {
+  font-size:clamp(12px,1.05vw,15px); color:var(--ink-muted); line-height:1.4;
+  margin-top:4px;
+}
+.slide-hermes .hermes-stat {
+  display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;
+}
+.slide-hermes .hermes-stat span {
+  font-size:clamp(11px,1vw,14px); padding:4px 10px; border-radius:999px;
+  background:rgba(124,106,173,.1); color:var(--ink); border:1px solid var(--rule);
+}
+
 /* Stat row */
-.stat-row { display:flex; gap:clamp(16px,2.5vw,36px); }
-.stat-item { text-align:center; }
+.stat-row { display:flex; align-items:stretch; gap:0; }
+.stat-item {
+  flex:1; text-align:center; padding:clamp(12px,1.8vh,20px) clamp(8px,1vw,16px);
+  display:flex; flex-direction:column; justify-content:center; align-items:center; min-width:0;
+}
 .stat-num { font-family:var(--font-display); font-size:clamp(28px,3.5vw,48px); font-weight:700; color:var(--accent); line-height:1; }
-.stat-label { font-size:clamp(10px,1vw,13px); color:var(--ink-muted); margin-top:4px; }
+.stat-num-text { font-size:clamp(20px,2.4vw,34px); letter-spacing:-.02em; }
+.stat-label {
+  font-size:var(--text-small); color:var(--ink-light); margin-top:clamp(6px,.8vh,10px);
+  line-height:1.35; max-width:12em; word-break:keep-all;
+}
+.stat-bar { display:flex; align-items:stretch; background:#fff; border:1px solid var(--rule); border-radius:8px; overflow:hidden; }
+.stat-bar .stat-divider { width:1px; background:var(--rule); flex-shrink:0; align-self:stretch; }
+
+/* Caption / secondary text in grids */
+.caption { font-size:var(--text-caption); color:var(--ink-muted); line-height:1.4; }
+.caption-sm { font-size:var(--text-small); color:var(--ink-light); line-height:1.45; }
 
 /* Responsive */
 @media(max-height:650px){ .tabs,.binder{display:none} .page{padding-left:clamp(28px,3.5vw,56px)} }
-@media(max-width:700px){ .grid-2,.grid-3,.grid-2-1,.grid-1-2{grid-template-columns:1fr} .pipeline{flex-wrap:wrap} .stat-row{flex-wrap:wrap} .tabs{display:none} }
-@media(prefers-reduced-motion:reduce){ *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.12s!important} html{scroll-behavior:auto} [data-step]{opacity:1;transform:none;pointer-events:auto} }
+@media(max-width:700px){
+  .grid-2,.grid-3,.grid-2-1,.grid-1-2{grid-template-columns:1fr}
+  .pipeline{flex-wrap:wrap} .stat-row{flex-wrap:wrap} .tabs{display:none}
+  .page-case--gallery .page-bg .bg-stage,
+  .page-case--doc .page-bg .bg-stage{
+    left:clamp(8px,2vw,16px); right:clamp(8px,2vw,16px);
+    top:auto; bottom:clamp(48px,7vh,64px);
+    height:clamp(200px,32vh,280px);
+  }
+  .page-case.is-gallery-focus.page-case--gallery .page-bg .bg-stage,
+  .page-case.is-gallery-focus.page-case--doc .page-bg .bg-stage{
+    left:clamp(8px,2vw,16px); right:clamp(8px,2vw,16px);
+    top:clamp(56px,8vh,72px); bottom:clamp(48px,7vh,64px);
+    width:auto !important; height:auto !important;
+  }
+}
+@media(prefers-reduced-motion:reduce){ *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.12s!important} html{scroll-behavior:auto} [data-step]{opacity:1;transform:none;pointer-events:auto} .page .content > [data-step]:not(.visible){display:none} }
+
+/* === DETAIL DRAWER — click-to-reveal interactive panels === */
+.detail-trigger {
+  cursor:pointer; position:relative;
+  transition:border-color .25s, box-shadow .25s;
+}
+.detail-trigger::after {
+  content:''; position:absolute; right:clamp(6px,.8vw,10px); top:clamp(6px,.8vh,10px);
+  width:clamp(16px,1.5vw,22px); height:clamp(16px,1.5vw,22px);
+  background:var(--accent); border-radius:50%; opacity:0;
+  display:flex; align-items:center; justify-content:center;
+  transition:opacity .3s, transform .3s var(--ease-spring);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:center; background-size:55%;
+}
+.detail-trigger:hover::after { opacity:.85; transform:scale(1); }
+.detail-trigger:hover { border-color:rgba(124,106,173,.35) !important; box-shadow:0 4px 20px rgba(124,106,173,.12) !important; }
+
+/* Drawer overlay + panel */
+.detail-overlay {
+  position:fixed; inset:0; z-index:500;
+  background:rgba(26,26,26,.35); backdrop-filter:blur(6px);
+  opacity:0; pointer-events:none;
+  transition:opacity .35s ease;
+}
+.detail-overlay.is-open { opacity:1; pointer-events:auto; }
+
+.detail-drawer {
+  position:fixed; top:0; right:0; bottom:0; z-index:510;
+  width:min(520px, 88vw);
+  background:var(--paper);
+  border-left:1px solid var(--rule);
+  box-shadow:-8px 0 40px rgba(26,26,26,.12);
+  transform:translateX(100%);
+  transition:transform .4s cubic-bezier(.4,0,.15,1);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.detail-drawer.is-open { transform:translateX(0); }
+
+.detail-drawer-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:clamp(14px,2vh,24px) clamp(20px,3vw,32px);
+  border-bottom:1px solid var(--rule);
+  flex-shrink:0;
+}
+.detail-drawer-title {
+  font-family:var(--font-display); font-size:clamp(18px,2vw,26px);
+  font-weight:700; color:var(--ink); line-height:1.2;
+}
+.detail-drawer-close {
+  width:clamp(28px,3vw,36px); height:clamp(28px,3vw,36px);
+  border:1px solid var(--rule); border-radius:50%; background:#fff;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:background .2s, border-color .2s;
+  flex-shrink:0;
+}
+.detail-drawer-close:hover { background:var(--paper-shadow); border-color:var(--ink-muted); }
+.detail-drawer-close svg { width:14px; height:14px; stroke:var(--ink); stroke-width:2; fill:none; }
+
+.detail-drawer-body {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  padding:clamp(20px,3vh,32px) clamp(20px,3vw,32px);
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin; scrollbar-color:rgba(124,106,173,.25) transparent;
+}
+.detail-drawer-body h3 {
+  font-family:var(--font-display); font-size:clamp(15px,1.6vw,20px);
+  font-weight:700; color:var(--ink); margin:clamp(16px,2.5vh,28px) 0 clamp(6px,1vh,12px);
+  line-height:1.25;
+}
+.detail-drawer-body h3:first-child { margin-top:0; }
+.detail-drawer-body p {
+  font-size:clamp(13px,1.25vw,16px); color:var(--ink-light);
+  line-height:1.65; margin-bottom:clamp(8px,1.2vh,14px);
+}
+.detail-drawer-body ul {
+  list-style:none; padding:0; margin:0 0 clamp(10px,1.5vh,16px);
+}
+.detail-drawer-body li {
+  font-size:clamp(13px,1.25vw,16px); color:var(--ink-light);
+  line-height:1.55; padding:clamp(4px,.5vh,6px) 0 clamp(4px,.5vh,6px) clamp(14px,1.5vw,20px);
+  position:relative;
+}
+.detail-drawer-body li::before {
+  content:''; position:absolute; left:0; top:clamp(10px,1.2vh,14px);
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent); opacity:.5;
+}
+.detail-drawer-body .detail-table {
+  width:100%; border-collapse:collapse; margin:clamp(8px,1vh,14px) 0 clamp(12px,1.5vh,18px);
+  font-size:clamp(12px,1.15vw,15px);
+}
+.detail-drawer-body .detail-table th,
+.detail-drawer-body .detail-table td {
+  text-align:left; padding:clamp(6px,.8vh,10px) clamp(8px,1vw,14px);
+  border-bottom:1px solid var(--rule); color:var(--ink-light);
+}
+.detail-drawer-body .detail-table th {
+  font-weight:600; color:var(--ink); background:rgba(124,106,173,.04);
+  font-size:clamp(11px,1.05vw,14px); text-transform:uppercase; letter-spacing:.05em;
+}
+.detail-drawer-body .detail-stat {
+  display:flex; gap:clamp(12px,1.5vw,20px); margin:clamp(10px,1.5vh,16px) 0;
+}
+.detail-drawer-body .detail-stat-item {
+  flex:1; text-align:center; padding:clamp(10px,1.5vh,18px);
+  background:#fff; border:1px solid var(--rule); border-radius:8px;
+}
+.detail-drawer-body .detail-stat-num {
+  font-family:var(--font-display); font-size:clamp(22px,2.8vw,36px);
+  font-weight:700; color:var(--accent); line-height:1;
+}
+.detail-drawer-body .detail-stat-label {
+  font-size:clamp(11px,1vw,13px); color:var(--ink-muted); margin-top:4px;
+}
+.detail-drawer-body .detail-code {
+  font-family:var(--font-mono); font-size:clamp(12px,1.1vw,14px);
+  background:rgba(26,26,26,.04); border:1px solid var(--rule);
+  border-radius:6px; padding:clamp(10px,1.5vh,16px) clamp(12px,1.5vw,18px);
+  line-height:1.6; color:var(--ink); overflow-x:auto; white-space:pre-wrap;
+  margin:clamp(6px,.8vh,10px) 0 clamp(10px,1.5vh,16px);
+}
+.detail-drawer-body .detail-flow {
+  display:flex; flex-direction:column; gap:0;
+  border-left:2px solid var(--accent); margin:clamp(8px,1vh,14px) 0 clamp(12px,1.5vh,18px); padding-left:clamp(14px,1.5vw,20px);
+}
+.detail-drawer-body .detail-flow-step {
+  padding:clamp(6px,.8vh,10px) 0; position:relative;
+}
+.detail-drawer-body .detail-flow-step::before {
+  content:''; position:absolute; left:calc(-1 * clamp(14px,1.5vw,20px) - 5px); top:clamp(12px,1.5vh,18px);
+  width:8px; height:8px; border-radius:50%; background:var(--accent);
+}
+.detail-drawer-body .detail-flow-step strong {
+  color:var(--ink); font-weight:600; display:block; margin-bottom:2px;
+}
+.detail-drawer-body .detail-flow-step span {
+  font-size:clamp(12px,1.1vw,14px); color:var(--ink-muted);
+}
+/* Keyboard hint inside drawer */
+.detail-drawer-hint {
+  padding:clamp(8px,1vh,14px) clamp(20px,3vw,32px);
+  border-top:1px solid var(--rule); flex-shrink:0;
+  font-size:clamp(11px,1vw,13px); color:var(--ink-faint);
+  text-align:center;
+}
+.detail-drawer-hint kbd {
+  display:inline-block; padding:1px 6px;
+  border:1px solid var(--rule); border-radius:3px;
+  background:#fff; font-family:var(--font-mono);
+  font-size:.9em;
+}
+
+/* === AI COST SLIDE === */
+.cost-grid {
+  display:grid; grid-template-columns:repeat(3, 1fr);
+  gap:clamp(8px,1.2vh,14px);
+}
+.cost-card {
+  display:flex; align-items:center; gap:clamp(8px,1vw,14px);
+  padding:clamp(10px,1.4vh,16px) clamp(12px,1.2vw,18px);
+  background:#fff; border:1px solid var(--rule);
+  border-radius:10px; transition:transform .2s var(--ease-spring), box-shadow .2s;
+}
+.cost-card:hover { transform:translateY(-2px); box-shadow:0 4px 16px rgba(0,0,0,.06); }
+.cost-logo {
+  width:clamp(32px,3.6vw,48px); height:clamp(32px,3.6vw,48px);
+  border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:clamp(14px,1.6vw,20px); color:#fff;
+}
+.cost-info { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.cost-name { font-weight:600; font-size:var(--text-small); color:var(--ink); white-space:nowrap; }
+.cost-price { font-family:var(--font-mono); font-weight:500; font-size:clamp(14px,1.4vw,18px); color:var(--accent); }
+.cost-use { font-size:var(--text-mini); color:var(--ink-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cost-total {
+  display:flex; align-items:baseline; gap:clamp(6px,.8vw,12px);
+  padding:clamp(8px,1vh,14px) clamp(14px,1.4vw,20px);
+  background:var(--accent-light); border-radius:10px; margin-top:clamp(4px,.6vh,8px);
+}
+.cost-total-num { font-family:var(--font-mono); font-weight:700; font-size:clamp(22px,2.6vw,34px); color:var(--accent); }
+.cost-total-label { font-size:var(--text-small); color:var(--ink-light); }
+.cost-insights {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:clamp(6px,.8vh,10px); margin-top:clamp(6px,1vh,12px);
+}
+.cost-insight {
+  font-size:var(--text-small); color:var(--ink-light);
+  padding:clamp(6px,.8vh,10px) clamp(10px,1vw,14px);
+  background:rgba(124,106,173,.04); border-left:2px solid var(--accent);
+  border-radius:0 6px 6px 0; line-height:1.45;
+}
+
+/* Subtle presentation cursor (frontend-slides optional enhancement) */
+@media (hover:hover) and (pointer:fine) {
+  body.pres-cursor-on { cursor: none; }
+  body.pres-cursor-on a,
+  body.pres-cursor-on button,
+  body.pres-cursor-on .tab,
+  body.pres-cursor-on .chapter-dot,
+  body.pres-cursor-on .bg-nav-prev,
+  body.pres-cursor-on .bg-nav-next { cursor: none; }
+  .pres-cursor,
+  .pres-cursor-trail {
+    position: fixed; left: 0; top: 0;
+    pointer-events: none; z-index: 200;
+    border-radius: 50%;
+    will-change: transform;
+  }
+  .pres-cursor {
+    width: 10px; height: 10px; margin: -5px 0 0 -5px;
+    background: var(--accent);
+    opacity: .82;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.5), 0 0 14px rgba(124,106,173,.22);
+  }
+  .pres-cursor-trail {
+    background: var(--accent);
+    opacity: .2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pres-cursor, .pres-cursor-trail { display: none !important; }
+}
 </style>
 </head>
 <body>
 
 <div class="progress-bar" id="progressBar"></div>
 <div class="chapter-indicator" id="chapterIndicator">
-  <div class="chapter-dot" data-part="0"></div>
-  <div class="chapter-dot" data-part="1"></div>
-  <div class="chapter-dot" data-part="2"></div>
-  <div class="chapter-dot" data-part="3"></div>
-  <div class="chapter-dot" data-part="4"></div>
-  <div class="chapter-dot" data-part="5"></div>
+  <button type="button" class="chapter-dot" data-part="0" aria-label="封面"></button>
+  <button type="button" class="chapter-dot" data-part="1" aria-label="背景和思路"></button>
+  <button type="button" class="chapter-dot" data-part="2" aria-label="岗位角度"></button>
+  <button type="button" class="chapter-dot" data-part="3" aria-label="局部角度"></button>
+  <button type="button" class="chapter-dot" data-part="4" aria-label="全局角度"></button>
+  <button type="button" class="chapter-dot" data-part="5" aria-label="行动"></button>
   <span class="chapter-label" id="chapterLabel"></span>
 </div>
 
@@ -287,7 +928,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
     <div class="content">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
         <div class="kicker">Before we start</div>
-        <h2 class="title-lg">这次分享的<em>初衷</em></h2>
+        <h2 class="title-lg"><span class="title-nowrap">这次分享的</span><em>初衷</em></h2>
       </div>
 
       <!-- Step 1: two-column: left text + right visual -->
@@ -365,7 +1006,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 <!-- =============================================
      SLIDE 2: 痛点故事 — 沈阳客运
      ============================================= -->
-<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="2">
+<div class="slide slide-pain" data-part="1" data-chapter="背景和思路" data-steps="3">
   <div class="page">
     <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
     <div class="tabs">
@@ -380,73 +1021,86 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
       <div class="header-right">03 / --</div>
     </div>
     <div class="content">
-      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
         <div class="kicker">Story</div>
-        <h2 class="title-lg">从<em>沈阳客运</em>项目说起</h2>
+        <h2 class="title-lg" style="font-size:clamp(20px,2.8vw,38px);">从<em class="title-nowrap">沈阳客运项目</em>说起</h2>
       </div>
 
-      <!-- Step 1: project status + callout -->
-      <div data-step="1">
-        <div class="grid-2" style="gap:var(--gap-md);">
-          <!-- Left: project status visual -->
-          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
-            <div class="callout-danger">
-              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              <div>
-                <p style="font-size:clamp(13px,1.2vw,17px);font-weight:600;color:var(--danger);">项目严重延期</p>
-                <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:3px;">5月接手时，开发资源一直排不开，客户意见很大</p>
-              </div>
-            </div>
-            <!-- Mini stats -->
-            <div class="stat-row" style="justify-content:center;padding:var(--gap-sm) 0;">
-              <div class="stat-item">
-                <div class="stat-num" style="color:var(--danger);">9</div>
-                <div class="stat-label">经手工位</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-num" style="color:var(--danger);">N+</div>
-                <div class="stat-label">需求变更次数</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-num" style="color:var(--danger);">高</div>
-                <div class="stat-label">定制化程度</div>
-              </div>
-            </div>
+      <div data-step="1" class="pain-intro">
+        <div class="callout-danger">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>
+            <p class="callout-title">项目严重延期</p>
+            <p class="callout-desc">5月接手时，开发资源一直排不开，客户意见很大</p>
           </div>
+        </div>
+        <div class="pain-stat-row">
+          <div class="stat-item" style="flex:1;">
+            <div class="stat-num" style="color:var(--danger);">9</div>
+            <div class="stat-label">经手工位</div>
+          </div>
+          <div class="stat-item" style="flex:1;border-left:1px solid var(--rule);">
+            <div class="stat-num" style="color:var(--danger);">N+</div>
+            <div class="stat-label">需求变更</div>
+          </div>
+          <div class="stat-item" style="flex:1;border-left:1px solid var(--rule);">
+            <div class="stat-num" style="color:var(--danger);">高</div>
+            <div class="stat-label">定制化程度</div>
+          </div>
+        </div>
+        <div class="pain-chain-wrap">
+          <svg class="pain-chain-mini" viewBox="0 0 900 88" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <text x="16" y="18" font-size="13" fill="var(--ink-muted)" font-family="var(--font-mono)">信息在链条中逐层衰减</text>
+            <rect x="16" y="28" width="120" height="44" rx="6" fill="rgba(152,212,187,.22)" stroke="var(--tab-bg)" stroke-width="1.2"/>
+            <text x="76" y="56" text-anchor="middle" font-size="15" font-weight="600" fill="var(--ink)">销售</text>
+            <path d="M138 50h36" stroke="var(--ink-faint)" stroke-width="1.2" marker-end="url(#pain-arr)"/>
+            <rect x="176" y="28" width="120" height="44" rx="6" fill="rgba(152,212,187,.16)" stroke="var(--tab-bg)" stroke-width="1.2"/>
+            <text x="236" y="56" text-anchor="middle" font-size="15" font-weight="600" fill="var(--ink)">沟通</text>
+            <path d="M298 50h36" stroke="var(--ink-faint)" stroke-width="1.2" marker-end="url(#pain-arr)"/>
+            <rect x="336" y="28" width="120" height="44" rx="6" fill="rgba(220,80,80,.14)" stroke="var(--danger)" stroke-width="1.2"/>
+            <text x="396" y="56" text-anchor="middle" font-size="15" font-weight="600" fill="var(--danger)">产品</text>
+            <path d="M458 50h36" stroke="var(--ink-faint)" stroke-width="1.2" opacity=".45" marker-end="url(#pain-arr-dim)"/>
+            <rect x="496" y="28" width="200" height="44" rx="6" fill="var(--paper-shadow)" stroke="var(--rule)" stroke-width="1.2" stroke-dasharray="4 3" opacity=".85"/>
+            <text x="596" y="56" text-anchor="middle" font-size="15" fill="var(--ink-muted)">开发 → 验收</text>
+            <defs>
+              <marker id="pain-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--ink-faint)"/></marker>
+              <marker id="pain-arr-dim" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="var(--ink-faint)" opacity=".45"/></marker>
+            </defs>
+          </svg>
+        </div>
+      </div>
 
-          <!-- Right: problem list with icons -->
-          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
-            <div class="meta-text" style="margin-bottom:2px;">观察到的问题</div>
-            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
-              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">需求反复确认 / 变更 / 新增</p>
-            </div>
-            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
-              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
-              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">多项目并行，产品设计周期长</p>
-            </div>
-            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
-              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">产品产出无法直接作为开发依据</p>
-            </div>
-            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
-              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">开发资源排不开，项目不断延期</p>
-            </div>
-            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
-              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">跨部门协作难度高，KPI 隔离</p>
-            </div>
-            <div class="card card-h card-danger" style="padding:clamp(7px,1vh,12px) clamp(10px,1.2vw,16px);">
-              <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-              <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">不断重复开发定制化需求</p>
-            </div>
+      <div data-step="2">
+        <p class="pain-problems-head">观察到的问题</p>
+        <div class="pain-problems">
+          <div class="card card-h card-danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <p>需求反复确认 / 变更 / 新增</p>
+          </div>
+          <div class="card card-h card-danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+            <p>多项目并行，设计周期长</p>
+          </div>
+          <div class="card card-h card-danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+            <p>产出无法直接作开发依据</p>
+          </div>
+          <div class="card card-h card-danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <p>开发排不开，不断延期</p>
+          </div>
+          <div class="card card-h card-danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            <p>跨部门协作难，KPI 隔离</p>
+          </div>
+          <div class="card card-h card-danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            <p>重复开发定制化需求</p>
           </div>
         </div>
       </div>
 
-      <!-- Step 2: root cause quote -->
-      <div data-step="2">
+      <div data-step="3">
         <div class="quote-block">
           <p>这些问题并非某个人的失误，而是链条过长 + 高定制化 带来的系统性挑战。</p>
         </div>
@@ -462,7 +1116,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 <!-- =============================================
      SLIDE 3: 业务链条 + 信息衰减
      ============================================= -->
-<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="3">
+<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="4">
   <div class="page">
     <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
     <div class="tabs">
@@ -479,7 +1133,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
     <div class="content" style="gap:var(--gap-sm);">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
         <div class="kicker">Business Chain</div>
-        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">公司的<em>业务链条</em>与信息衰减</h2>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">公司的<em class="title-nowrap">业务链条与信息衰减</em></h2>
       </div>
 
       <!-- Step 1: Pipeline diagram with icons -->
@@ -552,22 +1206,24 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
         </div>
       </div>
 
-      <!-- Step 3: Key insight -->
+      <!-- Step 3: 根因 1 -->
       <div data-step="3">
-        <div class="grid-2" style="gap:var(--gap-sm);">
-          <div class="card card-accent" style="text-align:center;">
+          <div class="card card-accent" style="text-align:center;max-width:min(40vw,420px);">
             <p class="meta-text" style="margin-bottom:2px;">根因 1</p>
             <svg viewBox="0 0 24 24" style="width:clamp(24px,2.5vw,36px);height:clamp(24px,2.5vw,36px);margin:var(--gap-xs) auto;" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
             <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">定制化程度高</p>
             <p style="font-size:clamp(10px,.9vw,13px);color:var(--ink-muted);">无法快速开发部署</p>
           </div>
-          <div class="card card-accent" style="text-align:center;">
+      </div>
+
+      <!-- Step 4: 根因 2 -->
+      <div data-step="4">
+          <div class="card card-accent" style="text-align:center;max-width:min(40vw,420px);">
             <p class="meta-text" style="margin-bottom:2px;">根因 2</p>
             <svg viewBox="0 0 24 24" style="width:clamp(24px,2.5vw,36px);height:clamp(24px,2.5vw,36px);margin:var(--gap-xs) auto;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">业务链条过长</p>
             <p style="font-size:clamp(10px,.9vw,13px);color:var(--ink-muted);">信息逐层衰减</p>
           </div>
-        </div>
       </div>
     </div>
     <div class="foot">
@@ -580,7 +1236,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 <!-- =============================================
      SLIDE 4: 点线面框架
      ============================================= -->
-<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="3">
+<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="0">
   <div class="page">
     <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
     <div class="tabs">
@@ -597,43 +1253,43 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
     <div class="content">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
         <div class="kicker">Framework</div>
-        <h2 class="title-lg">我的思考框架：<em>点 · 线 · 面</em></h2>
+        <h2 class="title-lg">我的思考框架：<em class="title-nowrap">点 · 线 · 面</em></h2>
         <div class="divider"></div>
       </div>
 
       <div style="display:grid;grid-template-columns:1fr clamp(120px,18vw,220px);gap:var(--gap-md);align-items:center;">
         <!-- Left: 3 PLS cards -->
         <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
-          <div class="pls-card" data-step="1">
+          <div class="pls-card">
             <div class="pls-badge dot">点</div>
-            <div style="flex:1;">
-              <p style="font-family:var(--font-display);font-size:clamp(14px,1.4vw,20px);font-weight:700;">岗位角度 — 我自己怎么变了</p>
-              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:3px;">AI时代产品经理的工作模式转变 + 实际案例演示</p>
+            <div style="flex:1;min-width:0;">
+              <p class="pls-title">岗位角度 — 我自己怎么变了</p>
+              <p class="pls-desc">AI时代产品经理的工作模式转变 + 实际案例演示</p>
             </div>
-            <svg viewBox="0 0 24 24" style="width:20px;height:20px;flex-shrink:0;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg viewBox="0 0 24 24" style="width:22px;height:22px;flex-shrink:0;opacity:.5;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </div>
 
-          <div class="pls-card" data-step="2">
+          <div class="pls-card">
             <div class="pls-badge line">线</div>
-            <div style="flex:1;">
-              <p style="font-family:var(--font-display);font-size:clamp(14px,1.4vw,20px);font-weight:700;">局部角度 — FDE 模式的可行性</p>
-              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:3px;">借鉴 Palantir 的 FDE 理念解决信息损失问题</p>
+            <div style="flex:1;min-width:0;">
+              <p class="pls-title">局部角度 — FDE 模式的可行性</p>
+              <p class="pls-desc">借鉴 Palantir 的 FDE 理念解决信息损失问题</p>
             </div>
-            <svg viewBox="0 0 24 24" style="width:20px;height:20px;flex-shrink:0;" fill="none" stroke="var(--tab-local)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg viewBox="0 0 24 24" style="width:22px;height:22px;flex-shrink:0;opacity:.5;" fill="none" stroke="var(--tab-local)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </div>
 
-          <div class="pls-card" data-step="3">
+          <div class="pls-card">
             <div class="pls-badge surface">面</div>
-            <div style="flex:1;">
-              <p style="font-family:var(--font-display);font-size:clamp(14px,1.4vw,20px);font-weight:700;">全局角度 — 对公司意味着什么</p>
-              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:3px;">从业务链条和公司战略出发的组织升级思考</p>
+            <div style="flex:1;min-width:0;">
+              <p class="pls-title">全局角度 — 对公司意味着什么</p>
+              <p class="pls-desc">从业务链条和公司战略出发的组织升级思考</p>
             </div>
-            <svg viewBox="0 0 24 24" style="width:20px;height:20px;flex-shrink:0;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg viewBox="0 0 24 24" style="width:22px;height:22px;flex-shrink:0;opacity:.5;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </div>
         </div>
 
         <!-- Right: visual concentric diagram -->
-        <div style="display:flex;align-items:center;justify-content:center;">
+        <div class="pls-diagram" style="display:flex;align-items:center;justify-content:center;">
           <svg viewBox="0 0 160 160" style="width:100%;max-width:200px;">
             <!-- Surface (outer) -->
             <circle cx="80" cy="80" r="72" fill="none" stroke="var(--tab-global)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".5"/>
@@ -680,7 +1336,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
     <div class="content">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
         <div class="kicker">Point · 点</div>
-        <h2 class="title-lg">传统产品经理的<em>工作模式</em></h2>
+        <h2 class="title-lg"><span class="title-nowrap">传统产品经理的</span><em>工作模式</em></h2>
         <div class="divider"></div>
       </div>
 
@@ -753,7 +1409,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 <!-- =============================================
      SLIDE 6: AI 时代 PM 工作模式
      ============================================= -->
-<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="3">
   <div class="page">
     <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
     <div class="tabs">
@@ -770,14 +1426,12 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
     <div class="content">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
         <div class="kicker">Shift</div>
-        <h2 class="title-lg">AI 时代的<em>新模式</em></h2>
+        <h2 class="title-lg"><span class="title-nowrap">AI 时代的</span><em>新模式</em></h2>
       </div>
 
-      <!-- Step 1: Before / After comparison -->
+      <!-- Step 1: Before -->
       <div data-step="1">
-        <div class="grid-2" style="gap:var(--gap-md);">
-          <!-- Before -->
-          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);max-width:min(46vw,520px);">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--gap-xs);">
               <span style="width:10px;height:10px;background:var(--danger);display:inline-block;opacity:.6;"></span>
               <span class="meta-text" style="color:var(--danger);">Before · 传统模式</span>
@@ -801,8 +1455,11 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
               </div>
             </div>
           </div>
-          <!-- After -->
-          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+      </div>
+
+      <!-- Step 2: After -->
+      <div data-step="2">
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);max-width:min(46vw,520px);">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--gap-xs);">
               <span style="width:10px;height:10px;background:var(--accent);display:inline-block;"></span>
               <span class="meta-text" style="color:var(--accent);">After · AI 驱动模式</span>
@@ -826,11 +1483,10 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
               </div>
             </div>
           </div>
-        </div>
       </div>
 
-      <!-- Step 2: Key shift quote -->
-      <div data-step="2">
+      <!-- Step 3: 核心转变 -->
+      <div data-step="3">
         <div class="quote-block">
           <p>产品经理的核心产出，从"描述需求的文档"变成"可运行的解决方案"。</p>
         </div>
@@ -863,14 +1519,14 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
     <div class="content">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
         <div class="kicker">My Workflow</div>
-        <h2 class="title-lg">我的<em>工作链条</em></h2>
+        <h2 class="title-lg"><span class="title-nowrap">我的</span><em>工作链条</em></h2>
       </div>
 
       <!-- Step 1: Full workflow pipeline -->
       <div data-step="1">
         <div style="display:flex;flex-direction:column;gap:0;">
-          <!-- Row 1: Input -->
-          <div style="display:flex;align-items:stretch;background:#fff;border:1px solid var(--rule);border-bottom:none;">
+          <!-- Row 1: Input (clickable for detail) -->
+          <div class="detail-trigger" data-detail="detail-workflow-input" data-detail-title="信息输入 · 工作流详解" style="display:flex;align-items:stretch;background:#fff;border:1px solid var(--rule);border-bottom:none;border-radius:0;">
             <div style="width:clamp(60px,7vw,90px);background:var(--tab-role);display:flex;align-items:center;justify-content:center;padding:clamp(8px,1.2vh,14px);">
               <span style="writing-mode:vertical-rl;font-size:clamp(9px,.85vw,11px);font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.5);">INPUT</span>
             </div>
@@ -891,31 +1547,31 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
               </div>
             </div>
           </div>
-          <!-- Row 2: Output -->
-          <div style="display:flex;align-items:stretch;background:#fff;border:1px solid var(--rule);border-bottom:none;">
+          <!-- Row 2: Output (clickable for detail) -->
+          <div class="detail-trigger" data-detail="detail-workflow-output" data-detail-title="产出物 · 可执行的解决方案" style="display:flex;align-items:stretch;background:#fff;border:1px solid var(--rule);border-bottom:none;border-radius:0;">
             <div style="width:clamp(60px,7vw,90px);background:var(--tab-bg);display:flex;align-items:center;justify-content:center;padding:clamp(8px,1.2vh,14px);">
               <span style="writing-mode:vertical-rl;font-size:clamp(9px,.85vw,11px);font-weight:700;letter-spacing:.1em;color:rgba(0,0,0,.5);">OUTPUT</span>
             </div>
             <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);">
               <div style="background:#fff;padding:clamp(8px,1.2vh,14px);text-align:center;">
                 <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
-                <p style="font-size:clamp(10px,1vw,13px);font-weight:600;margin-top:4px;">文档沉淀</p>
-                <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-muted);">分项目知识库</p>
+                <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;margin-top:4px;">文档沉淀</p>
+                <p class="caption">分项目知识库</p>
               </div>
               <div style="background:#fff;padding:clamp(8px,1.2vh,14px);text-align:center;">
                 <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-                <p style="font-size:clamp(10px,1vw,13px);font-weight:600;margin-top:4px;">可交互 Demo</p>
-                <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-muted);">前端代码直出</p>
+                <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;margin-top:4px;">可交互 Demo</p>
+                <p class="caption">前端代码直出</p>
               </div>
               <div style="background:#fff;padding:clamp(8px,1.2vh,14px);text-align:center;">
                 <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <p style="font-size:clamp(10px,1vw,13px);font-weight:600;margin-top:4px;">验收标准</p>
-                <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-muted);">对应投标文件</p>
+                <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;margin-top:4px;">验收标准</p>
+                <p class="caption">对应投标文件</p>
               </div>
               <div style="background:#fff;padding:clamp(8px,1.2vh,14px);text-align:center;">
                 <svg viewBox="0 0 24 24" style="width:22px;height:22px;margin:0 auto;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                <p style="font-size:clamp(10px,1vw,13px);font-weight:600;margin-top:4px;">开发用 PRD</p>
-                <p style="font-size:clamp(8px,.7vw,10px);color:var(--ink-muted);">可直接使用</p>
+                <p style="font-size:clamp(12px,1.1vw,15px);font-weight:600;margin-top:4px;">开发用 PRD</p>
+                <p class="caption">可直接使用</p>
               </div>
             </div>
           </div>
@@ -941,7 +1597,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 
       <!-- Step 2: Key point -->
       <div data-step="2">
-        <div class="card card-accent" style="margin-top:var(--gap-xs);">
+        <div class="card card-accent detail-trigger" data-detail="detail-beautiful-waste" data-detail-title="美丽的废物 · 验证框架" style="margin-top:var(--gap-xs);">
           <p style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);">
             <strong>核心目标：</strong>产出的内容能否可以直接用？研发拿到后能否直接开发？不只是"生成文档"，而是"生成可执行的解决方案"。
           </p>
@@ -958,105 +1614,131 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 <!-- =============================================
      SLIDE 8: 案例展示-1
      ============================================= -->
-<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
-  <div class="page">
-    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
-    <div class="tabs">
-      <div class="tab" data-tab="1">背景</div>
-      <div class="tab active" data-tab="2">岗位</div>
-      <div class="tab" data-tab="3">局部</div>
-      <div class="tab" data-tab="4">全局</div>
-      <div class="tab" data-tab="5">行动</div>
-    </div>
-    <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
-      <div class="header-right">09 / --</div>
-    </div>
-    <div class="content">
-      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
-        <div class="kicker">Case Study</div>
-        <h2 class="title-lg">案例：<em>沈阳南电子班牌</em>方案</h2>
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="4" data-gallery-persistent>
+  <div class="page page-case page-case--gallery">
+    <!-- 图库常驻右侧适中窗口；悬浮放大；点击左右切换 -->
+    <div class="page-bg" data-photo-gallery>
+      <div class="bg-stage">
+        <div class="bg-photo is-active" data-index="0"><img src="images/case-1.png" alt="方案界面截图 1" loading="lazy"></div>
+        <div class="bg-photo" data-index="1"><img src="images/case-2.png" alt="方案界面截图 2" loading="lazy"></div>
+        <div class="bg-photo" data-index="2"><img src="images/case-3.png" alt="方案流程截图" loading="lazy"></div>
+        <div class="bg-photo" data-index="3"><img src="images/case-4.png" alt="文档结构截图" loading="lazy"></div>
+        <div class="bg-photo" data-index="4"><img src="images/case-doc-1.png" alt="讨论底稿截图" loading="lazy"></div>
+        <div class="bg-photo" data-index="5"><img src="images/case-doc-2.gif" alt="Demo 动图" loading="lazy"></div>
+        <div class="bg-nav">
+          <button type="button" class="bg-nav-prev" aria-label="上一张"></button>
+          <button type="button" class="bg-nav-next" aria-label="下一张"></button>
+        </div>
+        <div class="bg-pager"><span data-pager-current>1</span> / 6 · 悬浮放大 · 点击左右切换</div>
       </div>
+      <div class="bg-shade"></div>
+    </div>
 
-      <!-- Step 1: Process + screenshot placeholders -->
-      <div data-step="1">
-        <div class="grid-2" style="gap:var(--gap-md);">
-          <!-- Left: process -->
-          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
-            <div class="meta-text">工作流程</div>
-            <!-- Vertical timeline -->
-            <div style="display:flex;flex-direction:column;gap:0;border-left:2px solid var(--accent);margin-left:8px;padding-left:clamp(12px,1.5vw,20px);">
-              <div style="position:relative;padding:var(--gap-xs) 0;">
-                <div style="position:absolute;left:calc(-1 * clamp(12px,1.5vw,20px) - 5px);top:clamp(6px,.8vh,10px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
-                <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">飞书群沟通记录</p>
-                <p style="font-size:clamp(9px,.85vw,12px);color:var(--ink-muted);">客户需求讨论、会议纪要</p>
-              </div>
-              <div style="position:relative;padding:var(--gap-xs) 0;">
-                <div style="position:absolute;left:calc(-1 * clamp(12px,1.5vw,20px) - 5px);top:clamp(6px,.8vh,10px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
-                <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">飞书 CLI 提取结构化信息</p>
-                <p style="font-size:clamp(9px,.85vw,12px);color:var(--ink-muted);">自动抓取群消息和文档</p>
-              </div>
-              <div style="position:relative;padding:var(--gap-xs) 0;">
-                <div style="position:absolute;left:calc(-1 * clamp(12px,1.5vw,20px) - 5px);top:clamp(6px,.8vh,10px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
-                <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">Claude Code 生成方案底稿</p>
-                <p style="font-size:clamp(9px,.85vw,12px);color:var(--ink-muted);">PRD + 技术方案 + Demo</p>
-              </div>
-              <div style="position:relative;padding:var(--gap-xs) 0;">
-                <div style="position:absolute;left:calc(-1 * clamp(12px,1.5vw,20px) - 5px);top:clamp(6px,.8vh,10px);width:8px;height:8px;border-radius:50%;background:var(--tab-bg);"></div>
-                <p style="font-size:clamp(11px,1.1vw,14px);font-weight:600;color:var(--ink);">输出完整讨论底稿</p>
-                <p style="font-size:clamp(9px,.85vw,12px);color:var(--ink-muted);">直接用于客户对接和内部评审</p>
-              </div>
+    <div class="page-foreground">
+      <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+      <div class="tabs">
+        <div class="tab" data-tab="1">背景</div>
+        <div class="tab active" data-tab="2">岗位</div>
+        <div class="tab" data-tab="3">局部</div>
+        <div class="tab" data-tab="4">全局</div>
+        <div class="tab" data-tab="5">行动</div>
+      </div>
+      <div class="header">
+        <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+        <div class="header-right">09 / --</div>
+      </div>
+      <div class="content">
+        <div class="case-title-block" data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+          <div class="kicker">Case Study</div>
+          <h2 class="title-lg">案例：<em class="title-nowrap">沈阳南电子班牌方案</em></h2>
+          <p class="caption-sm">朗星电子班牌 · 教室设备预约 · 显示逻辑 — 1 天内产出可评审底稿</p>
+        </div>
+
+        <div data-step="1" class="frost-panel" style="padding:clamp(12px,1.6vh,18px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-xs);">案例工作流（与 Part2 主链条一致）</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:clamp(4px,.6vw,8px);font-size:clamp(11px,1.05vw,14px);">
+            <span class="card card-h" style="padding:6px 10px;border-left:3px solid var(--tab-role);"><strong>飞书群</strong><span class="caption-sm" style="margin-left:6px;">纪要/讨论</span></span>
+            <span style="color:var(--ink-faint);">→</span>
+            <span class="card card-h" style="padding:6px 10px;border-left:3px solid var(--accent);"><strong>飞书 CLI</strong><span class="caption-sm" style="margin-left:6px;">结构化提取</span></span>
+            <span style="color:var(--ink-faint);">→</span>
+            <span class="card card-h" style="padding:6px 10px;border-left:3px solid var(--accent);"><strong>Claude Code</strong><span class="caption-sm" style="margin-left:6px;">方案+Demo</span></span>
+            <span style="color:var(--ink-faint);">→</span>
+            <span class="card card-h" style="padding:6px 10px;border-left:3px solid var(--tab-bg);"><strong>讨论底稿</strong><span class="caption-sm" style="margin-left:6px;">客户/评审</span></span>
+          </div>
+          <p class="caption-sm" style="margin-top:var(--gap-xs);color:var(--ink-muted);">右侧图库：群聊截图 · 界面原型 · 流程图 · 讨论底稿 · Demo 动图（悬浮放大浏览）</p>
+        </div>
+
+        <div data-step="2" class="frost-panel" style="padding:clamp(14px,2vh,22px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-sm);">分步执行</div>
+          <div style="display:flex;flex-direction:column;gap:0;border-left:2px solid var(--accent);margin-left:8px;padding-left:clamp(14px,1.6vw,22px);">
+            <div class="timeline-item" style="position:relative;padding:var(--gap-sm) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(14px,1.6vw,22px) - 5px);top:clamp(8px,.9vh,12px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+              <p>飞书群沟通记录</p>
+              <p class="caption-sm">客户需求讨论、会议纪要</p>
+            </div>
+            <div class="timeline-item" style="position:relative;padding:var(--gap-sm) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(14px,1.6vw,22px) - 5px);top:clamp(8px,.9vh,12px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+              <p>飞书 CLI 提取结构化信息</p>
+              <p class="caption-sm">自动抓取群消息和文档</p>
+            </div>
+            <div class="timeline-item" style="position:relative;padding:var(--gap-sm) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(14px,1.6vw,22px) - 5px);top:clamp(8px,.9vh,12px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
+              <p>Claude Code 生成方案底稿</p>
+              <p class="caption-sm">PRD + 技术方案 + Demo</p>
+            </div>
+            <div class="timeline-item" style="position:relative;padding:var(--gap-sm) 0;">
+              <div style="position:absolute;left:calc(-1 * clamp(14px,1.6vw,22px) - 5px);top:clamp(8px,.9vh,12px);width:8px;height:8px;border-radius:50%;background:var(--tab-bg);"></div>
+              <p>输出完整讨论底稿</p>
+              <p class="caption-sm">直接用于客户对接和内部评审</p>
             </div>
           </div>
+        </div>
 
-          <!-- Right: screenshot placeholders -->
-          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
-            <div class="meta-text">产出展示</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-xs);">
-              <div style="aspect-ratio:4/3;background:var(--paper-shadow);border:1px dashed var(--rule);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
-                <svg viewBox="0 0 24 24" style="width:24px;height:24px;" fill="none" stroke="var(--ink-faint)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                <span style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">方案截图 1</span>
-              </div>
-              <div style="aspect-ratio:4/3;background:var(--paper-shadow);border:1px dashed var(--rule);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
-                <svg viewBox="0 0 24 24" style="width:24px;height:24px;" fill="none" stroke="var(--ink-faint)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                <span style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">方案截图 2</span>
-              </div>
-              <div style="aspect-ratio:4/3;background:var(--paper-shadow);border:1px dashed var(--rule);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
-                <svg viewBox="0 0 24 24" style="width:24px;height:24px;" fill="none" stroke="var(--ink-faint)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                <span style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">Demo 截图</span>
-              </div>
-              <div style="aspect-ratio:4/3;background:var(--paper-shadow);border:1px dashed var(--rule);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;">
-                <svg viewBox="0 0 24 24" style="width:24px;height:24px;" fill="none" stroke="var(--ink-faint)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                <span style="font-size:clamp(8px,.7vw,10px);color:var(--ink-faint);">文档截图</span>
-              </div>
+        <div data-step="3" class="frost-panel" style="padding:clamp(12px,1.6vh,18px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-sm);">产出物（飞书讨论底稿 + 附图）</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-xs);">
+            <div class="card" style="padding:clamp(8px,1vh,12px);border-left:3px solid var(--tab-role);">
+              <p style="font-size:var(--text-small);font-weight:600;">设备预约冲突方案</p>
+              <p class="caption-sm">业务规则与重叠处理</p>
+            </div>
+            <div class="card" style="padding:clamp(8px,1vh,12px);border-left:3px solid var(--accent);">
+              <p style="font-size:var(--text-small);font-weight:600;">电子班牌显示逻辑</p>
+              <p class="caption-sm">状态 / 课表 / 预约联动</p>
+            </div>
+            <div class="card" style="padding:clamp(8px,1vh,12px);border-left:3px solid var(--tab-local);">
+              <p style="font-size:var(--text-small);font-weight:600;">PRD + 技术说明</p>
+              <p class="caption-sm">研发可直接对照开发</p>
+            </div>
+            <div class="card" style="padding:clamp(8px,1vh,12px);border-left:3px solid var(--tab-bg);">
+              <p style="font-size:var(--text-small);font-weight:600;">可交互 Demo</p>
+              <p class="caption-sm">客户现场演示与确认</p>
+            </div>
+          </div>
+        </div>
+
+        <div data-step="4">
+          <div class="stat-bar frost-panel" style="border-radius:12px;overflow:hidden;">
+            <div class="stat-item">
+              <div class="stat-num">1</div>
+              <div class="stat-label">天内完成底稿</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-num">4+</div>
+              <div class="stat-label">类产出文档</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <div class="stat-num stat-num-text">可直接用</div>
+              <div class="stat-label">研发无需二次翻译</div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Step 2: Result highlight -->
-      <div data-step="2">
-        <div class="stat-row" style="justify-content:center;padding:var(--gap-xs) 0;background:#fff;border:1px solid var(--rule);">
-          <div class="stat-item">
-            <div class="stat-num">1</div>
-            <div class="stat-label">天内完成底稿</div>
-          </div>
-          <div style="width:1px;background:var(--rule);align-self:stretch;margin:0 clamp(12px,2vw,28px);"></div>
-          <div class="stat-item">
-            <div class="stat-num">4</div>
-            <div class="stat-label">份产出文档</div>
-          </div>
-          <div style="width:1px;background:var(--rule);align-self:stretch;margin:0 clamp(12px,2vw,28px);"></div>
-          <div class="stat-item">
-            <div class="stat-num" style="font-size:clamp(22px,2.8vw,38px);">可直接用</div>
-            <div class="stat-label">研发无需二次翻译</div>
-          </div>
-        </div>
+      <div class="foot">
+        <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+        <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
       </div>
-    </div>
-    <div class="foot">
-      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
-      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
     </div>
   </div>
 </div>
@@ -1064,7 +1746,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 <!-- =============================================
      SLIDE 9: 飞书 CLI 能力介绍
      ============================================= -->
-<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="3">
   <div class="page">
     <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
     <div class="tabs">
@@ -1081,14 +1763,12 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
     <div class="content">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
         <div class="kicker">Tool Deep-dive</div>
-        <h2 class="title-lg">关键工具：<em>飞书 CLI</em></h2>
+        <h2 class="title-lg">关键工具：<em class="title-nowrap">飞书 CLI</em></h2>
       </div>
 
-      <!-- Step 1: What + capabilities -->
+      <!-- Step 1: 左侧 — 是什么 + 能力 -->
       <div data-step="1">
-        <div class="grid-2" style="gap:var(--gap-md);">
-          <!-- Left: What is it -->
-          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div style="display:flex;flex-direction:column;gap:var(--gap-sm);max-width:min(48vw,560px);">
             <div class="card card-accent">
               <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">让 AI Agent 操作飞书的命令行接口</p>
               <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:2px;">Codex / Claude Code 通过 CLI 直接读写飞书数据，实现办公自动化</p>
@@ -1112,9 +1792,11 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
                 <span style="font-size:clamp(11px,1.05vw,14px);">被 Agent Coding 工具直接调用</span>
               </div>
             </div>
-          </div>
+        </div>
+      </div>
 
-          <!-- Right: Why CLI not 智能体 -->
+      <!-- Step 2: 右侧 — 对比表 -->
+      <div data-step="2">
           <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
             <div class="meta-text">为什么用 CLI，而不是飞书智能体？</div>
             <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
@@ -1141,17 +1823,16 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
                 <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;color:var(--ink-muted);">协作自动化</div>
               </div>
             </div>
-            <div class="card" style="border-left:3px solid var(--tab-bg);margin-top:var(--gap-xs);">
+            <div class="card detail-trigger" data-detail="detail-cli-mcp-skills" data-detail-title="CLI / MCP / Skills 详解" style="border-left:3px solid var(--tab-bg);margin-top:var(--gap-xs);">
               <p style="font-size:clamp(11px,1vw,14px);color:var(--ink);">
                 <strong>互补关系：</strong>CLI 做"从 0 到 1 写出可用东西"，智能体做流程自动化和团队协作。
               </p>
             </div>
           </div>
-        </div>
       </div>
 
-      <!-- Step 2: Code example visual -->
-      <div data-step="2">
+      <!-- Step 3: 终端示例 -->
+      <div data-step="3">
         <div style="background:var(--ink);padding:clamp(10px,1.5vh,18px) clamp(14px,1.5vw,22px);overflow:hidden;">
           <div style="display:flex;align-items:center;gap:6px;margin-bottom:clamp(6px,.8vh,10px);">
             <span style="width:8px;height:8px;border-radius:50%;background:#ff5f57;"></span>
@@ -1174,6 +1855,1261 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
   </div>
 </div>
 
+<!-- =============================================
+     SLIDE 10: 案例展示-2 — 沈阳南数字人（iframe Demo）
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page page-case page-case--doc">
+    <div class="page-bg" data-doc-panel>
+      <div class="bg-stage">
+        <div class="bg-doc-shell">
+          <div class="demo-chrome">
+            <span class="dot" style="background:#ff5f57;"></span>
+            <span class="dot" style="background:#febc2e;"></span>
+            <span class="dot" style="background:#28c840;"></span>
+            <span class="url">260506-shenyang/demo/digital-human-doc · 最新对外演示文档</span>
+          </div>
+          <iframe
+            src="demo/digital-human-doc/index.html?deck=1"
+            title="沈阳南数字人对外演示文档"
+            loading="eager"
+            sandbox="allow-scripts allow-same-origin allow-forms"
+          ></iframe>
+          <p class="bg-doc-hint">文档内可滚动；悬浮放大至顶底 · 翻页请点左侧空白或键盘</p>
+        </div>
+        <div class="bg-pager">Live Doc · 悬浮铺满</div>
+      </div>
+      <div class="bg-shade"></div>
+    </div>
+
+    <div class="page-foreground">
+      <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+      <div class="tabs">
+        <div class="tab" data-tab="1">背景</div>
+        <div class="tab active" data-tab="2">岗位</div>
+        <div class="tab" data-tab="3">局部</div>
+        <div class="tab" data-tab="4">全局</div>
+        <div class="tab" data-tab="5">行动</div>
+      </div>
+      <div class="header">
+        <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+        <div class="header-right">11 / --</div>
+      </div>
+      <div class="content">
+        <div class="case-title-block" data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+          <div class="kicker">Case Study · Live Demo</div>
+          <h2 class="title-lg">案例：<em class="title-nowrap">沈阳南数字人项目</em></h2>
+          <p class="caption-sm">对外演示包中的 HTML 文档，可直接嵌入幻灯片现场操作</p>
+        </div>
+
+        <div data-step="1" class="frost-panel" style="padding:clamp(12px,1.6vh,18px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-sm);">产出形态</div>
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+            <div class="card card-h" style="border-left:3px solid var(--tab-role);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
+              <span style="font-size:var(--text-small);">会议录音 → 结构化 PRD / 话术</span>
+            </div>
+            <div class="card card-h" style="border-left:3px solid var(--tab-local);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
+              <span style="font-size:var(--text-small);">可交互 HTML 演示文档（右侧面板）</span>
+            </div>
+            <div class="card card-h" style="border-left:3px solid var(--tab-global);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
+              <span style="font-size:var(--text-small);">与电子班牌案例同一工作流，不同交付物</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="foot">
+        <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+        <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 11: page7 — 前端代码直接输出
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">12 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Code Output</div>
+        <h2 class="title-lg">前端代码<em>直接输出</em></h2>
+        <p class="caption-sm">在约束清晰的前提下，产品经理可在原项目上推进简单改动</p>
+      </div>
+      <div data-step="1">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">
+          <div class="card" style="border-left:3px solid var(--tab-role);">
+            <p class="meta-text" style="margin-bottom:6px;">可以做</p>
+            <p style="font-size:var(--text-small);color:var(--ink-light);">在既有项目上继续开发，帮助前端处理单元级改动、补交互、改文案与布局</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--tab-bg);">
+            <p class="meta-text" style="margin-bottom:6px;">前提</p>
+            <p style="font-size:var(--text-small);color:var(--ink-light);">约束前端框架、组件库、数据库与接口协议，避免 AI 自由发挥</p>
+          </div>
+          <div class="card" style="border-left:3px solid var(--tab-local);grid-column:1/-1;">
+            <p class="meta-text" style="margin-bottom:6px;">仍交给前端</p>
+            <p style="font-size:var(--text-small);color:var(--ink-light);">性能优化、工程化发布、联调排障与线上质量，仍由前端工程师收口</p>
+          </div>
+        </div>
+      </div>
+      <div data-step="2">
+        <div class="frost-panel" style="padding:clamp(12px,1.6vh,18px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-xs);">分工边界</div>
+          <div style="display:flex;align-items:center;gap:clamp(8px,1vw,14px);flex-wrap:wrap;font-size:clamp(11px,1.05vw,14px);">
+            <span class="card card-h" style="padding:6px 12px;border:1px solid var(--rule);">PM：需求 + Demo + 小改动</span>
+            <span style="color:var(--ink-faint);">→</span>
+            <span class="card card-h" style="padding:6px 12px;border:1px solid var(--rule);">前端：架构 + 质量 + 发布</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 12: page8 — 产品产出是否可用
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">13 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Deliverable Quality</div>
+        <h2 class="title-lg">产品产出<em>是否可用</em></h2>
+      </div>
+      <div data-step="1">
+        <div class="callout-danger">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <div>
+            <p style="font-weight:600;color:var(--ink);font-size:clamp(13px,1.2vw,17px);">「美丽的废物」</p>
+            <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:4px;">格式规范、样式优美，但无法进入评审、无法交给研发直接开发</p>
+          </div>
+        </div>
+      </div>
+      <div data-step="2">
+        <div class="meta-text" style="margin-bottom:var(--gap-xs);">真正要检验的标准</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-xs);">
+          <div class="card" style="text-align:center;padding:clamp(10px,1.4vh,16px);">
+            <p style="font-size:clamp(13px,1.2vw,16px);font-weight:600;">能评审</p>
+            <p class="caption-sm">需求细节与交互说得清</p>
+          </div>
+          <div class="card" style="text-align:center;padding:clamp(10px,1.4vh,16px);">
+            <p style="font-size:clamp(13px,1.2vw,16px);font-weight:600;">能规格化</p>
+            <p class="caption-sm">可作为需求规格说明书</p>
+          </div>
+          <div class="card" style="text-align:center;padding:clamp(10px,1.4vh,16px);">
+            <p style="font-size:clamp(13px,1.2vw,16px);font-weight:600;">能开发</p>
+            <p class="caption-sm">研发拿到即可动手</p>
+          </div>
+        </div>
+      </div>
+      <div data-step="3">
+        <div class="card card-accent">
+          <p style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);"><strong>目标：</strong>不只是生成文档，而是生成可执行、可验收、可迭代的解决方案。</p>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 13: page9 — Hermes 个人案例
+     ============================================= -->
+<div class="slide slide-hermes" data-part="2" data-chapter="岗位角度" data-steps="2" data-gallery-persistent>
+  <div class="page page-case page-case--gallery">
+    <div class="page-bg" data-photo-gallery>
+      <div class="bg-stage">
+        <div class="bg-photo is-active" data-index="0"><img src="images/hermes-telegram.png" alt="Hermes Telegram 工作流截图" loading="lazy"></div>
+        <div class="bg-photo" data-index="1"><img src="images/hermes-obsidian.png" alt="Obsidian 知识库关系图谱" loading="lazy"></div>
+        <div class="bg-nav">
+          <button type="button" class="bg-nav-prev" aria-label="上一张"></button>
+          <button type="button" class="bg-nav-next" aria-label="下一张"></button>
+        </div>
+        <div class="bg-pager"><span data-pager-current>1</span> / 2 · 悬浮铺满</div>
+      </div>
+      <div class="bg-shade"></div>
+    </div>
+    <div class="page-foreground">
+      <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+      <div class="tabs">
+        <div class="tab" data-tab="1">背景</div>
+        <div class="tab active" data-tab="2">岗位</div>
+        <div class="tab" data-tab="3">局部</div>
+        <div class="tab" data-tab="4">全局</div>
+        <div class="tab" data-tab="5">行动</div>
+      </div>
+      <div class="header">
+        <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+        <div class="header-right">14 / --</div>
+      </div>
+      <div class="content">
+        <div class="case-title-block" data-step="0" style="display:flex;flex-direction:column;gap:2px;">
+          <div class="kicker">Personal Stack</div>
+          <h2 class="title-lg">个人案例：<em>Hermes</em></h2>
+          <p class="caption-sm">Telegram 网关 · 主用法：<strong>链接沉淀到 Obsidian</strong>（非替代飞书/IDE）</p>
+        </div>
+
+        <div data-step="1" class="frost-panel hermes-panel">
+          <div class="meta-text" style="margin-bottom:4px;">用处 · 三句话</div>
+          <div class="hermes-use-row">
+            <span><strong>可查</strong> · 碎片链接进库</span>
+            <span><strong>手机触发</strong> · 丢链接即可</span>
+            <span><strong>反哺 FDE</strong> · patterns 原料</span>
+          </div>
+          <div class="meta-text" style="margin:8px 0 4px;">沉淀流程</div>
+          <ol class="hermes-flow">
+            <li>YouTube / X / 公众号 <em>→ 复制链接</em></li>
+            <li>Telegram 转发给 Hermes</li>
+            <li class="is-core">Hermes：抓取 · 摘要 · wiki 草稿</li>
+            <li>写入 Obsidian（secondbrain）</li>
+            <li>双链挂到项目 / patterns</li>
+          </ol>
+          <p class="hermes-foot">飞书做协作，Obsidian 做个人洞察 · 右侧：Telegram / 关系图谱</p>
+        </div>
+
+        <div data-step="2" class="hermes-stat">
+          <span>刷到即丢链接</span>
+          <span>secondbrain 可检索</span>
+          <span>支撑 Part3 沉淀</span>
+        </div>
+      </div>
+      <div class="foot">
+        <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+        <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 15: AI 工具投入
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">-- / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">MONTHLY INVESTMENT</div>
+        <h2 class="title-lg">我每月在 AI 工具上的<em>投入</em></h2>
+      </div>
+
+      <div data-step="1" class="cost-grid">
+        <!-- ChatGPT Plus -->
+        <div class="cost-card">
+          <div class="cost-logo" style="background:#10a37f;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M22.28 9.37a5.93 5.93 0 0 0-.51-4.89 6 6 0 0 0-6.47-2.87A5.93 5.93 0 0 0 10.82.02a6 6 0 0 0-5.73 4.15 5.94 5.94 0 0 0-3.97 2.88 6 6 0 0 0 .74 7.03 5.93 5.93 0 0 0 .5 4.89 6 6 0 0 0 6.48 2.87 5.93 5.93 0 0 0 4.47 1.59 6 6 0 0 0 5.74-4.15 5.94 5.94 0 0 0 3.96-2.88 6 6 0 0 0-.73-7.03z" fill="#fff"/><path d="M9.37 21.5a4.46 4.46 0 0 1-2.86-1.03l.13-.08 4.75-2.74a.77.77 0 0 0 .39-.67v-6.69l2 1.16a.07.07 0 0 1 .04.06v5.54a4.49 4.49 0 0 1-4.45 4.45z" fill="#10a37f"/><path d="M3.07 17.53a4.46 4.46 0 0 1-.53-3.02l.13.08 4.74 2.74a.78.78 0 0 0 .78 0l5.79-3.34v2.32a.07.07 0 0 1-.03.06l-4.79 2.77a4.49 4.49 0 0 1-6.09-1.61z" fill="#10a37f"/><path d="M2.04 7.86a4.46 4.46 0 0 1 2.33-1.96v5.64a.77.77 0 0 0 .39.67l5.79 3.34-2.01 1.16a.07.07 0 0 1-.07 0l-4.79-2.77A4.49 4.49 0 0 1 2.04 7.86z" fill="#10a37f"/><path d="M20.2 11.43l-5.8-3.34 2.01-1.16a.07.07 0 0 1 .07 0l4.79 2.77a4.49 4.49 0 0 1-.7 8.1v-5.7a.77.77 0 0 0-.38-.67z" fill="#10a37f"/><path d="M22.23 9.53l-.13-.08-4.74-2.74a.78.78 0 0 0-.78 0L10.79 10v-2.3a.07.07 0 0 1 .03-.07l4.79-2.77a4.49 4.49 0 0 1 6.62 4.67z" fill="#10a37f"/><path d="M8.94 13.17l-2.01-1.16a.07.07 0 0 1-.04-.06V6.41A4.49 4.49 0 0 1 14.25 3l-.13.07-4.74 2.74a.77.77 0 0 0-.39.67l-.05 6.69z" fill="#10a37f"/></svg>
+          </div>
+          <div class="cost-info">
+            <span class="cost-name">ChatGPT Plus</span>
+            <span class="cost-price">$20/月</span>
+            <span class="cost-use">主力：Codex 代码生成</span>
+          </div>
+        </div>
+        <!-- Claude MAX -->
+        <div class="cost-card" style="border-color:var(--accent);">
+          <div class="cost-logo" style="background:linear-gradient(135deg,#d4a574,#c4956a);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M16.98 5.38L12 2 7.02 5.38 2 8.73V15.27L7.02 18.62 12 22l4.98-3.38L22 15.27V8.73L16.98 5.38z" fill="#fff" fill-opacity=".9"/><circle cx="12" cy="12" r="3.5" fill="#d4a574"/></svg>
+          </div>
+          <div class="cost-info">
+            <span class="cost-name">Claude MAX</span>
+            <span class="cost-price">$130/月</span>
+            <span class="cost-use">核心：Claude Code 主力</span>
+          </div>
+        </div>
+        <!-- Cursor -->
+        <div class="cost-card">
+          <div class="cost-logo" style="background:#000;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" fill="#000"/><path d="M8 8l8 4-8 4V8z" fill="#fff"/></svg>
+          </div>
+          <div class="cost-info">
+            <span class="cost-name">Cursor Pro</span>
+            <span class="cost-price">$20/月</span>
+            <span class="cost-use">AI IDE 编程环境</span>
+          </div>
+        </div>
+        <!-- DeepSeek API -->
+        <div class="cost-card">
+          <div class="cost-logo" style="background:#4d6bfe;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#4d6bfe"/><path d="M8 12a4 4 0 0 1 8 0" stroke="#fff" stroke-width="2" fill="none"/><circle cx="12" cy="14" r="2" fill="#fff"/></svg>
+          </div>
+          <div class="cost-info">
+            <span class="cost-name">DeepSeek API</span>
+            <span class="cost-price">≈¥100/月</span>
+            <span class="cost-use">Hermes / 小龙虾</span>
+          </div>
+        </div>
+        <!-- Google AI Pro -->
+        <div class="cost-card">
+          <div class="cost-logo" style="background:#fff;border:1px solid #e0e0e0;">
+            <svg width="22" height="22" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09a6.87 6.87 0 0 1 0-4.17V7.07H2.18A11.96 11.96 0 0 0 1 12c0 1.94.46 3.77 1.18 5.01l3.66-2.92z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          </div>
+          <div class="cost-info">
+            <span class="cost-name">Google AI Pro</span>
+            <span class="cost-price">≈¥30/年</span>
+            <span class="cost-use">白嫖 · Gemini 体验</span>
+          </div>
+        </div>
+        <!-- 机场 -->
+        <div class="cost-card">
+          <div class="cost-logo" style="background:linear-gradient(135deg,#667eea,#764ba2);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg>
+          </div>
+          <div class="cost-info">
+            <span class="cost-name">网络工具</span>
+            <span class="cost-price">¥30/月</span>
+            <span class="cost-use">访问全球 AI 服务</span>
+          </div>
+        </div>
+      </div>
+
+      <div data-step="2" style="display:flex;gap:clamp(10px,1.4vw,18px);align-items:stretch;">
+        <div class="cost-total">
+          <span class="cost-total-num">≈ ¥1,400</span>
+          <span class="cost-total-label">/ 月</span>
+        </div>
+        <div class="cost-insights">
+          <div class="cost-insight">要用 AI 做生产力，就用<strong>最好的模型</strong></div>
+          <div class="cost-insight">最强模型买<strong>大套餐</strong>，作为主力工具</div>
+          <div class="cost-insight">保持对<strong>多个优秀工具</strong>的接触和判断力</div>
+          <div class="cost-insight">承认<strong>AI 焦虑</strong>——花钱是对抗焦虑最诚实的方式</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 16: Part 3 幕封
+     ============================================= -->
+<div class="slide" data-part="3" data-chapter="局部角度" data-steps="1">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab active" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-right">15 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-md);justify-content:center;min-height:40vh;">
+        <div class="kicker">Line · 局部</div>
+        <h2 class="title-lg">这个变化让 <em>FDE 模式</em><br>在我们公司变得可行</h2>
+        <p style="font-size:clamp(14px,1.4vw,20px);color:var(--ink-light);max-width:28em;line-height:1.55;">解决链条前半段「信息逐层损失」——把 Palantir 的前线部署理念，对照捷安高科的交付链路来理解。</p>
+      </div>
+      <div data-step="1" class="quote-block">
+        <p>线：不是换工具，而是让「听懂客户」的人更早坐在现场，并把洞察喂回平台。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 16: Part3 page1 — 回顾业务链条
+     ============================================= -->
+<div class="slide" data-part="3" data-chapter="局部角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab active" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-right">16 / --</div>
+    </div>
+    <div class="content" style="gap:var(--gap-sm);">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div class="kicker">Business Chain</div>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">回顾<em class="title-nowrap">现有业务流程</em></h2>
+      </div>
+      <div data-step="1">
+        <div class="pipeline" style="background:#fff;border:1px solid var(--rule);">
+          <div class="pipe-node" style="background:rgba(152,212,187,.15);"><span class="pipe-label">销售</span></div>
+          <div class="pipe-node"><span class="pipe-label">招投标</span></div>
+          <div class="pipe-node"><span class="pipe-label">客户沟通</span></div>
+          <div class="pipe-node highlight" style="border-color:var(--tab-local);background:rgba(124,106,173,.12);"><span class="pipe-label">产品设计</span><span class="pipe-sub">信息大量损失</span></div>
+          <div class="pipe-node"><span class="pipe-label">架构</span></div>
+          <div class="pipe-node"><span class="pipe-label">开发</span></div>
+          <div class="pipe-node"><span class="pipe-label">测试</span></div>
+          <div class="pipe-node"><span class="pipe-label">部署</span></div>
+          <div class="pipe-node" style="border-right:none;"><span class="pipe-label">验收</span></div>
+        </div>
+        <p class="caption-sm" style="margin-top:var(--gap-xs);">括号内职责说明已省略，聚焦主链条流转（与 Part1 一致）</p>
+      </div>
+      <div data-step="2">
+        <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <span class="meta-text">到达「产品设计」时的信息完整度</span>
+            <span class="meta-text" style="color:var(--danger);">前半段衰减最严重</span>
+          </div>
+          <div class="loss-bar-wrap"><span class="loss-bar-label left">100%</span><span class="loss-bar-label right">???</span></div>
+          <div style="display:flex;gap:2px;">
+            <div style="flex:2;height:clamp(22px,3vh,32px);background:var(--tab-local);opacity:1;"></div>
+            <div style="flex:1;height:clamp(22px,3vh,32px);background:var(--tab-local);opacity:.55;"></div>
+            <div style="flex:1;height:clamp(22px,3vh,32px);background:var(--tab-local);opacity:.35;display:flex;align-items:center;justify-content:center;"><span style="font-size:9px;color:#fff;font-weight:600;">产品设计</span></div>
+            <div style="flex:1;height:clamp(22px,3vh,32px);background:var(--tab-local);opacity:.2;"></div>
+            <div style="flex:1;height:clamp(22px,3vh,32px);background:var(--tab-local);opacity:.1;"></div>
+          </div>
+        </div>
+      </div>
+      <div data-step="3" class="card card-accent" style="padding:clamp(12px,1.5vh,18px);">
+        <p style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);"><strong>局部视角的问题：</strong>不是产品设计写得慢，而是到手里时已是「二手需求」——FDE 要把听和做前移到链条前半段。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 17: Part3 page2 — Palantir
+     ============================================= -->
+<div class="slide" data-part="3" data-chapter="局部角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab active" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-right">17 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">Reference</div>
+        <h2 class="title-lg">Palantir：<em class="title-nowrap">卖「跑通业务」</em></h2>
+        <p class="caption-sm">不是卖功能清单，而是派最强的人嵌入客户现场，从工作流里「打捞」需求。</p>
+      </div>
+      <div data-step="1">
+        <div class="frost-panel" style="padding:clamp(14px,1.8vh,22px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:var(--gap-sm);">碎石路 → 柏油路（gravel road to paved highway）</div>
+          <svg viewBox="0 0 520 88" style="width:100%;max-height:clamp(72px,10vh,96px);" aria-hidden="true">
+            <defs><marker id="arr-p" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="var(--tab-local)"/></marker></defs>
+            <rect x="8" y="28" width="100" height="36" rx="6" fill="rgba(124,106,173,.15)" stroke="var(--tab-local)" stroke-width="1"/>
+            <text x="58" y="50" text-anchor="middle" font-size="11" fill="var(--ink)">现场解法</text>
+            <line x1="108" y1="46" x2="138" y2="46" stroke="var(--tab-local)" marker-end="url(#arr-p)"/>
+            <rect x="140" y="28" width="100" height="36" rx="6" fill="rgba(124,106,173,.2)" stroke="var(--tab-local)" stroke-width="1"/>
+            <text x="190" y="50" text-anchor="middle" font-size="11" fill="var(--ink)">跨客户抽象</text>
+            <line x1="240" y1="46" x2="270" y2="46" stroke="var(--tab-local)" marker-end="url(#arr-p)"/>
+            <rect x="272" y="28" width="100" height="36" rx="6" fill="rgba(124,106,173,.28)" stroke="var(--tab-local)" stroke-width="1"/>
+            <text x="322" y="50" text-anchor="middle" font-size="11" fill="var(--ink)">沉淀进平台</text>
+            <line x1="372" y1="46" x2="402" y2="46" stroke="var(--tab-local)" marker-end="url(#arr-p)"/>
+            <rect x="404" y="28" width="108" height="36" rx="6" fill="var(--tab-local)" opacity=".35" stroke="var(--tab-local)" stroke-width="1"/>
+            <text x="458" y="50" text-anchor="middle" font-size="11" fill="var(--ink)">下一轮更快</text>
+          </svg>
+        </div>
+      </div>
+      <div data-step="2" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">
+        <div class="card detail-trigger" data-detail="detail-fde-deep" data-detail-title="FDE 模式 · 深度解析" style="padding:clamp(12px,1.5vh,18px);">
+          <p class="meta-text">业务模式</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.5;">第三条路：不只做平台，也不只做行业 SaaS，而是<strong>嵌入客户把流程数字化</strong>，再从个性化工作流中抽共性。</p>
+        </div>
+        <div class="card card-accent detail-trigger" data-detail="detail-gravel-road" data-detail-title="碎石路 → 柏油路 · 内部对标" style="padding:clamp(12px,1.5vh,18px);">
+          <p class="meta-text">为什么值得参考</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.5;">客户常说不清要什么；<strong>今天聊、今天有 demo</strong> 的决策回路，才能把真话问出来。</p>
+        </div>
+      </div>
+      <div data-step="3" class="stat-row" style="margin-top:var(--gap-xs);">
+        <div class="stat-item"><div class="stat-num" style="color:var(--tab-local);">高</div><div class="stat-label">交付粘性</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--tab-local);">厚</div><div class="stat-label">平台复利</div></div>
+        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-local);">ROI</div><div class="stat-label">定价对标结果</div></div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 18: Part3 page3 — FDE
+     ============================================= -->
+<div class="slide" data-part="3" data-chapter="局部角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab active" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-right">18 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">FDE</div>
+        <h2 class="title-lg">Forward Deployed <em>Engineer</em></h2>
+        <p class="caption-sm">写生产代码 · 长期嵌入现场 · 对业务结果负责 · 反向喂养平台</p>
+      </div>
+      <div data-step="1" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">
+        <div class="frost-panel" style="padding:clamp(14px,1.6vh,20px);border-radius:12px;border-top:3px solid var(--tab-local);">
+          <p style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">Echo · 听</p>
+          <p class="caption-sm" style="margin-top:6px;">领域专家：识别哪些痛点值得解决，把「正确问题」提到最高优先级。</p>
+        </div>
+        <div class="frost-panel" style="padding:clamp(14px,1.6vh,20px);border-radius:12px;border-top:3px solid var(--accent);">
+          <p style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">Delta · 做</p>
+          <p class="caption-sm" style="margin-top:6px;">工程师：把听到的痛点快速做成可用 demo，当天迭代。</p>
+        </div>
+      </div>
+      <div data-step="2">
+        <div class="meta-text" style="margin-bottom:var(--gap-xs);">FDE 如何解决「前半段信息损失」</div>
+        <div style="display:flex;flex-direction:column;gap:var(--gap-xs);font-size:var(--text-small);">
+          <div class="card card-h" style="padding:8px 12px;border-left:3px solid var(--tab-local);"><span><strong>前移：</strong>出现在销售/客户第一次深度技术交流，拿一手需求</span></div>
+          <div class="card card-h" style="padding:8px 12px;border-left:3px solid var(--accent);"><span><strong>提速：</strong>AI Coding 把 demo 周期从「周」压到「小时」</span></div>
+          <div class="card card-h" style="padding:8px 12px;border-left:3px solid var(--tab-bg);"><span><strong>沉淀：</strong>每次现场产出 patterns，季度推入产品规划</span></div>
+        </div>
+      </div>
+      <div data-step="3" class="quote-block">
+        <p>在捷安，我现在的角色接近 Echo + 一部分 Delta——Part2 的案例，就是这条线在培训产品线的试运行。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- =============================================
+     SLIDE 19: Part 4 幕封 — 全局角度
+     ============================================= -->
+<div class="slide" data-part="4" data-chapter="全局角度" data-steps="1">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab active" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-right">19 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-md);justify-content:center;min-height:38vh;">
+        <div class="kicker">Surface · 面</div>
+        <h2 class="title-lg">对公司<em class="title-nowrap">意味着什么</em></h2>
+        <p style="font-size:clamp(15px,1.45vw,21px);color:var(--ink-light);max-width:32em;line-height:1.55;">不是个人工具秀，而是：交付结构、AI 提效方向、垂类平台投资——能否对齐。</p>
+      </div>
+      <div data-step="1" class="quote-block">
+        <p>面：把 Part2 的岗位实践、Part3 的 FDE 方法论，放回捷安高科的生意与组织里看。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 20: Part4 — 交付复杂度 vs 组织形态
+     ============================================= -->
+<div class="slide" data-part="4" data-chapter="全局角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab active" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-right">20 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div class="kicker">Mismatch</div>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">我们卖的不是<em class="title-nowrap">标准软件</em></h2>
+        <p class="caption-sm">而是「设备 + 仿真 + 课程 + 师资 + 考核」一体的教学解决方案。</p>
+      </div>
+      <div data-step="1">
+        <div class="grid-2" style="gap:var(--gap-sm);">
+          <div class="frost-panel" style="padding:clamp(14px,1.6vh,20px);border-radius:12px;border-top:3px solid var(--tab-global);">
+            <p class="meta-text">业务现实</p>
+            <ul style="margin-top:10px;padding-left:1.1em;font-size:var(--text-small);color:var(--ink-light);line-height:1.55;display:flex;flex-direction:column;gap:6px;">
+              <li>轨道交通约占 70%，单订单 200–300 万量级</li>
+              <li>招投标驱动，定制化极高，几乎每单二次开发</li>
+              <li>必须进现场：硬件、软件、教学法一起落地</li>
+              <li>需求常说不清——老师、教务、甲方三方统合</li>
+            </ul>
+          </div>
+          <div class="frost-panel" style="padding:clamp(14px,1.6vh,20px);border-radius:12px;border-top:3px solid var(--danger);">
+            <p class="meta-text">组织现实</p>
+            <ul style="margin-top:10px;padding-left:1.1em;font-size:var(--text-small);color:var(--ink-light);line-height:1.55;display:flex;flex-direction:column;gap:6px;">
+              <li>仍是销售 → 沟通 → 产品 → 开发 → 验收的瀑布</li>
+              <li>各工位 KPI 独立，信息在转述中衰减</li>
+              <li>产品拿到手时，常已是「二手需求」</li>
+              <li>AI 工具上了，但<strong>协作结构</strong>还没变</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div data-step="2" class="card card-accent" style="padding:clamp(14px,1.6vh,20px);">
+        <p style="font-size:clamp(15px,1.35vw,19px);color:var(--ink);line-height:1.5;"><strong>结论：</strong>交付物比 Palantir 典型客户更复杂，却用更长的远程瀑布链路——<strong>结构与业务本质错配</strong>，这正是 FDE 模式在捷安「反而更贴切」的原因。</p>
+      </div>
+      <div data-step="3" class="stat-row">
+        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global);">必须</div><div class="stat-label">深入现场</div></div>
+        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global);">极高</div><div class="stat-label">定制化</div></div>
+        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global);">机会</div><div class="stat-label">前移 + 沉淀</div></div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 21: Part4 — 与公司变革方向同向
+     ============================================= -->
+<div class="slide" data-part="4" data-chapter="全局角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab active" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-right">21 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div class="kicker">Alignment</div>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">FDE 不是<em class="title-nowrap">另起炉灶</em></h2>
+        <p class="caption-sm">是给「AI 提效、垂类平台、任职资格」配一套可执行的协作方法论。</p>
+      </div>
+      <div data-step="1" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">
+        <div class="card" style="padding:clamp(12px,1.5vh,18px);">
+          <p class="meta-text">公司强调的方向</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:8px;line-height:1.5;">产品经理提出<strong>正确问题</strong>；研发做<strong>有价值</strong>的创新；研发/运营流程<strong>AI 化</strong>；<strong>垂类知识</strong>成为核心竞争力。</p>
+        </div>
+        <div class="card card-accent" style="padding:clamp(12px,1.5vh,18px);">
+          <p class="meta-text">FDE 的对应动作</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:8px;line-height:1.5;">Echo 前移识别真问题；Delta + AI Coding 快速验证；现场数据反哺运营洞察；patterns 沉淀进产品与<strong>职教垂类大模型</strong>建设。</p>
+        </div>
+      </div>
+      <div data-step="2">
+        <div class="meta-text" style="margin-bottom:var(--gap-xs);">与「基于职教垂类大模型的 AI 职教平台」的关系</div>
+        <div class="pipeline" style="background:#fff;border:1px solid var(--rule);">
+          <div class="pipe-node" style="background:rgba(168,216,234,.2);"><span class="pipe-label">现场项目</span><span class="pipe-sub">FDE 打捞需求</span></div>
+          <div class="pipe-node highlight" style="border-color:var(--tab-global);background:rgba(168,216,234,.28);"><span class="pipe-label">patterns</span><span class="pipe-sub">跨客户抽象</span></div>
+          <div class="pipe-node"><span class="pipe-label">平台能力</span><span class="pipe-sub">模块进 roadmap</span></div>
+          <div class="pipe-node" style="border-right:none;background:rgba(168,216,234,.15);"><span class="pipe-label">下一单</span><span class="pipe-sub">交付更快、更准</span></div>
+        </div>
+      </div>
+      <div data-step="3" class="quote-block">
+        <p>推 FDE，本质是给公司 AI 战略配「协作结构」——工具换不掉信息在十个杯子里的损耗，结构可以。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 22: Part4 — 工具层 vs 流程层
+     ============================================= -->
+<div class="slide" data-part="4" data-chapter="全局角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab active" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-right">22 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div class="kicker">Two Layers</div>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);"><em class="title-nowrap">互补</em>，不是对立</h2>
+      </div>
+      <div data-step="1" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-md);align-items:stretch;">
+        <div class="frost-panel" style="padding:clamp(16px,2vh,24px);border-radius:12px;border-top:3px solid var(--tab-bg);display:flex;flex-direction:column;gap:var(--gap-sm);">
+          <p style="font-size:clamp(16px,1.4vw,22px);font-weight:700;color:var(--ink);">工具层 · 飞书智能伙伴 / 智能体</p>
+          <p style="font-size:var(--text-body);color:var(--ink-light);line-height:1.5;">会议纪要、文档协作、流程自动化——在<strong>现有协作基础设施</strong>里提效。</p>
+          <div style="margin-top:auto;padding-top:var(--gap-sm);border-top:1px solid var(--rule);">
+            <p class="meta-text">典型场景</p>
+            <p style="font-size:var(--text-small);color:var(--ink-muted);margin-top:6px;line-height:1.45;">群消息汇总 · 纪要结构化 · 审批/分配规则化</p>
+          </div>
+        </div>
+        <div class="frost-panel" style="padding:clamp(16px,2vh,24px);border-radius:12px;border-top:3px solid var(--tab-global);display:flex;flex-direction:column;gap:var(--gap-sm);">
+          <p style="font-size:clamp(16px,1.4vw,22px);font-weight:700;color:var(--ink);">流程层 · FDE 工作方式</p>
+          <p style="font-size:var(--text-body);color:var(--ink-light);line-height:1.5;">人坐到需求源头，<strong>可运行 demo</strong> 替代二手文档，洞察反向喂回平台。</p>
+          <div style="margin-top:auto;padding-top:var(--gap-sm);border-top:1px solid var(--rule);">
+            <p class="meta-text">典型场景</p>
+            <p style="font-size:var(--text-small);color:var(--ink-muted);margin-top:6px;line-height:1.45;">售前技术交流 · 当天 demo 迭代 · patterns 进规划</p>
+          </div>
+        </div>
+      </div>
+      <div data-step="2" class="card" style="padding:clamp(14px,1.6vh,20px);margin-top:var(--gap-xs);">
+        <p style="font-size:clamp(15px,1.35vw,19px);color:var(--ink);line-height:1.5;"><strong>我的工作流：</strong>飞书 CLI / 智能伙伴负责「捞信息」→ Codex / Claude Code 负责「出 demo」→ Obsidian 负责「沉淀 patterns」——三层串起来，信息不再断在转述里。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 23: Part4 — 捷安版飞轮与公司收益
+     ============================================= -->
+<div class="slide" data-part="4" data-chapter="全局角度" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab active" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-right">23 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div class="kicker">Flywheel</div>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">捷安版<em class="title-nowrap">「碎石路→柏油路」</em></h2>
+      </div>
+      <div data-step="1">
+        <svg viewBox="0 0 560 100" style="width:100%;max-height:clamp(80px,11vh,108px);" aria-hidden="true">
+          <defs><marker id="arr-g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="var(--tab-global)"/></marker></defs>
+          <rect x="8" y="32" width="108" height="40" rx="6" fill="rgba(168,216,234,.22)" stroke="var(--tab-global)" stroke-width="1.2"/>
+          <text x="62" y="58" text-anchor="middle" font-size="12" fill="var(--ink)">项目现场解法</text>
+          <line x1="118" y1="52" x2="148" y2="52" stroke="var(--tab-global)" marker-end="url(#arr-g)"/>
+          <rect x="150" y="32" width="108" height="40" rx="6" fill="rgba(168,216,234,.3)" stroke="var(--tab-global)" stroke-width="1.2"/>
+          <text x="204" y="58" text-anchor="middle" font-size="12" fill="var(--ink)">需求/方案 patterns</text>
+          <line x1="260" y1="52" x2="290" y2="52" stroke="var(--tab-global)" marker-end="url(#arr-g)"/>
+          <rect x="292" y="32" width="108" height="40" rx="6" fill="rgba(168,216,234,.38)" stroke="var(--tab-global)" stroke-width="1.2"/>
+          <text x="346" y="58" text-anchor="middle" font-size="12" fill="var(--ink)">产品线 &amp; 职教平台</text>
+          <line x1="402" y1="52" x2="432" y2="52" stroke="var(--tab-global)" marker-end="url(#arr-g)"/>
+          <rect x="434" y="32" width="118" height="40" rx="6" fill="var(--tab-global)" opacity=".4" stroke="var(--tab-global)" stroke-width="1.2"/>
+          <text x="493" y="58" text-anchor="middle" font-size="12" fill="var(--ink)">下一单更快更准</text>
+        </svg>
+      </div>
+      <div data-step="2" class="grid-3" style="gap:var(--gap-sm);">
+        <div class="card" style="padding:clamp(12px,1.5vh,18px);text-align:center;">
+          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global);font-family:var(--font-display);">粘</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.4;">业务流程长在平台上，换供应商成本高</p>
+        </div>
+        <div class="card" style="padding:clamp(12px,1.5vh,18px);text-align:center;">
+          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global);font-family:var(--font-display);">厚</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.4;">每次交付让平台/modules 变厚，边际成本下降</p>
+        </div>
+        <div class="card" style="padding:clamp(12px,1.5vh,18px);text-align:center;">
+          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global);font-family:var(--font-display);">准</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.4;">定价可对齐 ROI，而非功能清单比价</p>
+        </div>
+      </div>
+      <div data-step="3" class="quote-block">
+        <p>对公司：证明一种「前线构建 + 反向沉淀」在培训交付里跑得通；对个人：积累可量化的案例与客户洞察资产。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 24: Part 5 幕封 — 行动
+     ============================================= -->
+<div class="slide" data-part="5" data-chapter="行动" data-steps="1">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab active" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-action);">行动</span></div>
+      <div class="header-right">24 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-md);justify-content:center;min-height:38vh;">
+        <div class="kicker">Next</div>
+        <h2 class="title-lg">从想法到<em class="title-nowrap">一件小事</em></h2>
+        <p style="font-size:clamp(15px,1.45vw,21px);color:var(--ink-light);max-width:28em;line-height:1.55;">不申请新岗位，先把行为做出来——3 个月小试点，用结果说话。</p>
+      </div>
+      <div data-step="1" class="quote-block" style="border-left-color:var(--tab-action);background:rgba(255,230,167,.25);">
+        <p style="color:var(--ink);">「我做现在的工作 + 增量：售前可叫我、现场可出 demo、走访必产出三件套。」</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 25: Part5 — 六个月节奏（压缩版）
+     ============================================= -->
+<div class="slide" data-part="5" data-chapter="行动" data-steps="3">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab active" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-action);">行动</span></div>
+      <div class="header-right">25 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
+        <div class="kicker">Roadmap</div>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">六个月<em class="title-nowrap">试点节奏</em></h2>
+        <p class="caption-sm">可证伪：每个阶段有产出物，方便跟上级复盘。</p>
+      </div>
+      <div data-step="1" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="card card-h" style="padding:clamp(12px,1.4vh,16px) clamp(14px,1.4vw,20px);border-left:3px solid var(--tab-action);">
+          <p style="font-size:clamp(15px,1.3vw,18px);font-weight:700;color:var(--ink);">第 1 个月 · 基础设施</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.5;">Obsidian 四库（客户 / 需求 patterns / 方案 / 复盘）· 绑定 2–3 位销售 · demo 30 分钟工作流跑顺 · 1on1 对齐试点</p>
+        </div>
+        <div class="card card-h" style="padding:clamp(12px,1.4vh,16px) clamp(14px,1.4vw,20px);border-left:3px solid var(--accent);">
+          <p style="font-size:clamp(15px,1.3vw,18px);font-weight:700;color:var(--ink);">第 2–3 个月 · 现场验证</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.5;">跟 1–2 个真实项目出差 · 当天 demo 迭代 · 每次走访<strong>三件套</strong>：需求 patterns / 方案 patterns / 反共识 insights</p>
+        </div>
+      </div>
+      <div data-step="2" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="card card-h" style="padding:clamp(12px,1.4vh,16px) clamp(14px,1.4vw,20px);border-left:3px solid var(--tab-global);">
+          <p style="font-size:clamp(15px,1.3vw,18px);font-weight:700;color:var(--ink);">第 4–6 个月 · 沉淀扩大</p>
+          <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.5;">v1「客户需求语义图谱」· 频次 ≥3 的 patterns 推产品 roadmap · 1–2 个内部分享案例 · 评估是否在 AI 提效项目里铺开</p>
+        </div>
+        <div class="stat-row" style="margin-top:var(--gap-xs);">
+          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action);">1–2</div><div class="stat-label">可量化成功案例</div></div>
+          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action);">1 份</div><div class="stat-label">独家客户洞察资产</div></div>
+          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action);">1 条</div><div class="stat-label">协作模式验证结论</div></div>
+        </div>
+      </div>
+      <div data-step="3" class="card card-danger" style="padding:clamp(12px,1.4vh,16px);">
+        <p style="font-size:var(--text-small);color:var(--ink);line-height:1.5;"><strong>常见顾虑：</strong>销售不愿带？从最棘手客户切入。demo 吊高期望？标「探索原型」。跟 KPI 无关？短期是投资，长期提升需求质量与 AI 项目落地。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 26: Part5 — 下周一件小事
+     ============================================= -->
+<div class="slide" data-part="5" data-chapter="行动" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab active" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-action);">行动</span></div>
+      <div class="header-right">26 / --</div>
+    </div>
+    <div class="content">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+        <div class="kicker">This Week</div>
+        <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">下周可做的一件<em class="title-nowrap">小事</em></h2>
+      </div>
+      <div data-step="1" style="display:grid;grid-template-columns:1.1fr .9fr;gap:var(--gap-md);align-items:stretch;">
+        <div class="frost-panel" style="padding:clamp(18px,2.2vh,28px);border-radius:12px;border:2px solid var(--tab-action);background:rgba(255,230,167,.12);">
+          <p class="meta-text" style="color:var(--ink);">推荐动作（零成本启动）</p>
+          <p style="font-size:clamp(17px,1.55vw,24px);font-weight:700;color:var(--ink);margin-top:12px;line-height:1.4;">找 1 位销售同事，约定一句话：</p>
+          <p style="font-size:clamp(16px,1.4vw,21px);color:var(--accent);margin-top:14px;line-height:1.5;font-style:italic;">「凡是客户问到 AI / 智能化 / 数字人 / 实训升级的，第一时间叫我。」</p>
+          <p style="font-size:var(--text-body);color:var(--ink-light);margin-top:16px;line-height:1.55;">不用改流程、不用批项目——先接到<strong>第一个电话</strong>，用 Part2 的工具链在 48 小时内回一个可点的 demo 或结构化纪要。</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
+          <div class="card" style="padding:clamp(14px,1.6vh,20px);flex:1;">
+            <p class="meta-text">备选动作</p>
+            <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:8px;line-height:1.5;">对<strong>当前在手项目</strong>（如沈阳南）补一份走访「三件套」模板，下次出差直接填。</p>
+          </div>
+          <div class="card card-accent" style="padding:clamp(14px,1.6vh,20px);flex:1;">
+            <p class="meta-text">三件套模板</p>
+            <ol style="margin-top:8px;padding-left:1.2em;font-size:var(--text-small);color:var(--ink-light);line-height:1.55;display:flex;flex-direction:column;gap:6px;">
+              <li>需求 patterns：独此一家 vs 听过多次</li>
+              <li>方案 patterns：怎么解的、能否复用</li>
+              <li>反共识 insights：与内部假设不一致的点</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div data-step="2" class="quote-block" style="border-left-color:var(--tab-action);">
+        <p>客户改需求的成本越接近 0，反馈越有价值——下周的目标，是让<strong>第一次</strong>低成本验证发生。</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     SLIDE 27: 收尾 — 抛砖引玉
+     ============================================= -->
+<div class="slide" data-part="5" data-chapter="行动" data-steps="0">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab active" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-action);">行动</span></div>
+      <div class="header-right">27 / --</div>
+    </div>
+    <div class="content" style="justify-content:center;align-items:stretch;text-align:center;">
+      <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-lg);align-items:center;">
+        <div class="kicker">Thank You</div>
+        <h2 class="title-lg" style="font-size:clamp(24px,3.2vw,44px);">抛砖引玉，<em>欢迎交流</em></h2>
+        <p style="font-size:clamp(16px,1.5vw,22px);color:var(--ink-light);max-width:26em;line-height:1.55;">入职两个月的观察与实践，不一定对，但愿意用真实项目继续验证。</p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:var(--gap-sm);margin-top:var(--gap-sm);">
+          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">点 · 岗位工作模式变了</span>
+          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">线 · FDE 解决前半段损耗</span>
+          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">面 · 对公司意味着协作升级</span>
+        </div>
+        <p style="font-family:var(--font-display);font-size:clamp(18px,1.8vw,28px);color:var(--accent);font-style:italic;margin-top:var(--gap-md);">从需求接收者 → 前线构建者</p>
+        <p style="font-size:var(--text-caption);color:var(--ink-muted);">杨明哲 · 产品经理 — 培训服务产品线 · 捷安高科</p>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>← → 翻页</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===========================================
+     DETAIL DRAWER — interactive deep-dive panels
+     =========================================== -->
+<div class="detail-overlay" id="detailOverlay"></div>
+<div class="detail-drawer" id="detailDrawer">
+  <div class="detail-drawer-header">
+    <div class="detail-drawer-title" id="detailTitle"></div>
+    <button class="detail-drawer-close" id="detailClose" aria-label="关闭">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="detail-drawer-body" id="detailBody"></div>
+  <div class="detail-drawer-hint"><kbd>Esc</kbd> 关闭详情</div>
+</div>
+
+<!-- Detail content templates (hidden, cloned into drawer on click) -->
+<template id="detail-workflow-input">
+  <h3>信息输入：从飞书沟通到结构化知识</h3>
+  <p>传统产品经理的信息输入是碎片化的——散落在飞书群聊、会议纪要、邮件附件中。我通过 CLI 工具链把这些碎片自动化地转变为结构化的知识资产。</p>
+  <div class="detail-flow">
+    <div class="detail-flow-step">
+      <strong>1. 飞书沟通记录抓取</strong>
+      <span>用飞书 CLI 一键拉取项目群的完整消息流，包括文件、图片、多维表格链接</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>2. 飞书文档批量获取</strong>
+      <span>lark-cli docs +fetch —— 把飞书文档转为 Markdown，保留结构和表格</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>3. AI 分析与结构化</strong>
+      <span>Claude Code / Codex 自动解析需求、提取关键约束、生成验收标准</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>4. 知识库沉淀</strong>
+      <span>自动存入项目知识库（分项目文件夹 + Obsidian 双链笔记）</span>
+    </div>
+  </div>
+  <h3>实际命令示例</h3>
+  <div class="detail-code">$ lark-cli docs +fetch --api-version v2 \
+  --doc "https://jiean.feishu.cn/docx/xxx" \
+  --doc-format markdown
+
+# 输出：完整的 Markdown 文档，包含表格、链接、引用
+# 然后用 Claude Code 分析：
+$ claude "分析这份需求文档，提取功能清单和验收标准"</div>
+  <h3>与传统方式的对比</h3>
+  <table class="detail-table">
+    <tr><th>维度</th><th>传统方式</th><th>AI 工作流</th></tr>
+    <tr><td>信息收集</td><td>手动翻群聊、截图、复制粘贴</td><td>CLI 一键拉取，自动结构化</td></tr>
+    <tr><td>文档处理</td><td>打开飞书 → 逐段阅读 → 笔记</td><td>批量转 Markdown → AI 摘要</td></tr>
+    <tr><td>知识沉淀</td><td>Word/本地文件夹/遗忘</td><td>自动入库 + 双链 + 可检索</td></tr>
+    <tr><td>耗时</td><td>30-60 分钟/项目</td><td>3-5 分钟/项目</td></tr>
+  </table>
+</template>
+
+<template id="detail-workflow-output">
+  <h3>产出物：不只是文档，是可执行的解决方案</h3>
+  <p>核心目标是：研发拿到产出后能否直接开发？而不是"拿到一份需要再翻译的文档"。</p>
+
+  <h3>四类产出物详解</h3>
+  <div class="detail-flow">
+    <div class="detail-flow-step">
+      <strong>文档沉淀</strong>
+      <span>每个项目独立知识库，包含需求分析、技术调研、会议记录、变更历史。不是"写完就扔"的文档，而是可持续更新的活知识</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>可交互 Demo</strong>
+      <span>用 Claude Code 直接生成前端代码——HTML/CSS/JS 一步到位。客户看到的不是静态原型，而是可点击、可交互的真实界面</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>验收标准</strong>
+      <span>从投标文件自动提取验收条款，逐条对应到功能点。研发知道"做到什么程度算完成"</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>开发用 PRD</strong>
+      <span>不是给领导看的 PPT 风格 PRD，而是给开发看的——包含接口定义、数据结构、状态流转、边界条件</span>
+    </div>
+  </div>
+
+  <h3>案例：沈阳南电子班牌项目</h3>
+  <p>从收到需求到产出完整方案（含可交互 Demo + 技术规格 + 验收标准），全程使用 AI 工具链，未排期研发资源。产出直接用于客户演示和内部评审。</p>
+</template>
+
+<template id="detail-cli-mcp-skills">
+  <h3>CLI、MCP、Skills —— 三者的区别</h3>
+  <p>很多同事混淆了这三个概念。它们是不同层次的工具，解决不同的问题。</p>
+
+  <table class="detail-table">
+    <tr><th></th><th>CLI（命令行）</th><th>MCP（协议）</th><th>Skills（能力）</th></tr>
+    <tr><td><strong>是什么</strong></td><td>人与 AI 的交互界面</td><td>AI 与外部系统的通信协议</td><td>AI 的专业能力封装</td></tr>
+    <tr><td><strong>类比</strong></td><td>方向盘</td><td>车的 OBD 接口</td><td>驾驶技能</td></tr>
+    <tr><td><strong>谁用</strong></td><td>产品/运营/任何人</td><td>开发者</td><td>AI 自己调用</td></tr>
+    <tr><td><strong>解决什么</strong></td><td>高效地与 AI 对话</td><td>让 AI 读写外部系统</td><td>让 AI 具备领域专长</td></tr>
+    <tr><td><strong>举例</strong></td><td>lark-cli、claude code</td><td>连接飞书/ERP/OA</td><td>"前端开发"技能包</td></tr>
+  </table>
+
+  <h3>什么时候该用什么？</h3>
+  <ul>
+    <li><strong>想让 AI 帮你做事</strong> → 用 CLI（命令行对话）</li>
+    <li><strong>想让 AI 读写公司系统</strong> → 需要 MCP 协议对接（开发者做）</li>
+    <li><strong>想让 AI 做得更专业</strong> → 给 AI 配 Skills（知识包+工具包）</li>
+  </ul>
+
+  <h3>对捷安高科的意义</h3>
+  <p>大多数同事目前停留在飞书智能伙伴的 GUI 界面——写文档、读群消息、定日程。这只是 AI 能力的冰山一角。CLI 打开了更大的可能性：批量处理、自动化工作流、跨系统调用。</p>
+</template>
+
+<template id="detail-fde-deep">
+  <h3>FDE 模式深度解析</h3>
+  <p>FDE（Forward Deployed Engineer，前线部署工程师）是 Palantir 独创的岗位，也是其商业模式的核心引擎。</p>
+
+  <h3>Palantir 的 FDE 模式</h3>
+  <div class="detail-flow">
+    <div class="detail-flow-step">
+      <strong>嵌入客户现场</strong>
+      <span>不是远程支持，是派最强工程师直接坐到客户办公室，和客户团队一起工作</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>理解真实业务</strong>
+      <span>不是听客户描述需求，而是亲眼看、亲手做，理解业务的每个细节和痛点</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>快速交付原型</strong>
+      <span>"碎石路"——用最快速度跑通业务链路，证明可行性，让客户看到价值</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>固化为产品</strong>
+      <span>"柏油路"——把验证过的方案工程化，变成可复制的产品能力</span>
+    </div>
+  </div>
+
+  <h3>捷安高科 vs Palantir：惊人的相似</h3>
+  <table class="detail-table">
+    <tr><th>维度</th><th>Palantir</th><th>捷安高科</th></tr>
+    <tr><td>客户类型</td><td>大型企业/政府</td><td>铁路局/地铁/交通客户</td></tr>
+    <tr><td>交付物</td><td>数据分析平台</td><td>虚拟仿真实训系统</td></tr>
+    <tr><td>核心挑战</td><td>每个客户的数据/流程不同</td><td>每个客户的场景/标准/设备不同</td></tr>
+    <tr><td>交付方式</td><td>工程师嵌入现场</td><td>项目团队驻场实施</td></tr>
+    <tr><td>复杂度</td><td>数据整合+分析</td><td>3D建模+逻辑+考核——甚至更高</td></tr>
+  </table>
+
+  <h3>内部 FDE 雏形</h3>
+  <p>田满佳做的"仿真脚本智能体建设"本质上就是 FDE 思维——深入理解仿真业务流程，定义标准，工程化交付。如果把这种模式推广到每条业务线，就是捷安版的 FDE。</p>
+  <p>另一个思路：找通用智能体搭建经验丰富的人，在各业务线重要项目跑一遍——这本身也是 FDE：派有经验的人嵌入业务线。</p>
+</template>
+
+<template id="detail-gravel-road">
+  <h3>"碎石路到柏油路" —— 捷安内部的对标案例</h3>
+  <p>Palantir 的核心飞轮：先用"碎石路"（快速原型）跑通客户业务，证明价值；再铺"柏油路"（工程化产品），实现规模复制。</p>
+
+  <h3>景晨凯的事故仿真平台路线图</h3>
+  <div class="detail-stat">
+    <div class="detail-stat-item">
+      <div class="detail-stat-num">5月底</div>
+      <div class="detail-stat-label">Demo 验证<br>碎石路</div>
+    </div>
+    <div class="detail-stat-item">
+      <div class="detail-stat-num">7月底</div>
+      <div class="detail-stat-label">工程化版本<br>铺路基</div>
+    </div>
+    <div class="detail-stat-item">
+      <div class="detail-stat-num">9月底</div>
+      <div class="detail-stat-label">批量生产<br>柏油路</div>
+    </div>
+  </div>
+  <p>这和 Palantir 的"碎石路→柏油路"路径高度一致。</p>
+
+  <h3>张冶的 AI 多媒体视频量化目标</h3>
+  <div class="detail-stat">
+    <div class="detail-stat-item">
+      <div class="detail-stat-num" style="color:var(--tab-bg);">70%</div>
+      <div class="detail-stat-label">交付周期缩短</div>
+    </div>
+    <div class="detail-stat-item">
+      <div class="detail-stat-num" style="color:var(--tab-bg);">60%</div>
+      <div class="detail-stat-label">制作成本降低</div>
+    </div>
+    <div class="detail-stat-item">
+      <div class="detail-stat-num" style="color:var(--tab-bg);">50%</div>
+      <div class="detail-stat-label">修改周期缩短</div>
+    </div>
+  </div>
+  <p>这些数字说明 AI 应用的价值不是理论上的——内部已经有团队在用量化指标衡量效果。</p>
+
+  <h3>关键管理信号</h3>
+  <p style="font-weight:600;color:var(--ink);font-size:clamp(14px,1.35vw,18px);">
+    "谁先完成完整项目且效果好 → 重奖"
+  </p>
+  <p>这说明公司对 AI 落地的紧迫度已经到了用激励手段加速的阶段。</p>
+</template>
+
+<template id="detail-beautiful-waste">
+  <h3>"美丽的废物" —— 如何验证 AI 产出的真实价值？</h3>
+  <p>全公司做了大量智能体和智能伙伴。但一个关键问题很少有人问：这些产出到底有没有真实价值？还是"看起来很厉害，实际上没人用"的美丽废物？</p>
+
+  <h3>验证四步法</h3>
+  <div class="detail-flow">
+    <div class="detail-flow-step">
+      <strong>1. 输入质量</strong>
+      <span>你喂给 AI 的信息是否准确、完整、结构化？垃圾进 → 垃圾出（GIGO）</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>2. 过程可控</strong>
+      <span>AI 的推理过程你是否理解？能否调整？如果是黑盒，你无法保证结果可靠</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>3. 输出可用</strong>
+      <span>产出是否直接进入了业务流程？还是"看完就关"的一次性报告？</span>
+    </div>
+    <div class="detail-flow-step">
+      <strong>4. 持续迭代</strong>
+      <span>这个智能体/流程是否在持续改进？还是做完就没人维护了？</span>
+    </div>
+  </div>
+
+  <h3>自检清单</h3>
+  <ul>
+    <li>你的智能体上线后，有多少人在用？</li>
+    <li>它的输出，有没有直接进入过正式交付物？</li>
+    <li>如果它明天下线，谁会受到影响？</li>
+    <li>你能用数据说明它节省了多少时间/成本吗？</li>
+  </ul>
+  <p>如果以上答案大部分是"不知道"或"没有"，那它可能就是一个美丽的废物。承认这一点不丢人——关键是从验证开始改进。</p>
+</template>
 
 <!-- ===========================================
      JAVASCRIPT
@@ -1191,11 +3127,24 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 
   function maxSteps(s){return parseInt(s.dataset.steps||'0',10)}
   function showTo(s,n){
+    const root=s.querySelector('.content')||s;
     for(let i=0;i<=maxSteps(s);i++){
-      s.querySelectorAll(`[data-step="${i}"]`).forEach(el=>{
+      root.querySelectorAll(`[data-step="${i}"]`).forEach(el=>{
         i<=n?el.classList.add('visible'):el.classList.remove('visible');
       });
     }
+  }
+  function markDocShellReady(shell,frame){
+    if(!shell||shell.classList.contains('is-iframe-ready'))return;
+    const ready=()=>shell.classList.add('is-iframe-ready');
+    frame?.addEventListener('load',ready,{once:true});
+    setTimeout(ready,2000);
+  }
+  function preloadDocIframes(){
+    document.querySelectorAll('.page-case--doc .bg-doc-shell').forEach((shell)=>{
+      const frame=shell.querySelector('iframe');
+      markDocShellReady(shell,frame);
+    });
   }
   function updateNums(){
     slides.forEach((s,i)=>{
@@ -1208,42 +3157,204 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
     s.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===p));
     if(p==='0')s.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   }
-  function updateUI(){
+  const mediaPanels=new Map();
+  function isPersistentGallerySlide(s){return s.dataset.galleryPersistent!==undefined}
+  function registerMediaPanel(gal){
+    const slide=gal.closest('.slide');
+    if(!slide)return;
+    const page=slide.querySelector('.page-case');
+    const stage=gal.querySelector('.bg-stage');
+    const photos=[...gal.querySelectorAll('.bg-photo')];
+    const pager=gal.querySelector('[data-pager-current]');
+    const state={gal,slide,page,photos,pager,stage,idx:0};
+    mediaPanels.set(slide,state);
+    if(photos.length){
+      function showPhoto(i){
+        state.idx=(i+photos.length)%photos.length;
+        photos.forEach((p,j)=>p.classList.toggle('is-active',j===state.idx));
+        if(pager) pager.textContent=String(state.idx+1);
+      }
+      state.showPhoto=showPhoto;
+      showPhoto(0);
+      const nav=gal.querySelector('.bg-nav');
+      nav?.addEventListener('click',e=>{
+        e.stopPropagation();
+        if(slide!==slides[cur])return;
+        const rect=nav.getBoundingClientRect();
+        const x=e.clientX-rect.left;
+        if(x<rect.width*0.5) showPhoto(state.idx-1);
+        else showPhoto(state.idx+1);
+      });
+    }
+    const docShell=gal.querySelector('.bg-doc-shell');
+    const docIframe=docShell?.querySelector('iframe');
+    markDocShellReady(docShell,docIframe);
+    const focusIn=()=>{
+      if(slide!==slides[cur])return;
+      page?.classList.add('is-gallery-focus');
+      try{docIframe?.contentWindow?.postMessage({type:'ppt-deck',focus:true},'*');}catch(_e){}
+    };
+    const focusOut=()=>{
+      page?.classList.remove('is-gallery-focus');
+      try{docIframe?.contentWindow?.postMessage({type:'ppt-deck',focus:false},'*');}catch(_e){}
+    };
+    stage?.addEventListener('mouseenter',focusIn);
+    stage?.addEventListener('mouseleave',focusOut);
+    gal.addEventListener('mouseenter',focusIn);
+    gal.addEventListener('mouseleave',focusOut);
+  }
+  function updateMediaPanel(){
+    const s=slides[cur];
+    document.querySelectorAll('.page-case.is-gallery-focus').forEach(p=>{
+      p.classList.remove('is-gallery-focus');
+    });
+    const state=mediaPanels.get(s);
+    if(!state||!isPersistentGallerySlide(s)||!state.showPhoto)return;
+    state.showPhoto(state.idx);
+  }
+  function updateUI(opts){
+    const smooth=!(opts&&opts.instant);
     const s=slides[cur];
     slides.forEach((x,i)=>x.classList.toggle('active',i===cur));
-    s.scrollIntoView({behavior:'smooth',block:'start'});
+    if(smooth) s.scrollIntoView({behavior:'smooth',block:'start'});
     bar.style.width=(cur/(total-1))*100+'%';
     const p=s.dataset.part;
     dots.forEach(d=>d.classList.toggle('active',d.dataset.part===p));
     label.textContent=chapters[p]||'';
     updateTabs(s);
     showTo(s,step);
+    const content=s.querySelector('.content');
+    if(content) content.scrollTop=0;
+    if(s.querySelector('.page-case--doc')){
+      const shell=s.querySelector('.bg-doc-shell');
+      const frame=shell?.querySelector('iframe');
+      markDocShellReady(shell,frame);
+    }
+    updateMediaPanel();
   }
-  function goTo(i){if(i<0||i>=total)return;cur=i;step=0;showTo(slides[cur],0);updateUI();}
+  function goTo(i){
+    if(i<0||i>=total)return;
+    cur=i; step=0;
+    updateUI();
+  }
   function next(){
     const s=slides[cur],m=maxSteps(s);
-    if(step<m){step++;showTo(s,step);}
+    if(step<m){step++;updateUI();}
     else if(cur<total-1)goTo(cur+1);
   }
   function prev(){
-    if(step>0){step--;showTo(slides[cur],step);}
-    else if(cur>0){cur--;step=maxSteps(slides[cur]);showTo(slides[cur],step);updateUI();}
+    if(step>0){step--;updateUI();}
+    else if(cur>0){cur--;step=maxSteps(slides[cur]);updateUI();}
   }
   document.addEventListener('keydown',e=>{
+    if(window._detailDrawerIsOpen&&window._detailDrawerIsOpen())return;
     if(['ArrowRight',' ','ArrowDown'].includes(e.key)){e.preventDefault();next();}
     if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();prev();}
     if(e.key==='Home'){e.preventDefault();goTo(0);}
     if(e.key==='End'){e.preventDefault();goTo(total-1);}
   });
-  document.querySelectorAll('.page').forEach(p=>p.addEventListener('click',e=>{if(!e.target.closest('.tab,.chapter-dot,a,button'))next();}));
-  dots.forEach(d=>d.addEventListener('click',()=>{const i=slides.findIndex(s=>s.dataset.part===d.dataset.part);if(i>=0)goTo(i);}));
+  document.querySelectorAll('.page-bg[data-photo-gallery],.page-bg[data-doc-panel]').forEach(registerMediaPanel);
+  document.querySelectorAll('.page').forEach(p=>p.addEventListener('click',e=>{
+    if(!e.target.closest('.tab,.chapter-indicator,.chapter-dot,a,button,.page-bg,.bg-stage,.bg-nav,.bg-nav-prev,.bg-nav-next,.bg-photo,.bg-doc-shell,.demo-chrome,iframe,.detail-trigger,.detail-overlay,.detail-drawer')&&!(window._detailDrawerIsOpen&&window._detailDrawerIsOpen()))next();
+  }));
+  dots.forEach(d=>d.addEventListener('click',e=>{
+    e.stopPropagation();
+    const i=slides.findIndex(s=>s.dataset.part===d.dataset.part);
+    if(i>=0) goTo(i);
+  }));
   document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{const i=slides.findIndex(s=>s.dataset.part===t.dataset.tab);if(i>=0)goTo(i);}));
   let locked=false;
-  document.addEventListener('wheel',e=>{if(locked)return;locked=true;e.deltaY>0?next():prev();setTimeout(()=>locked=false,400);},{passive:true});
+  document.addEventListener('wheel',e=>{if(locked||(window._detailDrawerIsOpen&&window._detailDrawerIsOpen()))return;locked=true;e.deltaY>0?next():prev();setTimeout(()=>locked=false,400);},{passive:true});
   let ty=0;
   document.addEventListener('touchstart',e=>{ty=e.touches[0].clientY},{passive:true});
   document.addEventListener('touchend',e=>{const d=ty-e.changedTouches[0].clientY;if(Math.abs(d)>50){d>0?next():prev();}},{passive:true});
+  preloadDocIframes();
   updateNums();updateUI();
+
+  /* === DETAIL DRAWER SYSTEM === */
+  (function initDetailDrawer(){
+    const overlay=document.getElementById('detailOverlay');
+    const drawer=document.getElementById('detailDrawer');
+    const titleEl=document.getElementById('detailTitle');
+    const bodyEl=document.getElementById('detailBody');
+    const closeBtn=document.getElementById('detailClose');
+    if(!overlay||!drawer)return;
+
+    let isOpen=false;
+
+    function openDrawer(templateId,title){
+      const tpl=document.getElementById(templateId);
+      if(!tpl)return;
+      titleEl.textContent=title||'详情';
+      bodyEl.innerHTML=tpl.innerHTML;
+      overlay.classList.add('is-open');
+      drawer.classList.add('is-open');
+      isOpen=true;
+      bodyEl.scrollTop=0;
+    }
+    function closeDrawer(){
+      overlay.classList.remove('is-open');
+      drawer.classList.remove('is-open');
+      isOpen=false;
+    }
+    window._detailDrawerIsOpen=()=>isOpen;
+
+    // Click on triggers
+    document.addEventListener('click',e=>{
+      const trigger=e.target.closest('.detail-trigger');
+      if(trigger&&trigger.dataset.detail){
+        e.stopPropagation();
+        e.preventDefault();
+        openDrawer(trigger.dataset.detail,trigger.dataset.detailTitle);
+        return;
+      }
+    },true);
+
+    // Close
+    closeBtn.addEventListener('click',e=>{e.stopPropagation();closeDrawer();});
+    overlay.addEventListener('click',e=>{e.stopPropagation();closeDrawer();});
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'&&isOpen){e.preventDefault();e.stopPropagation();closeDrawer();}
+    },true);
+  })();
+
+  /* 克制拖影光标：Skill 列为 Optional，此处按笔记本风实现 */
+  (function initSubtleCursor(){
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    const TRAIL=4;
+    const head=document.createElement('div');
+    head.className='pres-cursor';
+    document.body.appendChild(head);
+    const trails=Array.from({length:TRAIL},(_,i)=>{
+      const el=document.createElement('div');
+      el.className='pres-cursor-trail';
+      const s=8-i*1.2;
+      el.style.width=el.style.height=`${s}px`;
+      el.style.margin=`${-s/2}px 0 0 ${-s/2}px`;
+      el.style.opacity=String(.28-i*.05);
+      document.body.appendChild(el);
+      return {el,x:innerWidth/2,y:innerHeight/2};
+    });
+    document.body.classList.add('pres-cursor-on');
+    let mx=innerWidth/2,my=innerHeight/2,hx=mx,hy=my;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+    document.addEventListener('mouseleave',()=>{head.style.opacity='0';trails.forEach(t=>t.el.style.opacity='0');});
+    document.addEventListener('mouseenter',()=>{head.style.opacity='';trails.forEach((t,i)=>t.el.style.opacity=String(.28-i*.05));});
+    function tick(){
+      hx+=(mx-hx)*.42; hy+=(my-hy)*.42;
+      head.style.transform=`translate3d(${hx}px,${hy}px,0)`;
+      let px=hx,py=hy;
+      trails.forEach((t,i)=>{
+        const ease=i===0?.32:.22;
+        t.x+=(px-t.x)*ease; t.y+=(py-t.y)*ease;
+        t.el.style.transform=`translate3d(${t.x}px,${t.y}px,0)`;
+        px=t.x; py=t.y;
+      });
+      requestAnimationFrame(tick);
+    }
+    tick();
+  })();
 })();
 </script>
 </body>

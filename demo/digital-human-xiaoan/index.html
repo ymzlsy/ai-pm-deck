@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>智慧问答数字人「小安」交互体验</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { font-family: 'Noto Sans SC', system-ui, sans-serif; }
+  body { margin: 0; padding: 0; overflow: hidden; background: #020617; color: #fff; }
+
+  /* === 仿真器底图：深色专业科技感 === */
+  .sim-bg {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(56,89,160,0.18), transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(30,58,138,0.10), transparent 50%),
+      linear-gradient(180deg, #0c1524 0%, #111827 40%, #0f172a 100%);
+  }
+  .sim-grid::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0, transparent 59px, rgba(59,130,246,0.03) 60px),
+      repeating-linear-gradient(90deg, transparent 0, transparent 59px, rgba(59,130,246,0.03) 60px);
+    pointer-events: none;
+  }
+
+  /* === 场景背景毛璃璃 === */
+  .scene-layer { position: absolute; inset: 0; z-index: 0; transition: opacity 0.8s ease; }
+  .scene-layer.hidden-scene { opacity: 0; pointer-events: none; }
+  .scene-layer img { width: 100%; height: 100%; object-fit: cover; }
+  .scene-frost {
+    display: none;
+  }
+  /* 背景切换器 */
+  .bg-switcher {
+    position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 45;
+    display: flex; gap: 6px; padding: 5px 12px;
+    background: rgba(15,23,42,0.75); backdrop-filter: blur(12px);
+    border: 1px solid rgba(59,130,246,0.25); border-radius: 999px;
+  }
+  .bg-dot {
+    width: 32px; height: 22px; border-radius: 4px; cursor: pointer;
+    border: 1.5px solid rgba(59,130,246,0.2); transition: all 0.3s;
+    position: relative; overflow: hidden; opacity: 0.6;
+  }
+  .bg-dot:hover { opacity: 0.85; border-color: rgba(96,165,250,0.5); }
+  .bg-dot.active { opacity: 1; border-color: #60a5fa; box-shadow: 0 0 8px rgba(96,165,250,0.4); }
+  .bg-dot-label {
+    position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    white-space: nowrap; font-size: 10px; color: #93c5fd;
+    background: rgba(15,23,42,0.9); padding: 2px 8px; border-radius: 4px;
+    border: 1px solid rgba(59,130,246,0.3);
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .bg-dot:hover .bg-dot-label { opacity: 1; }
+
+  /* === 数字人头像动画 === */
+  @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  .breathe { animation: breathe 4s ease-in-out infinite; }
+
+  /* 胸口起伏（面板内大头像使用） */
+  @keyframes chest { 0%,100% { transform: translateY(0) scaleY(1); } 50% { transform: translateY(-1px) scaleY(1.012); } }
+  .chest-anim { animation: chest 3.6s ease-in-out infinite; transform-origin: center bottom; transform-box: fill-box; }
+
+  /* 头发微动 */
+  @keyframes hair { 0%,100% { transform: translateX(0) rotate(0deg); } 50% { transform: translateX(0.5px) rotate(0.3deg); } }
+  .hair-anim { animation: hair 5s ease-in-out infinite; transform-origin: 100px 60px; transform-box: fill-box; }
+
+  /* 头部轻微侧〇 */
+  @keyframes headSway { 0%,100% { transform: rotate(0deg); } 30% { transform: rotate(-0.6deg); } 70% { transform: rotate(0.6deg); } }
+  .head-anim { animation: headSway 8s ease-in-out infinite; transform-origin: 100px 130px; transform-box: fill-box; }
+
+  /* 微笑表情切换（speaking 未启动时使用） */
+  @keyframes smile { 0%,90%,100% { d: path('M 92 120 Q 100 122 108 120'); } 95% { d: path('M 92 120 Q 100 126 108 120'); } }
+
+  @keyframes glow {
+    0%,100% { box-shadow: 0 0 18px rgba(96,165,250,0.45), 0 0 36px rgba(96,165,250,0.2), inset 0 0 20px rgba(255,255,255,0.05); }
+    50%      { box-shadow: 0 0 28px rgba(96,165,250,0.75), 0 0 60px rgba(96,165,250,0.35), inset 0 0 20px rgba(255,255,255,0.08); }
+  }
+  .glow-anim { animation: glow 3s ease-in-out infinite; }
+
+  @keyframes wake-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(96,165,250,0.7); }
+    100% { box-shadow: 0 0 0 35px rgba(96,165,250,0); }
+  }
+  .waking { animation: wake-pulse 1s ease-out 3; }
+
+  @keyframes blink { 0%,94%,100% { transform: scaleY(1); } 97% { transform: scaleY(0.05); } }
+  .eye { animation: blink 5s infinite; transform-origin: center; transform-box: fill-box; }
+
+  @keyframes mouth-open {
+    0%,100% { transform: scaleY(0.4); }
+    25% { transform: scaleY(1.1); }
+    50% { transform: scaleY(0.6); }
+    75% { transform: scaleY(1.0); }
+  }
+  .speaking .mouth { animation: mouth-open 0.28s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+
+  /* === v0.1.9 真人 3D 透视微动 · 肉眼可见财转头点头 === */
+  /* 关键思路：人脸身体旋转比位移明显多。
+     以 脚下 为轴心，用 perspective + rotateY/rotateX 模拟头部转动、点头。 */
+  @keyframes humanLife {
+    0%   { transform: perspective(900px) rotateY(0deg)   rotateX(0deg)   translateY(0); }
+    18%  { transform: perspective(900px) rotateY(-2.6deg) rotateX(0.6deg)  translateY(-1px); }
+    35%  { transform: perspective(900px) rotateY(-1.4deg) rotateX(-1.0deg) translateY(-2.5px); }
+    52%  { transform: perspective(900px) rotateY(1.8deg)  rotateX(-0.3deg) translateY(-2.5px); }
+    72%  { transform: perspective(900px) rotateY(3.0deg)  rotateX(0.4deg)  translateY(-1px); }
+    88%  { transform: perspective(900px) rotateY(1.0deg)  rotateX(-0.2deg) translateY(0); }
+    100% { transform: perspective(900px) rotateY(0deg)   rotateX(0deg)   translateY(0); }
+  }
+  /* 胸口呼吸（单独一层，仅垂直 1-2px 动，不再缩放） */
+  @keyframes chestRise {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-1px); }
+  }
+  /* 头部 3D 动 · 轴心在脚下 */
+  .human-life {
+    animation: humanLife 9s cubic-bezier(.5,.05,.5,.95) infinite;
+    transform-origin: 50% 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .chest-rise { animation: chestRise 4.5s ease-in-out infinite; will-change: transform; }
+
+  /* 说话时节奏加快且轴躺动幅增大（点头主、转动为辅） */
+  @keyframes humanTalk {
+    0%   { transform: perspective(900px) rotateY(0deg)   rotateX(0deg)   translateY(0); }
+    25%  { transform: perspective(900px) rotateY(-1.5deg) rotateX(1.6deg)  translateY(-2px); }
+    50%  { transform: perspective(900px) rotateY(0.8deg)  rotateX(-1.2deg) translateY(0); }
+    75%  { transform: perspective(900px) rotateY(1.6deg)  rotateX(2.0deg)  translateY(-1.5px); }
+    100% { transform: perspective(900px) rotateY(0deg)   rotateX(0deg)   translateY(0); }
+  }
+  .speaking-wrap .human-life { animation: humanTalk 2.6s ease-in-out infinite; }
+  .speaking-wrap .chest-rise { animation-duration: 1.8s; }
+  .speaking-wrap img.avatar-img {
+    filter: drop-shadow(0 0 10px rgba(255,200,120,0.30)) drop-shadow(0 0 22px rgba(255,200,120,0.12));
+  }
+
+  /* 脚下柔光圈 */
+  @keyframes glowPulse {
+    0%,100% { opacity: 0.55; transform: translateX(-50%) scaleX(1); }
+    50%     { opacity: 0.85; transform: translateX(-50%) scaleX(1.15); }
+  }
+
+  /* 唤起提示气泡：无底色、淡入淡出 */
+  @keyframes bubbleInOut {
+    0%       { opacity: 0; transform: translateY(4px) translateX(8px); }
+    10%, 80% { opacity: 1; transform: translateY(0) translateX(0); }
+    100%     { opacity: 0; transform: translateY(-4px) translateX(0); }
+  }
+  .idle-bubble-anim { animation: bubbleInOut 5s ease-in-out forwards; }
+
+  /* legacy 兼容 */
+  .avatar-float { animation: humanBreathe 4s ease-in-out infinite; }
+  img.avatar-float.speaking, #avatarSvg.speaking {
+    animation-duration: 1.4s;
+    filter: drop-shadow(0 0 8px rgba(255,200,120,0.30));
+  }
+
+  /* === 流式文字光标 === */
+  .caret::after { content: '▎'; animation: caret 0.7s infinite; color: #60a5fa; margin-left: 1px; }
+  @keyframes caret { 50% { opacity: 0; } }
+
+  /* === 面板进入 === */
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-8px) scale(0.97); } to { opacity: 1; transform: none; } }
+  .panel-in { animation: slideIn 0.35s cubic-bezier(0.16,1,0.3,1); }
+
+  @keyframes slideOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-8px) scale(0.97); } }
+  .panel-out { animation: slideOut 0.25s ease-in forwards; }
+
+  /* === 玻璃面板 === */
+  .glass {
+    background: rgba(15, 23, 42, 0.82);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid rgba(96,165,250,0.28);
+  }
+  .glass-light {
+    background: rgba(30, 41, 59, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(148,163,184,0.18);
+  }
+
+  /* === 语音波形 === */
+  @keyframes wave1 { 0%,100% { height: 4px; } 50% { height: 16px; } }
+  @keyframes wave2 { 0%,100% { height: 8px; } 50% { height: 22px; } }
+  @keyframes wave3 { 0%,100% { height: 12px; } 50% { height: 18px; } }
+  .wave-bar { width: 3px; background: #60a5fa; border-radius: 2px; }
+  .wave-bar:nth-child(1) { animation: wave1 0.9s ease-in-out infinite; }
+  .wave-bar:nth-child(2) { animation: wave2 0.7s ease-in-out infinite; }
+  .wave-bar:nth-child(3) { animation: wave3 0.8s ease-in-out infinite; }
+  .wave-bar:nth-child(4) { animation: wave1 0.6s ease-in-out infinite; }
+  .wave-bar:nth-child(5) { animation: wave2 0.85s ease-in-out infinite; }
+
+  /* === 倒计时圆环 === */
+  .ring-track { stroke: rgba(96,165,250,0.2); }
+  .ring-progress { stroke: #60a5fa; transition: stroke-dashoffset 1s linear; }
+
+  /* === 滚动条美化 === */
+  .nice-scroll::-webkit-scrollbar { width: 4px; }
+  .nice-scroll::-webkit-scrollbar-thumb { background: rgba(96,165,250,0.45); border-radius: 2px; }
+  .nice-scroll::-webkit-scrollbar-track { background: transparent; }
+
+  /* === 调试面板折叠按钮 === */
+  .toggle-arrow { transition: transform 0.3s; }
+  .toggle-arrow.collapsed { transform: rotate(180deg); }
+
+  /* === 错误事件闪烁 === */
+  @keyframes errorFlash {
+    0%,100% { background-color: rgba(220,38,38,0.0); }
+    50% { background-color: rgba(220,38,38,0.4); }
+  }
+  .error-flash { animation: errorFlash 1s ease-in-out 3; }
+
+  /* === 进度条 === */
+  @keyframes progressFill { from { width: 0%; } }
+  .progress-fill { animation: progressFill linear forwards; }
+
+  /* 隐藏滚动 */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  /* hover 提升 */
+  .lift { transition: transform 0.2s, box-shadow 0.2s; }
+  .lift:hover { transform: translateY(-1px); }
+</style>
+</head>
+<body>
+
+<!-- ============== 实训设备屏幕模拟 ============== -->
+<div id="simulator" class="sim-bg sim-grid w-screen h-screen relative overflow-hidden">
+
+  <!-- ===== 场景背景（原图 + 轻微毛玻璃） ===== -->
+  <div id="scene-0" class="scene-layer"><img src="assets/bg1.png" alt="安检作业实训学员端" draggable="false"/></div>
+  <div id="scene-1" class="scene-layer hidden-scene"><img src="assets/bg2.png" alt="车站大厅电子沙盘" draggable="false"/></div>
+  <div id="scene-2" class="scene-layer hidden-scene"><img src="assets/bg3.png" alt="安检通道" draggable="false"/></div>
+  <div id="scene-3" class="scene-layer hidden-scene"><img src="assets/bg4.png" alt="保洁综合实训" draggable="false"/></div>
+
+  <!-- 场景背景模糊效果 -->
+  <div class="scene-frost"></div>
+
+  <!-- 背景切换器 -->
+  <div class="bg-switcher">
+    <div class="bg-dot active" data-scene="0" style="background: linear-gradient(135deg, #1a3a6e, #0c1a38);">
+      <span class="bg-dot-label">安检作业实训学员端</span>
+    </div>
+    <div class="bg-dot" data-scene="1" style="background: linear-gradient(135deg, #8aa0b8, #4a6078);">
+      <span class="bg-dot-label">车站大厅电子沙盘</span>
+    </div>
+    <div class="bg-dot" data-scene="2" style="background: linear-gradient(135deg, #7a8898, #4a5868);">
+      <span class="bg-dot-label">安检通道</span>
+    </div>
+    <div class="bg-dot" data-scene="3" style="background: linear-gradient(135deg, #6a7078, #484f58);">
+      <span class="bg-dot-label">保洁综合实训</span>
+    </div>
+  </div>
+
+  <!-- 顶部状态栏（仿真软件）—— 演示隐藏 -->
+  <div class="absolute top-0 left-0 right-0 h-12 bg-slate-900/85 border-b border-blue-500/25 flex items-center px-5 text-xs z-30" style="display:none">
+    <div class="flex items-center gap-3 text-blue-200">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="font-semibold" id="deviceTitle">CR400BF-GS 动车组模拟驾驶仿真系统 V3.2</span>
+      <span class="text-slate-600">|</span>
+      <!-- 设备切换器 -->
+      <div class="relative">
+        <button id="deviceSwitcherBtn" class="flex items-center gap-1 px-2 py-1 rounded hover:bg-slate-700/50 text-slate-300" title="切换实训设备场景">
+          <span id="currentDeviceLabel">SIM-001 · 动车仿真</span>
+          <svg width="10" height="10" viewBox="0 0 20 20" fill="currentColor"><path d="M5 8l5 5 5-5z"/></svg>
+        </button>
+        <div id="deviceMenu" class="hidden absolute top-full left-0 mt-1 w-56 glass rounded-lg overflow-hidden text-slate-200">
+          <button data-device="cr400" class="w-full text-left px-3 py-2 hover:bg-blue-500/20 border-b border-slate-700/50">
+            <div class="font-semibold text-xs">SIM-001 · 动车仿真</div>
+            <div class="text-[10px] text-slate-400">CR400BF-GS 驾驶仿真系统</div>
+          </button>
+          <button data-device="station" class="w-full text-left px-3 py-2 hover:bg-blue-500/20 border-b border-slate-700/50">
+            <div class="font-semibold text-xs">SIM-007 · 候车厅实训</div>
+            <div class="text-[10px] text-slate-400">客运服务 + 票务模拟</div>
+          </button>
+          <button data-device="fire" class="w-full text-left px-3 py-2 hover:bg-blue-500/20">
+            <div class="font-semibold text-xs">SIM-012 · 消防实训</div>
+            <div class="text-[10px] text-slate-400">客车火灾处置仿真</div>
+          </button>
+        </div>
+      </div>
+      <span class="text-slate-600">|</span>
+      <span class="text-slate-400" id="baseLabel">沈阳铁路职工培训基地</span>
+    </div>
+    <div class="ml-auto flex gap-5 text-slate-400 items-center">
+      <!-- 状态标签 -->
+      <span id="modeBadge" class="hidden px-2 py-0.5 rounded text-[10px]"></span>
+      <span id="taskLabel">当前任务：哈大客专 沈阳→大连 出发作业</span>
+      <span>步骤 <span class="text-blue-300 font-semibold" id="stepNum">7</span>/24</span>
+      <span id="clock">--:--:--</span>
+      <!-- 远程推送状态灯 -->
+      <span id="remoteIndicator" class="hidden flex items-center gap-1 px-2 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-200 border border-amber-400/40" title="已连智慧管控平台">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>远程
+      </span>
+      <!-- 设置按钮 -->
+      <button id="settingsBtn" class="w-7 h-7 rounded-full hover:bg-slate-700/50 flex items-center justify-center text-slate-300" title="设置">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- 仿真主显示区（占位的驾驶舱视景）—— 演示隐藏 -->
+  <div class="absolute top-12 left-0 right-0 bottom-12 flex items-center justify-center" style="display:none">
+    <!-- 驾驶舱前景 SVG -->
+    <svg viewBox="0 0 1200 600" class="w-[88%] h-[88%] opacity-90" preserveAspectRatio="xMidYMid meet">
+      <!-- 远方铁轨透视 -->
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.4" />
+          <stop offset="100%" stop-color="#0a1628" stop-opacity="0.9" />
+        </linearGradient>
+        <linearGradient id="rail" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#475569" />
+          <stop offset="100%" stop-color="#1e293b" />
+        </linearGradient>
+      </defs>
+      <!-- 天空 -->
+      <rect x="0" y="0" width="1200" height="280" fill="url(#sky)" />
+      <!-- 地面 -->
+      <rect x="0" y="280" width="1200" height="220" fill="url(#rail)" />
+      <!-- 透视铁轨 -->
+      <polygon points="600,280 540,500 660,500" fill="#0f172a" stroke="#64748b" stroke-width="2" />
+      <line x1="600" y1="280" x2="540" y2="500" stroke="#94a3b8" stroke-width="3" />
+      <line x1="600" y1="280" x2="660" y2="500" stroke="#94a3b8" stroke-width="3" />
+      <!-- 接触网柱 -->
+      <g stroke="#64748b" stroke-width="1.5" fill="none">
+        <line x1="200" y1="120" x2="200" y2="280" />
+        <line x1="1000" y1="120" x2="1000" y2="280" />
+        <line x1="380" y1="160" x2="380" y2="280" />
+        <line x1="820" y1="160" x2="820" y2="280" />
+        <line x1="510" y1="190" x2="510" y2="280" />
+        <line x1="690" y1="190" x2="690" y2="280" />
+      </g>
+      <!-- 接触线 -->
+      <line x1="0" y1="180" x2="1200" y2="180" stroke="#64748b" stroke-width="1" stroke-dasharray="2,4" />
+      <!-- 远端信号机 -->
+      <g transform="translate(560,220)">
+        <rect x="-3" y="0" width="6" height="60" fill="#475569" />
+        <circle cx="0" cy="-8" r="6" fill="#22c55e" stroke="#0f172a" stroke-width="1">
+          <animate attributeName="opacity" values="1;0.6;1" dur="1.5s" repeatCount="indefinite" />
+        </circle>
+      </g>
+      <!-- 司机室仪表（前景）-->
+      <g transform="translate(0,420)">
+        <rect x="0" y="0" width="1200" height="180" fill="#0a1628" stroke="#334155" stroke-width="1" />
+        <!-- 仪表盘 -->
+        <g transform="translate(120,30)">
+          <circle cx="60" cy="60" r="55" fill="#0f172a" stroke="#334155" stroke-width="2" />
+          <text x="60" y="55" text-anchor="middle" fill="#60a5fa" font-size="10">速度</text>
+          <text x="60" y="78" text-anchor="middle" fill="#fff" font-size="22" font-weight="700">0</text>
+          <text x="60" y="95" text-anchor="middle" fill="#94a3b8" font-size="9">km/h</text>
+        </g>
+        <g transform="translate(280,30)">
+          <circle cx="60" cy="60" r="55" fill="#0f172a" stroke="#334155" stroke-width="2" />
+          <text x="60" y="55" text-anchor="middle" fill="#60a5fa" font-size="10">列车制动</text>
+          <text x="60" y="78" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">缓解</text>
+          <text x="60" y="95" text-anchor="middle" fill="#94a3b8" font-size="9">kPa  0</text>
+        </g>
+        <!-- 司控级 -->
+        <g transform="translate(440,30)">
+          <rect x="0" y="0" width="200" height="120" fill="#0f172a" stroke="#334155" stroke-width="2" rx="4" />
+          <text x="100" y="20" text-anchor="middle" fill="#60a5fa" font-size="10">司控级 (SCK)</text>
+          <g id="schemaHandle">
+            <rect x="20" y="35" width="160" height="12" fill="#1e293b" />
+            <circle cx="40" cy="41" r="9" fill="#22c55e" stroke="#0f172a" stroke-width="2" />
+            <text x="40" y="63" text-anchor="middle" fill="#94a3b8" font-size="8">缓解位</text>
+            <text x="100" y="63" text-anchor="middle" fill="#94a3b8" font-size="8">运转位</text>
+            <text x="160" y="63" text-anchor="middle" fill="#94a3b8" font-size="8">制动位</text>
+          </g>
+          <text x="100" y="100" text-anchor="middle" fill="#10b981" font-size="11" font-weight="600">当前：缓解位</text>
+        </g>
+        <!-- 信号 -->
+        <g transform="translate(680,30)">
+          <rect x="0" y="0" width="180" height="120" fill="#0f172a" stroke="#334155" stroke-width="2" rx="4" />
+          <text x="90" y="20" text-anchor="middle" fill="#60a5fa" font-size="10">前方信号</text>
+          <circle cx="90" cy="55" r="18" fill="#22c55e">
+            <animate attributeName="opacity" values="1;0.6;1" dur="1.5s" repeatCount="indefinite" />
+          </circle>
+          <text x="90" y="100" text-anchor="middle" fill="#fff" font-size="11">SY-1145 · 绿灯</text>
+        </g>
+        <!-- 任务进度 -->
+        <g transform="translate(900,30)">
+          <rect x="0" y="0" width="260" height="120" fill="#0f172a" stroke="#334155" stroke-width="2" rx="4" />
+          <text x="130" y="22" text-anchor="middle" fill="#60a5fa" font-size="10">当前实训步骤</text>
+          <text x="130" y="50" text-anchor="middle" fill="#fff" font-size="14" font-weight="600">出发前制动试验</text>
+          <text x="130" y="72" text-anchor="middle" fill="#94a3b8" font-size="10">步骤 7/24</text>
+          <rect x="20" y="88" width="220" height="6" fill="#1e293b" rx="3" />
+          <rect x="20" y="88" width="64" height="6" fill="#3b82f6" rx="3" />
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- 底部控制栏 —— 演示隐藏 -->
+  <div class="absolute bottom-0 left-0 right-0 h-12 bg-slate-900/85 border-t border-blue-500/25 flex items-center px-5 text-xs z-30" style="display:none">
+    <div class="flex gap-2">
+      <button class="px-3 py-1 bg-blue-600/30 border border-blue-500/40 rounded text-blue-200">主控屏</button>
+      <button class="px-3 py-1 hover:bg-slate-700 rounded text-slate-400">辅助显示屏</button>
+      <button class="px-3 py-1 hover:bg-slate-700 rounded text-slate-400">监控屏</button>
+      <button class="px-3 py-1 hover:bg-slate-700 rounded text-slate-400">视景屏</button>
+    </div>
+    <div class="ml-auto flex items-center gap-5 text-slate-400">
+      <span>速度：<span class="text-emerald-400 font-semibold">0</span> km/h</span>
+      <span>司控级：<span class="text-emerald-400 font-semibold">缓解位</span></span>
+      <span>列车制动：<span class="text-emerald-400 font-semibold">缓解</span></span>
+      <span>学员：<span class="text-blue-300">王浩然</span> · 工号 SY-2024-0738</span>
+    </div>
+  </div>
+
+  <!-- ============== 页面切换浮动按钮 ============== -->
+  <div class="absolute top-4 left-4 z-50 flex gap-1 bg-slate-900/80 backdrop-blur-md border border-blue-500/30 rounded-full px-1 py-1">
+    <a href="index.html" class="px-4 py-1.5 rounded-full text-xs font-medium bg-blue-500/30 text-blue-200 border border-blue-400/40">数字人交互</a>
+    <a href="monitor.html" class="px-4 py-1.5 rounded-full text-xs font-medium text-slate-400 hover:text-blue-200 hover:bg-blue-500/10 transition-all">监控预警</a>
+  </div>
+
+  <!-- ============== 数字人「小安」overlay ============== -->
+  <div id="digitalHuman" class="absolute top-16 right-5 z-40 flex items-start gap-3">
+
+    <!-- 面板（唤起后出现在形象左侧） -->
+    <!-- 面板会在下面插入；avatar 始终可见 -->
+
+    <!-- 唤起提示气泡（v0.1.9：移到形象头顶，无底色，过长两行换行） -->
+    <div id="idleBubble" class="hidden absolute pointer-events-none" style="top:-46px; right:0; width:160px; text-align:center; text-shadow: 0 1px 4px rgba(15,23,42,0.95), 0 0 12px rgba(96,165,250,0.55);">
+      <div class="text-[12px] font-medium leading-snug" style="word-break: break-word;">
+        <span class="text-blue-300/85">有问题随时呼叫：</span>
+        <span class="text-white tracking-wide whitespace-nowrap">「小安小安」</span>
+      </div>
+      <!-- 下点点指向头部 -->
+      <div class="mx-auto mt-1" style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid rgba(255,255,255,0.85); filter: drop-shadow(0 0 4px rgba(96,165,250,0.7));"></div>
+    </div>
+
+    <!-- 形象本体：透明背景 · 3D 透视头转 · 胸呼吸 · 肉色眽眼 -->
+    <div id="avatarCollapsed" class="cursor-pointer relative" style="width:140px;height:200px;" title="点击唤起小安">
+      <!-- 脚下柔光圈（不参与 3D 转动，保持平面） -->
+      <div class="absolute left-1/2 -translate-x-1/2 bottom-1 w-24 h-2 rounded-full pointer-events-none" style="background: radial-gradient(closest-side, rgba(96,165,250,0.45), rgba(96,165,250,0)); animation: glowPulse 3s ease-in-out infinite; z-index:1;"></div>
+
+      <!-- 头转点头 3D 层 -->
+      <div class="absolute inset-0 human-life" style="z-index:2;">
+        <!-- 胸口呼吸（仅垂直） -->
+        <div class="absolute inset-0 chest-rise">
+          <img src="assets/avatar.png" alt="小安" class="avatar-img absolute inset-0 w-full h-full object-contain object-bottom select-none pointer-events-none" draggable="false" />
+        </div>
+      </div>
+      <span class="absolute right-3 bottom-2 w-1.5 h-1.5 rounded-full bg-emerald-400" style="box-shadow: 0 0 6px #34d399; z-index:3;"></span>
+    </div>
+
+    <!-- 原 SVG 资产在下面隐藏保留（作为备份不删） -->
+    <div style="display:none" id="avatarCollapsedSVG_legacy">
+      <!-- 外部柔和柔和光晕（仅为肩脒区域，不是圆框，人物外透明） -->
+      <svg viewBox="0 0 88 130" class="w-full h-full overflow-visible">
+        <defs>
+          <radialGradient id="miniFace" cx="50%" cy="40%" r="55%">
+            <stop offset="0%" stop-color="#fff5e0" />
+            <stop offset="60%" stop-color="#f7d4af" />
+            <stop offset="100%" stop-color="#e8b88a" />
+          </radialGradient>
+          <linearGradient id="miniUniform" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1e3a8a" />
+            <stop offset="100%" stop-color="#172554" />
+          </linearGradient>
+          <radialGradient id="miniHair" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#3a2418" />
+            <stop offset="100%" stop-color="#1f2937" />
+          </radialGradient>
+          <radialGradient id="miniGlow" cx="50%" cy="95%" r="55%">
+            <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.30" />
+            <stop offset="100%" stop-color="#60a5fa" stop-opacity="0" />
+          </radialGradient>
+          <filter id="miniSoftGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="1.5" result="blur" />
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- 脚下微发光圈（表现“浮在实训设备屏幕上”） -->
+        <ellipse cx="44" cy="125" rx="32" ry="4" fill="url(#miniGlow)">
+          <animate attributeName="rx" values="30;34;30" dur="3s" repeatCount="indefinite" />
+        </ellipse>
+
+        <g class="chest-anim" style="transform-origin: 44px 110px">
+          <!-- 肩领 -->
+          <path d="M8 130 Q44 88 80 130 Z" fill="url(#miniUniform)" />
+          <!-- 领口白边 -->
+          <path d="M30 100 L44 92 L58 100" stroke="#fff" stroke-width="1.4" fill="none" opacity="0.85" />
+          <!-- 肩章 金色 -->
+          <rect x="14" y="108" width="12" height="2.5" rx="0.6" fill="#fbbf24" />
+          <rect x="62" y="108" width="12" height="2.5" rx="0.6" fill="#fbbf24" />
+          <!-- 红领结 -->
+          <path d="M36 112 L44 104 L52 112 L52 122 L36 122 Z" fill="#dc2626" />
+          <ellipse cx="44" cy="110" rx="2" ry="1.2" fill="#fbbf24" />
+          <!-- 胸牌 -->
+          <rect x="22" y="114" width="11" height="4" rx="0.6" fill="#0f172a" stroke="#fbbf24" stroke-width="0.3" />
+          <text x="27.5" y="117" text-anchor="middle" fill="#fbbf24" font-size="2.6" font-weight="700">小安</text>
+        </g>
+
+        <!-- 脖 -->
+        <rect x="38" y="86" width="12" height="10" fill="#e8b88a" />
+        <ellipse cx="44" cy="96" rx="7" ry="2" fill="#d4a574" opacity="0.5" />
+
+        <g class="head-anim" style="transform-origin: 44px 60px">
+          <!-- 耳朵 -->
+          <ellipse cx="24" cy="60" rx="2.5" ry="4" fill="#e8b88a" />
+          <ellipse cx="64" cy="60" rx="2.5" ry="4" fill="#e8b88a" />
+          <!-- 脸 -->
+          <ellipse cx="44" cy="58" rx="19" ry="24" fill="url(#miniFace)" />
+          <!-- 头发（职业盘发） -->
+          <g class="hair-anim" style="transform-origin: 44px 30px">
+            <path d="M22 58 Q22 12 44 12 Q66 12 66 58 Q66 50 60 48 Q56 30 44 28 Q32 30 28 48 Q22 50 22 58 Z" fill="url(#miniHair)" />
+            <!-- 发丝高光 -->
+            <path d="M30 24 Q38 18 44 16" stroke="#5a3924" stroke-width="0.6" fill="none" opacity="0.7" />
+          </g>
+          <!-- 帽徽 · 中铁标 -->
+          <g transform="translate(44,18)">
+            <ellipse cx="0" cy="0" rx="6" ry="2" fill="#dc2626" />
+            <circle cx="0" cy="0" r="1.1" fill="#fbbf24" />
+          </g>
+          <!-- 额头高光 -->
+          <ellipse cx="44" cy="42" rx="10" ry="3" fill="#fff5e0" opacity="0.4" />
+          <!-- 眉毛 -->
+          <path d="M32 52 Q36 49 41 52" stroke="#3a2418" stroke-width="1.4" fill="none" stroke-linecap="round" />
+          <path d="M47 52 Q52 49 56 52" stroke="#3a2418" stroke-width="1.4" fill="none" stroke-linecap="round" />
+          <!-- 眼睛 -->
+          <g class="eye">
+            <ellipse cx="36" cy="60" rx="2.4" ry="3" fill="#fff" />
+            <ellipse cx="36" cy="60" rx="1.5" ry="2.2" fill="#0f172a" />
+            <circle cx="36.5" cy="59" r="0.6" fill="#fff" />
+          </g>
+          <g class="eye" style="animation-delay: 0.05s">
+            <ellipse cx="52" cy="60" rx="2.4" ry="3" fill="#fff" />
+            <ellipse cx="52" cy="60" rx="1.5" ry="2.2" fill="#0f172a" />
+            <circle cx="52.5" cy="59" r="0.6" fill="#fff" />
+          </g>
+          <!-- 鼻子 -->
+          <path d="M43.5 64 Q42.5 70 43.5 73 Q45 72.5 44.5 70.5" stroke="#c89572" stroke-width="0.7" fill="none" stroke-linecap="round" />
+          <!-- 腕红 -->
+          <ellipse cx="30" cy="70" rx="4" ry="2.5" fill="#fda4af" opacity="0.35" />
+          <ellipse cx="58" cy="70" rx="4" ry="2.5" fill="#fda4af" opacity="0.35" />
+          <!-- 嘴（微笑） -->
+          <path class="smile" d="M40 76 Q44 79 48 76" stroke="#9f1239" stroke-width="1" fill="none" stroke-linecap="round" />
+        </g>
+      </svg>
+    </div>
+    <!-- /legacy SVG 备份结束 -->
+
+    <!-- 历史问答抽屉（从面板右侧滑出） -->
+    <div id="historyDrawer" class="hidden absolute top-0 right-[395px] w-[300px] glass rounded-2xl overflow-hidden z-50" style="max-height: 460px;">
+      <div class="flex items-center justify-between px-3 py-2.5 border-b border-blue-500/20">
+        <div class="flex items-center gap-2">
+          <span class="text-base">📜</span>
+          <span class="font-semibold text-sm">历史问答</span>
+          <span id="historyCount" class="text-[10px] text-slate-400">0 条</span>
+        </div>
+        <button id="historyClose" class="w-6 h-6 hover:bg-slate-700/50 rounded-full text-slate-400">×</button>
+      </div>
+      <div id="historyList" class="p-2 space-y-1.5 overflow-y-auto nice-scroll" style="max-height: 410px;">
+        <div class="text-[11px] text-slate-500 text-center py-6">
+          本会话尚无问答记录。<br/>
+          唤起小安后，这里会依时间倒序列出本会话问答。<br/>
+          点某条 = 主区重启该问答。
+        </div>
+      </div>
+    </div>
+
+    <!-- 展开态：完整面板（v0.1.8 仅文字+媒体，形象在右侧独立） -->
+    <div id="panel" class="hidden glass rounded-2xl overflow-hidden mt-0 order-first" style="width: 360px;">
+
+      <!-- 头部 -->
+      <div class="flex items-center gap-3 p-3 border-b border-blue-500/20">
+        <div class="flex-1 min-w-0">
+          <div id="statusText" class="text-[11px] text-blue-300/80">在线 · 待命中</div>
+        </div>
+        <!-- 倒计时圆环（30s 静默） -->
+        <div id="idleRing" class="hidden relative w-7 h-7" title="静默自动收起倒计时">
+          <svg class="w-7 h-7 -rotate-90" viewBox="0 0 28 28">
+            <circle class="ring-track" cx="14" cy="14" r="12" stroke-width="2" fill="none" />
+            <circle id="ringProgress" class="ring-progress" cx="14" cy="14" r="12" stroke-width="2" fill="none"
+                    stroke-dasharray="75.4" stroke-dashoffset="0" stroke-linecap="round" />
+          </svg>
+          <span id="ringText" class="absolute inset-0 flex items-center justify-center text-[10px] text-blue-300" style="display:none">30</span>
+        </div>
+        <button id="historyBtn" class="ml-1 w-7 h-7 hover:bg-slate-700/60 rounded-full flex items-center justify-center text-slate-300 relative" title="历史问答">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+          <span id="historyBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[14px] h-3.5 px-1 rounded-full bg-blue-500 text-[9px] text-white flex items-center justify-center font-semibold">0</span>
+        </button>
+        <button id="closeBtn" class="ml-1 w-7 h-7 hover:bg-slate-700/60 rounded-full flex items-center justify-center text-slate-400 text-lg leading-none" title="收起 (M)">×</button>
+      </div>
+
+      <!-- v0.1.8：形象请出面板，面板只留文字+媒体 -->
+      <div id="avatarLarge" style="display:none;">
+        <img id="avatarSvg" src="assets/avatar.png" alt="小安" class="hidden" />
+        <svg id="avatarSvg_legacy" style="display:none" viewBox="0 0 200 220" class="relative w-40 h-44">
+          <defs>
+            <radialGradient id="faceGradBig" cx="45%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#fff5e0" />
+              <stop offset="60%" stop-color="#f7d4af" />
+              <stop offset="100%" stop-color="#e8b88a" />
+            </radialGradient>
+            <linearGradient id="uniformGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1e3a8a" />
+              <stop offset="60%" stop-color="#1e40af" />
+              <stop offset="100%" stop-color="#172554" />
+            </linearGradient>
+            <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#3a2418" />
+              <stop offset="100%" stop-color="#1f2937" />
+            </linearGradient>
+            <radialGradient id="cheekGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fda4af" stop-opacity="0.7" />
+              <stop offset="100%" stop-color="#fda4af" stop-opacity="0" />
+            </radialGradient>
+            <filter id="softGlow">
+              <feGaussianBlur stdDeviation="0.6" />
+            </filter>
+          </defs>
+
+          <!-- 肩 · 制服 · 胸口呼吸 -->
+          <g class="chest-anim">
+            <path d="M14 220 Q100 132 186 220 Z" fill="url(#uniformGrad)" />
+            <!-- 制服主线 -->
+            <line x1="100" y1="148" x2="100" y2="220" stroke="#0f172a" stroke-width="1.2" opacity="0.6" />
+            <!-- 肩章 -->
+            <rect x="35" y="166" width="22" height="4" rx="1" fill="#fbbf24" />
+            <rect x="143" y="166" width="22" height="4" rx="1" fill="#fbbf24" />
+            <rect x="39" y="172" width="14" height="2" fill="#fbbf24" opacity="0.7" />
+            <rect x="147" y="172" width="14" height="2" fill="#fbbf24" opacity="0.7" />
+            <!-- 领口白边 -->
+            <path d="M76 152 L100 145 L124 152" stroke="#fff" stroke-width="2" fill="none" opacity="0.85" />
+            <!-- 红领结 -->
+            <path d="M84 178 L100 162 L116 178 L116 198 L84 198 Z" fill="#dc2626" />
+            <path d="M88 172 L100 160 L112 172 L100 178 Z" fill="#ef4444" />
+            <ellipse cx="100" cy="175" rx="3.5" ry="2" fill="#fbbf24" />
+            <!-- 胸牌 -->
+            <rect x="60" y="178" width="18" height="6" rx="1" fill="#0f172a" stroke="#fbbf24" stroke-width="0.5" />
+            <text x="69" y="183" text-anchor="middle" fill="#fbbf24" font-size="4" font-weight="700">小安</text>
+          </g>
+
+          <!-- 颈部 -->
+          <rect x="86" y="132" width="28" height="22" fill="#e8b88a" />
+          <ellipse cx="100" cy="152" rx="15" ry="4" fill="#d4a574" opacity="0.5" />
+
+          <!-- 头部总体（含微侧〇） -->
+          <g class="head-anim">
+            <!-- 耳朵 -->
+            <ellipse cx="58" cy="96" rx="5" ry="8" fill="#e8b88a" />
+            <ellipse cx="58" cy="96" rx="2" ry="4" fill="#c89572" />
+            <ellipse cx="142" cy="96" rx="5" ry="8" fill="#e8b88a" />
+            <ellipse cx="142" cy="96" rx="2" ry="4" fill="#c89572" />
+            <!-- 耳环 -->
+            <circle cx="58" cy="104" r="1.5" fill="#fbbf24" />
+            <circle cx="142" cy="104" r="1.5" fill="#fbbf24" />
+
+            <!-- 脸部主体 -->
+            <ellipse cx="100" cy="95" rx="43" ry="52" fill="url(#faceGradBig)" />
+            <!-- 下颐阴影 -->
+            <ellipse cx="100" cy="135" rx="30" ry="10" fill="#d4a574" opacity="0.25" />
+
+            <!-- 头发主体（职业盘发） -->
+            <g class="hair-anim">
+              <path d="M55 92 Q55 32 100 32 Q145 32 145 92 Q145 80 132 78 Q123 56 100 54 Q77 56 68 78 Q55 80 55 92 Z" fill="url(#hairGrad)" />
+              <!-- 发丝光泽 -->
+              <path d="M70 50 Q85 38 100 36" stroke="#5a3924" stroke-width="1.2" fill="none" opacity="0.7" />
+              <path d="M115 38 Q128 48 138 60" stroke="#5a3924" stroke-width="1.2" fill="none" opacity="0.7" />
+              <!-- 额付发丝 -->
+              <path d="M75 60 Q80 70 78 80" stroke="#1f2937" stroke-width="1" fill="none" opacity="0.6" />
+              <path d="M125 60 Q120 70 122 80" stroke="#1f2937" stroke-width="1" fill="none" opacity="0.6" />
+            </g>
+
+            <!-- 帽徽（铁路标） -->
+            <g transform="translate(100,38)">
+              <ellipse cx="0" cy="0" rx="12" ry="4" fill="#dc2626" />
+              <circle cx="0" cy="0" r="2.2" fill="#fbbf24" />
+              <text x="0" y="1" text-anchor="middle" fill="#dc2626" font-size="2.5" font-weight="700">中铁</text>
+            </g>
+
+            <!-- 额头高光 -->
+            <ellipse cx="100" cy="68" rx="22" ry="6" fill="#fff5e0" opacity="0.4" />
+
+            <!-- 眉毛 -->
+            <path d="M75 78 Q83 73 92 78" stroke="#3a2418" stroke-width="2.8" fill="none" stroke-linecap="round" />
+            <path d="M108 78 Q117 73 125 78" stroke="#3a2418" stroke-width="2.8" fill="none" stroke-linecap="round" />
+
+            <!-- 眼睛（多层） -->
+            <g class="eye">
+              <ellipse cx="83" cy="92" rx="5" ry="6" fill="#fff" />
+              <ellipse cx="83" cy="92" rx="3.5" ry="4.8" fill="#3a2418" />
+              <ellipse cx="83" cy="92" rx="2.2" ry="3" fill="#0f172a" />
+              <circle cx="84.5" cy="90.5" r="1.3" fill="#fff" />
+              <circle cx="82" cy="94" r="0.6" fill="#fff" opacity="0.6" />
+            </g>
+            <g class="eye" style="animation-delay: 0.05s">
+              <ellipse cx="117" cy="92" rx="5" ry="6" fill="#fff" />
+              <ellipse cx="117" cy="92" rx="3.5" ry="4.8" fill="#3a2418" />
+              <ellipse cx="117" cy="92" rx="2.2" ry="3" fill="#0f172a" />
+              <circle cx="118.5" cy="90.5" r="1.3" fill="#fff" />
+              <circle cx="116" cy="94" r="0.6" fill="#fff" opacity="0.6" />
+            </g>
+
+            <!-- 上睛毛 -->
+            <path d="M78 88 Q83 85 88 88" stroke="#3a2418" stroke-width="1.2" fill="none" stroke-linecap="round" />
+            <path d="M112 88 Q117 85 122 88" stroke="#3a2418" stroke-width="1.2" fill="none" stroke-linecap="round" />
+
+            <!-- 鼻 -->
+            <path d="M99 100 Q97 113 99 117 Q102 116.5 101 113.5" stroke="#c89572" stroke-width="1.5" fill="none" stroke-linecap="round" />
+            <ellipse cx="97" cy="117" rx="1.5" ry="0.8" fill="#c89572" opacity="0.6" />
+            <ellipse cx="103" cy="117" rx="1.5" ry="0.8" fill="#c89572" opacity="0.6" />
+
+            <!-- 腮红 -->
+            <ellipse cx="73" cy="112" rx="9" ry="5" fill="url(#cheekGrad)" />
+            <ellipse cx="127" cy="112" rx="9" ry="5" fill="url(#cheekGrad)" />
+
+            <!-- 嘴·外唇轮廓 -->
+            <path d="M88 124 Q100 121 112 124" stroke="#9f1239" stroke-width="0.8" fill="none" />
+            <!-- 嘴·主体（含 speaking 动画） -->
+            <path class="mouth" d="M88 124 Q100 130 112 124 Q100 127 88 124 Z" fill="#be123c" />
+            <!-- 上唇高光 -->
+            <path d="M94 124 Q100 122 106 124" stroke="#fda4af" stroke-width="0.6" fill="none" opacity="0.7" />
+            <!-- 唇下阴影 -->
+            <path d="M91 128 Q100 130 109 128" stroke="#7c2d12" stroke-width="0.5" fill="none" opacity="0.4" />
+          </g>
+        </svg>
+
+        <!-- 右下小标签 -->
+        <div class="absolute bottom-2 right-3 text-[9px] text-blue-300/60 tracking-wider">智慧实训 · 数字助手</div>
+      </div>
+
+      <!-- 文字流式区 -->
+      <div class="px-4 pt-3 pb-2">
+        <div id="userQuestion" class="hidden mb-2 text-[14px] font-medium text-blue-200 bg-blue-500/10 border border-blue-400/20 rounded-lg px-3 py-2"></div>
+        <div id="textArea" class="text-sm leading-relaxed text-slate-100 max-h-40 overflow-y-auto nice-scroll min-h-[3rem]">
+          <span id="streamText"></span>
+        </div>
+      </div>
+
+      <!-- 媒体（图/视频）区 -->
+      <div id="mediaArea" class="hidden mx-4 mb-3 rounded-lg overflow-hidden border border-blue-500/20">
+        <div id="mediaContent"></div>
+        <div id="mediaCaption" class="text-[10px] text-blue-300/70 px-2 py-1 bg-slate-900/60"></div>
+      </div>
+
+      <!-- 预设问题下拉 -->
+      <div class="px-3 py-2 border-t border-blue-500/20 bg-slate-900/30">
+        <select id="presetQuestions" class="w-full bg-slate-800/80 border border-blue-500/20 rounded px-2 py-1.5 text-[11px] text-slate-200 cursor-pointer">
+          <option value="">💬 选择预设问题向小安提问...</option>
+          <option value="0">制动操作的要点是什么？</option>
+          <option value="1">信号灯怎么确认？</option>
+          <option value="2">超速了怎么处理？</option>
+          <option value="3">雨雪天气需要注意什么？</option>
+          <option value="4">紧急情况怎么处置？</option>
+          <option value="5">出发前需要检查什么？</option>
+          <option value="6">安检作业的标准流程是什么？</option>
+          <option value="7">站台保洁作业要注意什么？</option>
+          <option value="8">客运服务有哪些注意事项？</option>
+          <option value="9">发现火情怎么处理？</option>
+          <option value="10">行车调度的基本原则是什么？</option>
+          <option value="11">实训考核怎么评分？</option>
+        </select>
+      </div>
+
+      <!-- 控制条 -->
+      <div class="flex items-center gap-1 px-2 py-2 border-t border-blue-500/20 bg-slate-900/40">
+        <button id="pauseBtn" class="text-[11px] px-2.5 py-1.5 rounded hover:bg-blue-500/20 text-slate-300 flex items-center gap-1 lift">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+          暂停
+        </button>
+        <button id="repeatBtn" class="text-[11px] px-2.5 py-1.5 rounded hover:bg-blue-500/20 text-slate-300 flex items-center gap-1 lift">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+          复述
+        </button>
+        <button id="askBtn" class="text-[11px] px-2.5 py-1.5 rounded hover:bg-blue-500/20 text-slate-300 flex items-center gap-1 lift">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>
+          🎤 语音提问
+        </button>
+        <div class="ml-auto flex items-end gap-0.5 h-6" id="voiceWave" style="display:none;">
+          <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============== 错误事件提示横幅（设备模拟）============== -->
+  <div id="errorBanner" class="hidden absolute top-14 left-1/2 -translate-x-1/2 z-40 px-4 py-2 bg-red-600/90 border border-red-400 rounded-lg text-sm font-semibold shadow-2xl">
+    <span id="errorBannerText"></span>
+  </div>
+
+  <!-- ============== 设置抽屉（右侧滑入）============== -->
+  <div id="settingsPanel" class="hidden fixed top-0 right-0 h-full w-80 glass border-l border-blue-500/30 z-[60] p-5 overflow-y-auto nice-scroll">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-base font-semibold text-blue-300">⚙️ 交互设置</h3>
+      <button id="settingsClose" class="w-7 h-7 rounded-full hover:bg-slate-700/60 flex items-center justify-center text-slate-400">×</button>
+    </div>
+
+    <div class="space-y-5 text-xs">
+
+      <div>
+        <label class="flex justify-between text-slate-300 mb-2">
+          <span>🔉 语音语速</span>
+          <span class="text-blue-300" id="rateValue">0.95×</span>
+        </label>
+        <input id="rateSlider" type="range" min="0.6" max="1.5" step="0.05" value="0.95" class="w-full accent-blue-500" />
+        <div class="text-[10px] text-slate-500 mt-1">推荐：0.9-1.05（铁路讲解场景）</div>
+      </div>
+
+      <div>
+        <label class="flex justify-between text-slate-300 mb-2">
+          <span>✍️ 文字流式速度</span>
+          <span class="text-blue-300" id="streamValue">42 ms/字</span>
+        </label>
+        <input id="streamSlider" type="range" min="15" max="100" step="3" value="42" class="w-full accent-blue-500" />
+        <div class="text-[10px] text-slate-500 mt-1">越小越快；推荐与语速匹配</div>
+      </div>
+
+      <div>
+        <label class="text-slate-300 mb-2 block">🎨 主题色</label>
+        <div class="grid grid-cols-3 gap-2">
+          <button data-theme="navy" class="theme-btn h-12 rounded-lg border-2 border-blue-400 bg-gradient-to-br from-slate-900 to-blue-900 flex items-center justify-center text-[10px]">藏蓝</button>
+          <button data-theme="black" class="theme-btn h-12 rounded-lg border border-slate-600 bg-gradient-to-br from-black to-slate-800 flex items-center justify-center text-[10px]">纯黑</button>
+          <button data-theme="green" class="theme-btn h-12 rounded-lg border border-slate-600 bg-gradient-to-br from-emerald-950 to-teal-900 flex items-center justify-center text-[10px]">醉青</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-slate-300 mb-2 block">🔊 TTS 音色</label>
+        <select id="voiceSelect" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-slate-200">
+          <option value="">默认（系统中文女声）</option>
+        </select>
+        <div id="voiceHint" class="text-[10px] text-slate-500 mt-1">取决于浏览器与系统。<b>Edge</b> 浏览器拟人度最高（Xiaoxiao Online 神经声音）；正式产品采用讯飞/豆包云端 TTS</div>
+      </div>
+
+      <div>
+        <label class="text-slate-300 mb-2 block">⏱️ 静默自动收起</label>
+        <div class="flex gap-2">
+          <input id="idleSecondsInput" type="number" min="5" max="120" value="30" class="w-20 bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-slate-200" />
+          <span class="flex items-center text-slate-400">秒</span>
+        </div>
+        <div class="text-[10px] text-slate-500 mt-1">PRD v0.1.5 §5.5 默认 30s</div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-700/50 text-[10px] text-slate-500">
+        <div>版本：v0.2</div>
+        <div>智慧培训数字人系统</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== 调试控制台（左下） ============== -->
+  <div id="demoPanel" class="absolute bottom-5 left-5 glass rounded-xl z-30 transition-all flex flex-col" style="width: 280px; max-height: calc(100vh - 40px);">
+    <div class="flex items-center justify-between p-3 border-b border-blue-500/20 cursor-pointer flex-shrink-0" id="demoToggle">
+      <div class="flex items-center gap-2">
+        <span class="text-base">🎬</span>
+        <span class="text-xs font-semibold text-blue-300">控制台</span>
+      </div>
+      <svg class="w-4 h-4 toggle-arrow collapsed text-slate-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12l-5-5h10l-5 5z"/></svg>
+    </div>
+    <div id="demoBody" class="hidden p-3 space-y-2 text-xs overflow-y-auto nice-scroll" style="max-height: calc(100vh - 200px);">
+
+      <div class="text-[10px] text-slate-400 mb-1 mt-1 uppercase tracking-wider">▼ 唤醒方式</div>
+
+      <button data-action="wakeVoice" class="w-full text-left px-3 py-2 bg-blue-600/25 hover:bg-blue-600/45 border border-blue-500/30 rounded text-blue-100 lift flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1"/><path d="M12 18v4"/></svg>
+        语音唤醒「小安小安」
+      </button>
+
+      <button data-action="errorBrake" class="w-full text-left px-3 py-2 bg-red-600/25 hover:bg-red-600/45 border border-red-500/30 rounded text-red-100 lift flex items-center gap-2">
+        <span>⚠️</span> 错误断点：制动手柄位置不当
+      </button>
+
+      <button data-action="errorSignal" class="w-full text-left px-3 py-2 bg-amber-600/25 hover:bg-amber-600/45 border border-amber-500/30 rounded text-amber-100 lift flex items-center gap-2">
+        <span>⚠️</span> 错误断点：未确认前方信号
+      </button>
+
+      <button data-action="errorSpeed" class="w-full text-left px-3 py-2 bg-orange-600/25 hover:bg-orange-600/45 border border-orange-500/30 rounded text-orange-100 lift flex items-center gap-2">
+        <span>⚠️</span> 错误断点：超速运行
+      </button>
+
+      <button data-action="reset" class="w-full text-left px-3 py-2 mt-3 hover:bg-slate-700/50 rounded text-slate-400 lift">
+        ↻ 重置 / 收起
+      </button>
+    </div>
+  </div>
+
+  <!-- ============== 右下版本水印 ============== -->
+  <div class="absolute bottom-5 right-5 z-30 text-right">
+    <div class="text-[10px] text-blue-300/50 tracking-wider">数字人「小安」· 智慧实训</div>
+    <div class="text-[10px] text-slate-500">v0.2 · 智慧培训数字人系统</div>
+  </div>
+
+</div>
+
+<!-- ============== JS：交互逻辑 ============== -->
+<script>
+/* =========================================================
+   小安数字人 - 沈阳客运段 核心交互逻辑
+   = 状态机 + 流式文字 + TTS + 30s 静默 + 智慧问答
+   ========================================================= */
+
+const $ = (id) => document.getElementById(id);
+
+const state = {
+  expanded: false,
+  speaking: false,
+  paused: false,
+  idleTimer: null,
+  idleSeconds: 30,
+  idleSecondsMax: 30,
+  idleInterval: null,
+  currentScript: null,
+  currentScene: null,
+  cancelToken: 0,
+  // 设置
+  rate: 0.95,
+  streamMs: 42,
+  voiceURI: '',
+  device: 'cr400',
+  examMode: false,
+  // v0.1.6 新增
+  history: [],          // [{ id, ts, source, question, answer, triggerType, mediaCaption }]
+  historyOpen: false,
+  remoteConnected: false,
+  audioPlayer: null,    // 预录 mp3 audio 元素
+  audioFallbackTTS: true,
+};
+
+// v0.1.6 新增：预录音频查找表
+// 如果项目 `audio/` 目录下存在同名 mp3 文件则优先播放（预录豆包 / 即梦 拟人度语音）
+// 不存在则 fallback 到浏览器原生 TTS（折中机械感）
+const PRERECORDED_AUDIO = {
+  // 'brake': 'audio/brake.mp3',
+  // 'signal': 'audio/signal.mp3',
+  // 'overspeed': 'audio/overspeed.mp3',
+  // 'emergency': 'audio/emergency.mp3',
+  // 'weather': 'audio/weather.mp3',
+  // 底下 5 个键为占位。各位可在豆包合成平台生成后放进 `audio/` 目录、取消上面各行注释即可
+};
+
+// ---- 设备预置 ----
+const DEVICE_PRESETS = {
+  cr400: {
+    title: 'CR400BF-GS 动车组模拟驾驶仿真系统 V3.2',
+    label: 'SIM-001 · 动车仿真',
+    task: '当前任务：哈大客专 沈阳→大连 出发作业',
+    kbName: 'CR400BF-GS · 出发前制动试验',
+  },
+  station: {
+    title: '候车厅客运服务仿真 V2.1',
+    label: 'SIM-007 · 候车厅实训',
+    task: '当前任务：旅客售票与问询处理',
+    kbName: '候车厅 · 售票与服务规范',
+  },
+  fire: {
+    title: '客车火灾处置仿真系统 V1.5',
+    label: 'SIM-012 · 消防实训',
+    task: '当前任务：车厢初期火灾发现与处置',
+    kbName: '客车火灾处置 · 应急规程',
+  },
+};
+
+// ---- 知识库剧本（写死的 4 个场景）----
+const scenarios = {
+  brake: {
+    audioKey: 'brake',
+    source: 'KB-当前设备 · CR400BF-GS · 出发前制动试验',
+    triggerType: 'error',
+    bannerText: '⚠️ 检测到操作错误：制动手柄位置异常',
+    question: '【系统检测】学员将自动制动手柄置于"运转位"，但当前步骤要求"缓解位"',
+    answer: '王浩然同学注意，我检测到您将自动制动手柄置于"运转位"，但当前步骤"出发前制动试验"要求手柄保持在"缓解位"。\n\n正确操作步骤：\n第一步，将自动制动手柄回到"缓解位"；\n第二步，确认列车管压力恢复至 600 kPa；\n第三步，按压"试验"按钮，等待 BCU 自检完成。\n\n请按上述顺序操作，我会在屏幕上同步标记关键位置。',
+    media: {
+      type: 'image',
+      content: `<svg viewBox="0 0 320 120" class="w-full bg-slate-950">
+        <rect x="20" y="40" width="280" height="20" fill="#1e293b" stroke="#334155"/>
+        <text x="50" y="35" fill="#10b981" font-size="9">缓解位 ✓</text>
+        <text x="160" y="35" fill="#dc2626" font-size="9">运转位 ✗</text>
+        <text x="270" y="35" fill="#94a3b8" font-size="9">制动位</text>
+        <circle cx="50" cy="50" r="9" fill="#10b981" stroke="#fff" stroke-width="2">
+          <animate attributeName="r" values="9;12;9" dur="1s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="160" cy="50" r="9" fill="#dc2626" opacity="0.4"/>
+        <path d="M 160 65 Q 100 90 50 65" stroke="#10b981" stroke-width="2" fill="none" stroke-dasharray="4,2"/>
+        <polygon points="50,65 56,68 56,62" fill="#10b981"/>
+        <text x="160" y="105" text-anchor="middle" fill="#60a5fa" font-size="10">操作示意：将手柄从「运转位」回到「缓解位」</text>
+      </svg>`,
+      caption: '资源 · 司控级手柄操作位置示意图（KB-EQ-001-步骤 7）'
+    }
+  },
+  signal: {
+    audioKey: 'signal',
+    source: 'KB-当前设备 · CR400BF-GS · 信号显示与确认',
+    triggerType: 'error',
+    bannerText: '⚠️ 检测到未呼唤复诵信号',
+    question: '【系统检测】距 SY-1145 信号机 800m，未识别到呼唤复诵动作',
+    answer: '王浩然同学，前方 800 米处为 SY-1145 信号机，当前显示绿灯——这是允许列车按规定速度通过的信号。\n\n按《铁路行车安全管理规则》第 23 条要求，机车乘务员必须做到"双重呼唤复诵"：\n首次：在距信号机 800 米处呼唤"绿灯，注意运行"；\n复诵：副司机或本人确认后高声复诵"绿灯，注意运行"。\n\n请立即完成呼唤复诵动作。如声学环境不便，可使用面板上的"复诵确认"按钮替代。',
+    media: {
+      type: 'image',
+      content: `<svg viewBox="0 0 320 120" class="w-full bg-slate-950">
+        <line x1="20" y1="80" x2="300" y2="80" stroke="#475569" stroke-width="2"/>
+        <line x1="20" y1="80" x2="300" y2="80" stroke="#1e293b" stroke-width="2" stroke-dasharray="6,6"/>
+        <g transform="translate(60,40)">
+          <rect x="-8" y="0" width="6" height="40" fill="#475569"/>
+          <circle cx="-5" cy="-2" r="8" fill="#22c55e"/>
+          <text x="-5" y="55" text-anchor="middle" fill="#94a3b8" font-size="8">SY-1145</text>
+        </g>
+        <g transform="translate(220,55)">
+          <rect x="0" y="0" width="60" height="22" rx="2" fill="#1e3a8a"/>
+          <circle cx="50" cy="11" r="6" fill="#fbbf24"/>
+          <rect x="6" y="4" width="35" height="14" fill="#0f172a"/>
+        </g>
+        <text x="260" y="50" fill="#60a5fa" font-size="9">机车</text>
+        <path d="M 215 65 Q 130 90 80 65" stroke="#fbbf24" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/>
+        <text x="160" y="105" text-anchor="middle" fill="#94a3b8" font-size="9">800m 处呼唤复诵 → 通过前再次确认</text>
+      </svg>`,
+      caption: '资源 · 信号机呼唤复诵距离示意（KB-RULE-23）'
+    }
+  },
+  speed: {
+    audioKey: 'overspeed',
+    source: 'KB-当前设备 · CR400BF-GS · 限速与超速处置',
+    triggerType: 'error',
+    bannerText: '⚠️ 检测到超速预警',
+    question: '【系统检测】当前速度 235 km/h，前方 K15+200 区段限速 200 km/h',
+    answer: '王浩然同学，请立即减速。前方 K15+200 区段限速 200 km/h，您当前速度 235 km/h，剩余距离约 1.2 公里。\n\n标准减速操作：\n第一步，将司控级置于"惰行"，观察速度变化；\n第二步，若 5 秒内无明显减速，将自动制动手柄置于"常用 1 位"；\n第三步，进入限速区前确认速度低于 200 km/h；\n第四步，离开限速区后再缓慢提速。\n\n切勿使用紧急制动——除非速度无法控制。',
+    media: null
+  },
+  emergency: {
+    audioKey: 'emergency',
+    source: 'KB-全量 · 应急处置规程',
+    triggerType: 'voice',
+    bannerText: null,
+    question: '如何处理紧急制动？',
+    answer: '紧急制动后的标准处置流程包含 6 个步骤：\n\n第一步，紧急制动后，列车将在最短距离内停车，立即按压"安全警示灯"按钮；\n第二步，通过列车广播向旅客通报"列车因故临时停车，请保持镇定"；\n第三步，与车辆段值班员联系，报告停车位置（公里标 + 上下行）；\n第四步，派员沿线路两端 800 米处放置防护信号；\n第五步，检查列车走行部、制动系统是否异常；\n第六步，确认无危险后，请求恢复运行许可。\n\n需要我详细讲解某一步骤吗？',
+    media: {
+      type: 'image',
+      content: `<svg viewBox="0 0 320 130" class="w-full bg-slate-950">
+        <text x="160" y="14" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="600">紧急制动处置 · 6 步骤流程</text>
+        <g font-size="8" fill="#fff">
+          <rect x="10" y="25" width="46" height="22" rx="3" fill="#dc2626"/>
+          <text x="33" y="39" text-anchor="middle">1.警示灯</text>
+          <rect x="64" y="25" width="46" height="22" rx="3" fill="#ea580c"/>
+          <text x="87" y="39" text-anchor="middle">2.广播</text>
+          <rect x="118" y="25" width="46" height="22" rx="3" fill="#ca8a04"/>
+          <text x="141" y="39" text-anchor="middle">3.联系段</text>
+          <rect x="172" y="25" width="46" height="22" rx="3" fill="#65a30d"/>
+          <text x="195" y="39" text-anchor="middle">4.放防护</text>
+          <rect x="226" y="25" width="46" height="22" rx="3" fill="#0891b2"/>
+          <text x="249" y="39" text-anchor="middle">5.检查车</text>
+          <rect x="280" y="25" width="36" height="22" rx="3" fill="#7c3aed"/>
+          <text x="298" y="39" text-anchor="middle">6.恢复</text>
+          <path d="M 56 36 L 64 36 M 110 36 L 118 36 M 164 36 L 172 36 M 218 36 L 226 36 M 272 36 L 280 36" stroke="#475569" stroke-width="1"/>
+        </g>
+        <g font-size="9" fill="#94a3b8">
+          <text x="33" y="68" text-anchor="middle">立即</text>
+          <text x="87" y="68" text-anchor="middle">3min 内</text>
+          <text x="141" y="68" text-anchor="middle">5min 内</text>
+          <text x="195" y="68" text-anchor="middle">800m 处</text>
+          <text x="249" y="68" text-anchor="middle">现场</text>
+          <text x="298" y="68" text-anchor="middle">指令后</text>
+        </g>
+        <text x="160" y="100" text-anchor="middle" fill="#60a5fa" font-size="9">关键原则：先保护、再通报、后排查</text>
+        <text x="160" y="118" text-anchor="middle" fill="#fbbf24" font-size="8">资源 · KB-RULE-EMERGENCY · 适用全车型</text>
+      </svg>`,
+      caption: '资源 · 紧急制动 6 步处置流程（KB-RULE-EMERGENCY · 全量库命中）'
+    }
+  },
+  weather: {
+    audioKey: 'weather',
+    source: 'KB-全量 · 不利天气运行规程',
+    triggerType: 'voice',
+    bannerText: null,
+    question: '雨雪天气需要注意什么？',
+    answer: '雨雪天气下的高铁运行，重点关注 3 个方面：\n\n一、速度控制：积雪覆盖钢轨时，最大运行速度不得超过线路允许速度的 80%；冰冻时不得超过 70%。\n\n二、制动距离：雨雪天气下，请按平日制动距离的 1.3 倍预留减速空间；冰冻天气按 1.5 倍预留。\n\n三、瞭望观察：加强对接触网覆冰、道岔积雪、信号机显示的瞭望，发现异常立即报告调度。\n\n另外提醒：本次实训科目暂未涉及雨雪场景，您当前是晴天工况。如需切换场景，请联系培训师。',
+    media: null
+  }
+};
+
+// ---- 时钟 ----
+function startClock() {
+  const tick = () => {
+    const d = new Date();
+    $('clock').textContent = d.toLocaleTimeString('zh-CN', { hour12: false });
+  };
+  tick(); setInterval(tick, 1000);
+}
+startClock();
+
+// ---- 展开 / 收起 ----
+function expandPanel() {
+  if (state.expanded) return;
+  state.expanded = true;
+  hideIdleBubble(); // 唤起后不再弹提示
+  const panel = $('panel');
+  panel.classList.remove('hidden', 'panel-out');
+  panel.classList.add('panel-in');
+  // v0.1.8: avatar 不再隐藏，始终在场
+  setStatus('展开中...');
+  startIdleCountdown();
+}
+
+function collapsePanel() {
+  if (!state.expanded) return;
+  stopSpeaking();
+  stopIdleCountdown();
+  const panel = $('panel');
+  panel.classList.add('panel-out');
+  setTimeout(() => {
+    panel.classList.add('hidden');
+    panel.classList.remove('panel-in', 'panel-out');
+    // v0.1.8: avatar 始终在场，无需重示
+    state.expanded = false;
+    state.cancelToken++;
+    // 清空内容
+    $('streamText').textContent = '';
+    $('userQuestion').classList.add('hidden');
+    $('mediaArea').classList.add('hidden');
+    setStatus('在线 · 待命中');
+  }, 250);
+}
+
+function setStatus(text, color = 'text-blue-300/80') {
+  const el = $('statusText');
+  el.className = 'text-[11px] mt-0.5 ' + color;
+  el.textContent = text;
+}
+
+// ---- 30 秒静默倒计时 ----
+function startIdleCountdown() {
+  stopIdleCountdown();
+  state.idleSeconds = state.idleSecondsMax;
+  const ring = $('idleRing');
+  const ringProgress = $('ringProgress');
+  const ringText = $('ringText');
+  ring.classList.remove('hidden');
+  const total = 75.4;
+  const update = () => {
+    const offset = total * (1 - state.idleSeconds / state.idleSecondsMax);
+    ringProgress.setAttribute('stroke-dashoffset', offset);
+    ringText.textContent = state.idleSeconds;
+  };
+  update();
+  state.idleInterval = setInterval(() => {
+    if (state.speaking || state.paused) return; // 说话时暂停倒计时
+    state.idleSeconds--;
+    update();
+    if (state.idleSeconds <= 0) {
+      collapsePanel();
+    }
+  }, 1000);
+}
+
+function stopIdleCountdown() {
+  if (state.idleInterval) {
+    clearInterval(state.idleInterval);
+    state.idleInterval = null;
+  }
+  $('idleRing').classList.add('hidden');
+}
+
+function resetIdleCountdown() {
+  if (state.idleInterval) {
+    state.idleSeconds = state.idleSecondsMax;
+  }
+}
+
+// ---- 流式文字 + TTS ----
+async function streamAnswer(scenario, onFinish) {
+  const myToken = ++state.cancelToken;
+  state.currentScene = scenario;
+  state._onFinish = onFinish || null;
+  $('streamText').textContent = '';
+  $('streamText').classList.add('caret');
+
+  // 显示用户问题
+  if (scenario.question) {
+    $('userQuestion').textContent = '🗣 我的提问：' + scenario.question;
+    $('userQuestion').classList.remove('hidden');
+  }
+
+  // 显示来源
+  setStatus(`正在检索：${scenario.source}`, 'text-amber-300');
+  await wait(800);
+  if (myToken !== state.cancelToken) return;
+  setStatus(`回答中... 数据来源：${scenario.source}`, 'text-emerald-300');
+
+  // 同步启动 TTS
+  state.speaking = true;
+  $('avatarSvg').classList.add('speaking');
+  $('avatarCollapsed').classList.add('speaking-wrap');
+  $('voiceWave').style.display = 'flex';
+  speakTTS(scenario.answer, scenario.audioKey, state._onFinish);
+
+  // 流式文字（按字符）
+  const text = scenario.answer;
+  for (let i = 0; i < text.length; i++) {
+    if (myToken !== state.cancelToken) return;
+    while (state.paused) await wait(100);
+    $('streamText').textContent = text.slice(0, i + 1);
+    // 自动滚动
+    $('textArea').scrollTop = $('textArea').scrollHeight;
+    await wait(text[i] === '\n' ? Math.max(80, state.streamMs * 2) : state.streamMs);
+  }
+  $('streamText').classList.remove('caret');
+
+  // 显示媒体
+  if (scenario.media) {
+    await wait(150);
+    if (myToken !== state.cancelToken) return;
+    $('mediaContent').innerHTML = scenario.media.content;
+    $('mediaCaption').textContent = scenario.media.caption;
+    $('mediaArea').classList.remove('hidden');
+  }
+
+  // v0.1.6 新增：问答记入历史（避免重启重复记录）
+  if (myToken === state.cancelToken && !scenario._isReplay) {
+    pushHistory(scenario);
+  }
+}
+
+function speakTTS(text, audioKey, onDone) {
+  // 优先尝试预录音频（v0.1.6 拟人度机制）
+  if (audioKey && PRERECORDED_AUDIO[audioKey]) {
+    stopAudio();
+    try {
+      state.audioPlayer = new Audio(PRERECORDED_AUDIO[audioKey]);
+      state.audioPlayer.playbackRate = state.rate;
+      state.audioPlayer.onplaying = () => setStatus('应答中 · 已加载预录拟人音频', 'text-emerald-300');
+      let _audioDone = false;
+      state.audioPlayer.onended = () => {
+        if (_audioDone) return; _audioDone = true;
+        state.speaking = false;
+        $('avatarSvg').classList.remove('speaking');
+        $('avatarCollapsed').classList.remove('speaking-wrap');
+        $('voiceWave').style.display = 'none';
+        setStatus('回答完毕 · 30 秒后自动收起', 'text-blue-300/80');
+        resetIdleCountdown();
+        if (onDone) onDone();
+      };
+      state.audioPlayer.onerror = () => speakTTS_browser(text, onDone);  // 404 或加载失败，fallback
+      const p = state.audioPlayer.play();
+      if (p && p.catch) p.catch(() => speakTTS_browser(text, onDone));
+      return;
+    } catch(e) { /* fallthrough */ }
+  }
+  speakTTS_browser(text, onDone);
+}
+
+function speakTTS_browser(text, onDone) {
+  if (!('speechSynthesis' in window)) { if (onDone) onDone(); return; }
+  speechSynthesis.cancel();
+  speechSynthesis.resume();
+  const cleanText = text.replace(/\n/g, '。');
+  const u = new SpeechSynthesisUtterance(cleanText);
+  u.lang = 'zh-CN';
+  u.rate = state.rate;
+  u.pitch = 1.05;
+  const voices = speechSynthesis.getVoices();
+  let chosen;
+  if (state.voiceURI) chosen = voices.find(v => v.voiceURI === state.voiceURI);
+  if (!chosen) chosen = voices.find(v => v.lang.startsWith('zh') && /female|女|xiao|ting|hui/i.test(v.name)) ||
+                       voices.find(v => v.lang.startsWith('zh'));
+  if (chosen) u.voice = chosen;
+  let _done = false;
+  function finishOnce() {
+    if (_done) return; _done = true;
+    state.speaking = false;
+    $('avatarSvg').classList.remove('speaking');
+    $('avatarCollapsed').classList.remove('speaking-wrap');
+    $('voiceWave').style.display = 'none';
+    setStatus('回答完毕 · 30 秒后自动收起', 'text-blue-300/80');
+    resetIdleCountdown();
+    if (onDone) onDone();
+  }
+  u.onend = finishOnce;
+  u.onerror = finishOnce;
+  speechSynthesis.speak(u);
+  const keepAlive = setInterval(() => { if (_done || !state.speaking) { clearInterval(keepAlive); return; } speechSynthesis.resume(); }, 5000);
+}
+
+function stopAudio() {
+  if (state.audioPlayer) {
+    try { state.audioPlayer.pause(); state.audioPlayer.currentTime = 0; } catch(e) {}
+    state.audioPlayer = null;
+  }
+}
+
+function stopSpeaking() {
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  stopAudio();
+  state.speaking = false;
+  state.paused = false;
+  $('avatarSvg').classList.remove('speaking');
+  $('avatarCollapsed').classList.remove('speaking-wrap');
+  $('voiceWave').style.display = 'none';
+}
+
+/* === v0.1.8: 10s 唤起提示气泡 === */
+function showIdleBubble() {
+  const b = $('idleBubble');
+  if (!b) return;
+  if (state.expanded || state.examMode || state.speaking) return; // 仅在待机时弹
+  b.classList.remove('hidden', 'idle-bubble-anim');
+  void b.offsetWidth; // 重启动画
+  b.classList.add('idle-bubble-anim');
+  // 5秒后隐藏
+  setTimeout(() => b.classList.add('hidden'), 5000);
+}
+function hideIdleBubble() {
+  const b = $('idleBubble');
+  if (b) { b.classList.add('hidden'); b.classList.remove('idle-bubble-anim'); }
+}
+// 启动 10s 循环
+setInterval(showIdleBubble, 10000);
+// 首次推迟 3s 上面唤一下
+setTimeout(showIdleBubble, 3000);
+
+/* ============== v0.1.6 新增：历史问答 ============== */
+function pushHistory(scenario) {
+  const entry = {
+    id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+    ts: new Date(),
+    source: scenario.source || '',
+    question: scenario.question || '主动问答',
+    answer: scenario.answer || '',
+    triggerType: scenario.triggerType || 'voice',
+    mediaCaption: scenario.media ? scenario.media.caption : null,
+    scenarioRef: scenario,
+  };
+  state.history.unshift(entry);
+  if (state.history.length > 50) state.history.length = 50;
+  refreshHistoryUI();
+}
+
+function refreshHistoryUI() {
+  const list = $('historyList');
+  const count = state.history.length;
+  $('historyCount').textContent = count + ' 条';
+  const badge = $('historyBadge');
+  if (count > 0) {
+    badge.textContent = count;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+  if (count === 0) {
+    list.innerHTML = '<div class="text-[11px] text-slate-500 text-center py-6">本会话尚无问答记录。<br/>唤起小安后，这里会依时间倒序列出本会话问答。<br/>点某条 = 主区重启该问答。</div>';
+    return;
+  }
+  const ICON = { error: '⚠️', voice: '📣', teaching: '📚', proactive: '💬' };
+  list.innerHTML = state.history.map(h => {
+    const t = h.ts.toLocaleTimeString('zh-CN', { hour12: false });
+    const ic = ICON[h.triggerType] || '💬';
+    const qShort = (h.question || '').replace(/[《》『』【】]/g,'').slice(0, 28);
+    const aShort = (h.answer || '').slice(0, 50).replace(/\n/g, ' ');
+    return `<div data-hist="${h.id}" class="cursor-pointer p-2 rounded hover:bg-blue-500/10 border border-transparent hover:border-blue-500/30 transition-all">
+      <div class="flex items-center justify-between text-[10px] text-slate-400 mb-0.5">
+        <span>${ic} ${t}</span>
+        <span class="truncate ml-2 max-w-[140px]" title="${h.source}">${h.source}</span>
+      </div>
+      <div class="text-[11px] text-blue-200 font-medium leading-snug">${qShort}${qShort.length>=28?'…':''}</div>
+      <div class="text-[10px] text-slate-400 leading-snug mt-0.5">${aShort}${h.answer.length>50?'…':''}</div>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('[data-hist]').forEach(el => {
+    el.addEventListener('click', () => replayHistory(el.getAttribute('data-hist')));
+  });
+}
+
+function replayHistory(id) {
+  const h = state.history.find(x => x.id === id);
+  if (!h) return;
+  closeHistoryDrawer();
+  if (!state.expanded) expandPanel();
+  // 重启该问答流式与 TTS
+  setTimeout(() => streamAnswer(h.scenarioRef), 250);
+}
+
+function openHistoryDrawer() {
+  if (!state.expanded) return;
+  $('historyDrawer').classList.remove('hidden');
+  state.historyOpen = true;
+  resetIdleCountdown();
+}
+function closeHistoryDrawer() {
+  $('historyDrawer').classList.add('hidden');
+  state.historyOpen = false;
+}
+
+/* ============== v0.1.6 新增：智慧管控平台远程推送 mock ============== */
+const REMOTE_ACCENT = {
+  amber:   { bg: 'rgba(245,158,11,0.22)', border: '#fbbf24', title: '#fde68a', body: '#fef3c7', close: '#fcd34d' },
+  sky:     { bg: 'rgba(14,165,233,0.22)', border: '#38bdf8', title: '#bae6fd', body: '#e0f2fe', close: '#7dd3fc' },
+  emerald: { bg: 'rgba(16,185,129,0.22)', border: '#34d399', title: '#a7f3d0', body: '#d1fae5', close: '#6ee7b7' },
+  violet:  { bg: 'rgba(139,92,246,0.24)', border: '#a78bfa', title: '#ddd6fe', body: '#ede9fe', close: '#c4b5fd' },
+  rose:    { bg: 'rgba(244,63,94,0.22)',  border: '#fb7185', title: '#fecdd3', body: '#ffe4e6', close: '#fda4af' },
+};
+function showRemoteBanner(opts) {
+  const sim = $('simulator');
+  if (!sim) return;
+  document.querySelectorAll('.remote-banner').forEach(b => b.remove());
+  const c = REMOTE_ACCENT[opts.accent || 'amber'] || REMOTE_ACCENT.amber;
+  const banner = document.createElement('div');
+  banner.className = 'remote-banner absolute top-14 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-lg shadow-lg flex items-center gap-3 text-sm';
+  banner.style.cssText += `min-width: 420px; background:${c.bg}; border:1px solid ${c.border}; backdrop-filter: blur(8px);`;
+  banner.innerHTML = `
+    <span class="text-xl">${opts.icon || '📡'}</span>
+    <div class="flex-1">
+      <div class="font-semibold text-xs" style="color:${c.title}">${opts.sender || '智慧管控平台 · 培训师'}</div>
+      <div class="text-[13px]" style="color:${c.body}">${opts.message}</div>
+    </div>
+    <button class="text-lg leading-none px-1" style="color:${c.close}">×</button>
+  `;
+  banner.querySelector('button').addEventListener('click', () => banner.remove());
+  sim.appendChild(banner);
+  // 点亮“远程”状态灯
+  state.remoteConnected = true;
+  $('remoteIndicator').classList.remove('hidden');
+  // 执行控制动作
+  if (opts.action) opts.action();
+  setTimeout(() => banner.remove(), opts.duration || 6000);
+}
+
+function simulateRemote(kind) {
+  if (kind === 'silence') {
+    showRemoteBanner({
+      icon: '🔇',
+      sender: '智慧管控平台 · 培训师杨安陕',
+      message: '推送下行指令：请静默。所有实训设备上的小安请暂停播报，集中戳讲 90 秒。',
+      accent: 'amber',
+      action: () => { stopSpeaking(); state.paused = true; setStatus('远程静默中 · 等待培训师', 'text-amber-300'); },
+    });
+  } else if (kind === 'volumeUp') {
+    showRemoteBanner({
+      icon: '🔊',
+      sender: '智慧管控平台 · 运维',
+      message: '下行指令：SIM-001 音量提高 +20%（设备现场噪音超阈 65 dB）。',
+      accent: 'sky',
+      action: () => { state.rate = Math.min(1.2, state.rate); },
+    });
+  } else if (kind === 'broadcast') {
+    showRemoteBanner({
+      icon: '📣',
+      sender: '智慧管控平台 · 培训师杨安陕',
+      message: '广播推送：“所有同学注意，10:30 在 3 号教室集中点名，未完成实训者不该变”，小安在所有设备同步讲出。',
+      accent: 'emerald',
+      duration: 8000,
+      action: () => {
+        if (!state.expanded) expandPanel();
+        setTimeout(() => streamAnswer({
+          source: '远程广播 · 培训师推送',
+          triggerType: 'proactive',
+          question: '培训师广播推送',
+          answer: '各位同学注意，这是培训师杨安陕老师的推送。今天 10:30 请在 3 号教室集中点名。未完成今天实训考核的同学请联系你的班主任。',
+        }), 400);
+      },
+    });
+  } else if (kind === 'examMode') {
+    showRemoteBanner({
+      icon: '🎓',
+      sender: '智慧管控平台 · 管理员',
+      message: '下行指令：本班设备全部切换为考试态，小安静默观察，后台记录错误。',
+      accent: 'violet',
+      action: () => { if (!state.examMode) toggleExamMode(); },
+    });
+  } else if (kind === 'forceCollapse') {
+    showRemoteBanner({
+      icon: '⏬',
+      sender: '智慧管控平台 · 运维',
+      message: '下行指令：force.collapse — 立即强制收起小安（领导视察中）。',
+      accent: 'rose',
+      action: () => { stopSpeaking(); collapsePanel(); },
+    });
+  }
+}
+
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ---- 唤醒入口 ----
+function wakeUpWithVoice() {
+  showWakePulse();
+  setTimeout(() => {
+    expandPanel();
+    setStatus('已识别唤醒词「小安小安」', 'text-emerald-300');
+    setTimeout(() => {
+      state.speaking = true;
+      $('avatarSvg').classList.add('speaking');
+      $('avatarCollapsed').classList.add('speaking-wrap');
+      $('voiceWave').style.display = 'flex';
+      $('streamText').textContent = '在，你说。';
+      setStatus('回答中...', 'text-emerald-300');
+      speakTTS('在，你说。', null, () => {
+        setStatus('🎤 请说出您的问题...', 'text-amber-300');
+        if (voiceWakeEnabled && state.expanded) startFollowUpListening();
+      });
+    }, 600);
+  }, 800);
+}
+
+function wakeUpWithError(scenarioKey) {
+  const sc = scenarios[scenarioKey];
+  if (!sc) return;
+  // 屏幕错误横幅
+  $('errorBannerText').textContent = sc.bannerText;
+  $('errorBanner').classList.remove('hidden');
+  $('simulator').classList.add('error-flash');
+  setTimeout(() => $('simulator').classList.remove('error-flash'), 3000);
+  // 抖动一下
+  showWakePulse();
+  setTimeout(() => {
+    $('errorBanner').classList.add('hidden');
+    expandPanel();
+    streamAnswer(sc);
+  }, 1400);
+}
+
+function askProactively(scenarioKey) {
+  const sc = scenarios[scenarioKey];
+  if (!sc) return;
+  if (!state.expanded) expandPanel();
+  setTimeout(() => streamAnswer(sc), 250);
+}
+
+function showWakePulse() {
+  const a = $('avatarCollapsed');
+  a.classList.add('waking');
+  setTimeout(() => a.classList.remove('waking'), 3000);
+}
+
+// ---- 一键演示 ----
+async function autoDemo() {
+  reset();
+  await wait(800);
+  // 场景 1：错误唤醒 - 制动手柄
+  wakeUpWithError('brake');
+  await wait(20000); // 等待 ~流式 + TTS 完成
+  collapsePanel();
+  await wait(2000);
+  // 场景 2：错误唤醒 - 信号
+  wakeUpWithError('signal');
+  await wait(22000);
+  collapsePanel();
+  await wait(2000);
+  // 场景 3：主动语音
+  wakeUpWithVoice();
+  await wait(4500);
+  askProactively('emergency');
+  await wait(25000);
+  collapsePanel();
+}
+
+function reset() {
+  state.cancelToken++;
+  stopSpeaking();
+  closeHistoryDrawer();
+  collapsePanel();
+  $('errorBanner').classList.add('hidden');
+}
+
+// ---- 事件绑定 ----
+$('avatarCollapsed').addEventListener('click', () => {
+  if (!state.expanded) {
+    wakeUpWithVoice();
+  }
+});
+
+$('closeBtn').addEventListener('click', collapsePanel);
+
+$('pauseBtn').addEventListener('click', () => {
+  if (!state.speaking && !state.paused) return;
+  state.paused = !state.paused;
+  if (state.paused) {
+    speechSynthesis.pause();
+    $('pauseBtn').firstElementChild.outerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>';
+    $('pauseBtn').lastChild.textContent = ' 继续';
+  } else {
+    speechSynthesis.resume();
+    $('pauseBtn').innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>暂停';
+  }
+});
+
+$('repeatBtn').addEventListener('click', () => {
+  if (state.currentScene) {
+    stopSpeaking();
+    streamAnswer(state.currentScene);
+  }
+});
+
+$('askBtn').addEventListener('click', () => {
+  startFollowUpListening();
+});
+
+$('demoToggle').addEventListener('click', () => {
+  const body = $('demoBody');
+  const arrow = $('demoToggle').querySelector('.toggle-arrow');
+  body.classList.toggle('hidden');
+  arrow.classList.toggle('collapsed');
+});
+
+document.querySelectorAll('[data-action]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const action = btn.dataset.action;
+    switch (action) {
+      case 'wakeVoice': wakeUpWithVoice(); break;
+      case 'errorBrake': wakeUpWithError('brake'); break;
+      case 'errorSignal': wakeUpWithError('signal'); break;
+      case 'errorSpeed': wakeUpWithError('speed'); break;
+      case 'askEmergency': askProactively('emergency'); break;
+      case 'askWeather': askProactively('weather'); break;
+      case 'autoDemo': autoDemo(); break;
+      case 'teaching': startTeachingMode(); break;
+      case 'examMode': toggleExamMode(); break;
+      case 'remoteSilence': simulateRemote('silence'); break;
+      case 'remoteBroadcast': simulateRemote('broadcast'); break;
+      case 'remoteExam': simulateRemote('examMode'); break;
+      case 'remoteCollapse': simulateRemote('forceCollapse'); break;
+      case 'reset': reset(); break;
+    }
+  });
+});
+
+// v0.1.6 新增：历史抽屉事件
+$('historyBtn').addEventListener('click', () => {
+  if (state.historyOpen) closeHistoryDrawer();
+  else openHistoryDrawer();
+});
+$('historyClose').addEventListener('click', closeHistoryDrawer);
+
+// 键盘快捷
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'm' || e.key === 'M') collapsePanel();
+  if (e.key === 'Escape') reset();
+});
+
+// ---- 设备切换 ----
+$('deviceSwitcherBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  $('deviceMenu').classList.toggle('hidden');
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#deviceSwitcherBtn')) $('deviceMenu').classList.add('hidden');
+  if (!e.target.closest('#settingsBtn') && !e.target.closest('#settingsPanel')) {
+    // 设置抽屉外点击不自动关，需点 ×
+  }
+});
+document.querySelectorAll('[data-device]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.device;
+    state.device = key;
+    const p = DEVICE_PRESETS[key];
+    $('deviceTitle').textContent = p.title;
+    $('currentDeviceLabel').textContent = p.label;
+    $('taskLabel').textContent = p.task;
+    $('deviceMenu').classList.add('hidden');
+    // 提示
+    setStatus(`已切换到：${p.label}`, 'text-emerald-300');
+    setTimeout(() => setStatus('在线 · 待命中'), 2000);
+  });
+});
+
+// ---- 设置抽屉 ----
+$('settingsBtn').addEventListener('click', () => {
+  $('settingsPanel').classList.remove('hidden');
+  $('settingsPanel').classList.add('panel-in');
+});
+$('settingsClose').addEventListener('click', () => {
+  $('settingsPanel').classList.add('hidden');
+});
+$('rateSlider').addEventListener('input', (e) => {
+  state.rate = parseFloat(e.target.value);
+  $('rateValue').textContent = state.rate.toFixed(2) + '×';
+});
+$('streamSlider').addEventListener('input', (e) => {
+  state.streamMs = parseInt(e.target.value);
+  $('streamValue').textContent = state.streamMs + ' ms/字';
+});
+$('idleSecondsInput').addEventListener('change', (e) => {
+  const v = Math.max(5, Math.min(120, parseInt(e.target.value) || 30));
+  state.idleSecondsMax = v;
+  e.target.value = v;
+});
+$('voiceSelect').addEventListener('change', (e) => {
+  state.voiceURI = e.target.value;
+});
+document.querySelectorAll('[data-theme]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('border-blue-400', 'border-2'));
+    btn.classList.add('border-blue-400', 'border-2');
+    const sim = $('simulator');
+    sim.style.background = '';
+    if (btn.dataset.theme === 'black') {
+      sim.style.background = 'radial-gradient(ellipse at 50% 50%, #1f2937 0%, #000 100%)';
+    } else if (btn.dataset.theme === 'green') {
+      sim.style.background = 'radial-gradient(ellipse at 30% 20%, rgba(16,78,52,0.4), transparent 60%), linear-gradient(135deg, #022c22 0%, #064e3b 50%, #022c22 100%)';
+    }
+  });
+});
+
+// ---- 讲课模式 ----
+async function startTeachingMode() {
+  reset();
+  await wait(400);
+  $('modeBadge').textContent = '📚 讲课模式';
+  $('modeBadge').className = 'px-2 py-0.5 rounded text-[10px] bg-emerald-500/30 text-emerald-200';
+  expandPanel();
+  await wait(300);
+  await streamAnswer({
+    source: 'KB-讲课 · CR400BF-GS 安全概要 · PPT P3/P12',
+    triggerType: 'teaching',
+    question: '讲课中·主题：安全运行三大原则',
+    answer: '各位同学好，我是小安。现在我们进入《CR400BF-GS 安全运行要领》的第三页。\n\n本节要点：安全运行的三大原则。\n\n第一，呈哈大主领×××。这个原则要求我们在任何情况下，汇报制度不能丢。\n\n第二，双重呼唤复诵。主司机与副司机需互相确认信号，任一一方未完成复诵，必须补。\n\n第三，预警不侊幸。遇到疑似隐患，首例主动上报。\n\n下面请同学说一说：如果你是主司机，看到前方黄灯，你该怎么做？',
+    media: {
+      type: 'image',
+      content: `<svg viewBox="0 0 320 130" class="w-full bg-slate-950">
+        <text x="160" y="20" text-anchor="middle" fill="#10b981" font-size="11" font-weight="700">安全运行三大原则</text>
+        <g font-size="9" fill="#fff">
+          <rect x="20" y="35" width="86" height="60" rx="4" fill="#065f46"/>
+          <text x="63" y="55" text-anchor="middle">原则一</text>
+          <text x="63" y="75" text-anchor="middle" fill="#a7f3d0" font-size="8">汇报制度</text>
+          <text x="63" y="88" text-anchor="middle" fill="#a7f3d0" font-size="8">不能丢</text>
+          <rect x="117" y="35" width="86" height="60" rx="4" fill="#0e7490"/>
+          <text x="160" y="55" text-anchor="middle">原则二</text>
+          <text x="160" y="75" text-anchor="middle" fill="#a5f3fc" font-size="8">双重呼唤</text>
+          <text x="160" y="88" text-anchor="middle" fill="#a5f3fc" font-size="8">复诵</text>
+          <rect x="214" y="35" width="86" height="60" rx="4" fill="#1e40af"/>
+          <text x="257" y="55" text-anchor="middle">原则三</text>
+          <text x="257" y="75" text-anchor="middle" fill="#bfdbfe" font-size="8">预警</text>
+          <text x="257" y="88" text-anchor="middle" fill="#bfdbfe" font-size="8">不侊幸</text>
+        </g>
+        <text x="160" y="115" text-anchor="middle" fill="#94a3b8" font-size="9">PPT P3 · 上一页 → 下一页 · 跨到 P5</text>
+      </svg>`,
+      caption: '课件 · PPT P3/P12 · 出自《CR400BF 运行手册》第2章'
+    }
+  });
+}
+
+// ---- 考试态切换 ----
+function toggleExamMode() {
+  state.examMode = !state.examMode;
+  if (state.examMode) {
+    reset();
+    $('modeBadge').textContent = '🎓 考试态 · 小安静默中';
+    $('modeBadge').className = 'px-2 py-0.5 rounded text-[10px] bg-violet-500/40 text-violet-100';
+    $('modeBadge').classList.remove('hidden');
+    $('avatarCollapsed').style.opacity = '0.35';
+    $('avatarCollapsed').style.filter = 'grayscale(0.7)';
+    setTimeout(() => {
+      // 模拟事件记录
+      const banner = document.createElement('div');
+      banner.className = 'absolute top-14 left-1/2 -translate-x-1/2 z-40 px-3 py-1.5 bg-violet-700/80 border border-violet-400 rounded text-xs';
+      banner.textContent = '⚡ 事件已记录：制动手柄位置异常（考试态不唤起，仅纯后台记录）';
+      $('simulator').appendChild(banner);
+      setTimeout(() => banner.remove(), 4000);
+    }, 1500);
+  } else {
+    $('modeBadge').classList.add('hidden');
+    $('avatarCollapsed').style.opacity = '';
+    $('avatarCollapsed').style.filter = '';
+  }
+}
+
+// 拦截考试态下的唤起
+const origExpand = expandPanel;
+function expandPanelGuarded() {
+  if (state.examMode) {
+    const banner = document.createElement('div');
+    banner.className = 'absolute top-14 left-1/2 -translate-x-1/2 z-40 px-3 py-1.5 bg-violet-700/80 border border-violet-400 rounded text-xs';
+    banner.textContent = '考试态下不唤起小安（遵守 §5.5 例外）';
+    $('simulator').appendChild(banner);
+    setTimeout(() => banner.remove(), 3000);
+    return;
+  }
+  origExpand();
+}
+// 重定向 wakeUp 函数到 guarded 版
+const origWakeError = wakeUpWithError;
+window.wakeUpWithError = function(k) { if (state.examMode) { toggleExamMode(); /* simulate suppressed */ return; } origWakeError(k); };
+
+// ---- 预热语音 + 加载音色列表 ----
+function rankVoice(v) {
+  // 越高越优先：社区/云/神经网络语音拟人度最高
+  let s = 0;
+  const n = (v.name || '').toLowerCase();
+  if (/online|natural|neural|premium|enhanced/i.test(n)) s += 100;
+  if (/xiaoxiao|yunxi|xiaoyi|yunyang|xiaomeng|xiaohan/i.test(n)) s += 80;  // 微软神经声
+  if (/google.*中文|google.*chinese/i.test(n)) s += 40;
+  if (/female|女|xiao|ting|hui|mei|na/i.test(n)) s += 20;
+  if (v.localService === false) s += 10;  // 有些浏览器云侧质量更高
+  return s;
+}
+function loadVoices() {
+  if (!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  const sel = $('voiceSelect');
+  if (!sel) return;
+  const zhVoices = voices.filter(v => v.lang.startsWith('zh'));
+  zhVoices.sort((a, b) => rankVoice(b) - rankVoice(a));
+  sel.innerHTML = '<option value="">默认（自动选最佳中文女声）</option>';
+  zhVoices.forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v.voiceURI;
+    const ranked = rankVoice(v);
+    const tag = ranked >= 100 ? ' ⭐拟人度高' : (ranked >= 80 ? ' ✨推荐' : '');
+    opt.textContent = `${v.name}${tag}`;
+    sel.appendChild(opt);
+  });
+  // 权鵯提示：如果没有高质量声音，提醒使用 Edge
+  const hasNeural = zhVoices.some(v => rankVoice(v) >= 80);
+  const hint = $('voiceHint');
+  if (hint && !hasNeural) {
+    hint.innerHTML = '⚠️ 未检测到高拟人度中文声音。建议使用 <b>Microsoft Edge</b> 打开（内置 Xiaoxiao Online 神经声音）；或预录 mp3 放入 audio/ 目录。';
+    hint.className = 'text-[10px] text-amber-300/90 mt-1 leading-snug';
+  }
+}
+window.addEventListener('load', () => {
+  if ('speechSynthesis' in window) {
+    speechSynthesis.getVoices();
+    setTimeout(loadVoices, 300);
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+});
+
+// ---- 语音唤醒 + 追问（Web Speech API） ----
+let voiceWakeEnabled = false;
+let recognition = null;
+let listenMode = 'wake'; // 'wake' | 'followup'
+
+// 预设的追问回复（匹配关键词 + 下拉列表联动）
+const FOLLOWUP_REPLIES = [
+  { keywords: /制动|刹车|停车/, question: '制动操作的要点是什么？', answer: '制动操作要点：先将司控级置于惰行，观察速度变化，必要时使用常用制动。紧急情况才使用紧急制动。', source: 'KB-制动操作' },
+  { keywords: /信号|红灯|绿灯|黄灯/, question: '信号灯怎么确认？', answer: '信号确认要求：距信号机800米处必须呼唤复诵，主副司机双重确认。绿灯允许通过，黄灯减速，红灯停车。', source: 'KB-信号规程' },
+  { keywords: /超速|限速|速度/, question: '超速了怎么处理？', answer: '限速处置：立即将司控级置于惰行，5秒内无减速则使用常用制动。进入限速区前必须降至规定速度以下。', source: 'KB-限速规程' },
+  { keywords: /天气|雨|雪|冰/, question: '雨雪天气需要注意什么？', answer: '雨雪天气运行要点：速度不超过允许速度80%，制动距离按1.3倍预留，加强瞭望观察接触网和道岔。', source: 'KB-不利天气' },
+  { keywords: /紧急|应急|事故/, question: '紧急情况怎么处置？', answer: '紧急处置六步：按安全警示灯、广播通报旅客、联系值班员报告位置、放置防护信号、检查列车状态、确认安全后请求恢复。', source: 'KB-应急处置' },
+  { keywords: /出发|发车|启动/, question: '出发前需要检查什么？', answer: '出发前检查：确认制动试验完成、列车管压力600kPa、信号显示正确、车门关闭确认灯亮。', source: 'KB-出发作业' },
+  { keywords: /安检|X光|检查|违禁/, question: '安检作业的标准流程是什么？', answer: '安检标准流程：引导旅客放置行李至传送带，X光机判图识别违禁品，可疑物品需开包检查并登记，人身检查使用手持探测仪，重点检查腰部、腿部区域。', source: 'KB-安检流程' },
+  { keywords: /保洁|清扫|卫生|扶梯/, question: '站台保洁作业要注意什么？', answer: '站台保洁要点：列车到站前完成站台清扫，扶梯区域每2小时巡查一次，雨雪天气加铺防滑垫，垃圾桶满2/3时及时更换，作业时穿反光背心注意来车方向。', source: 'KB-保洁规范' },
+  { keywords: /客运|服务|旅客|问询/, question: '客运服务有哪些注意事项？', answer: '客运服务要点：使用标准服务用语，主动帮助老幼病残孕旅客，问询台保持微笑服务，广播通知需提前15分钟播报，晚点超30分钟需启动应急服务预案。', source: 'KB-客运服务' },
+  { keywords: /消防|灭火|火灾|烟雾/, question: '发现火情怎么处理？', answer: '火情处置流程：立即按下最近火灾报警按钮，使用对应类型灭火器（电气火灾用CO2，普通火灾用ABC干粉），疏散周围旅客，报告车站值班员并拨打119。', source: 'KB-消防安全' },
+  { keywords: /调度|行车|运行图|时刻/, question: '行车调度的基本原则是什么？', answer: '行车调度原则：严格按运行图组织行车，安全第一、正点运行，优先保证旅客列车，遇特殊情况及时向上级汇报，调度命令必须复诵确认后执行。', source: 'KB-行车调度' },
+  { keywords: /培训|考试|成绩|实训/, question: '实训考核怎么评分？', answer: '实训考核评分标准：操作规范性占40%，完成时间占20%，安全意识占25%，应急处置能力占15%。总分90分以上为优秀，80分以上为合格，需在规定时间内完成全部操作科目。', source: 'KB-考核标准' },
+];
+
+// 预设问题下拉选择
+$('presetQuestions').addEventListener('change', (e) => {
+  const idx = e.target.value;
+  if (idx === '') return;
+  const item = FOLLOWUP_REPLIES[parseInt(idx)];
+  if (!item) return;
+  e.target.value = ''; // 重置下拉
+  if (!state.expanded) expandPanel();
+  setTimeout(() => {
+    streamAnswer({
+      source: item.source,
+      triggerType: 'voice',
+      question: item.question,
+      answer: item.answer,
+      media: null
+    });
+  }, 300);
+});
+
+function matchFollowUp(text) {
+  for (const item of FOLLOWUP_REPLIES) {
+    if (item.keywords.test(text)) return item;
+  }
+  return { answer: '好的，我已记录您的问题。在正式版本中我会接入知识库为您检索详细答案。还有其他问题吗？', source: 'KB-全量' };
+}
+
+function startFollowUpListening() {
+  if (!recognition) return;
+  if (state.speaking) return; // 正在播报时不启动监听
+  listenMode = 'followup';
+  setStatus('🎤 请说出您的问题...', 'text-amber-300');
+  try { recognition.stop(); } catch(e) {}
+  setTimeout(() => {
+    if (state.speaking) return; // 双重保护
+    try { recognition.start(); } catch(e) {}
+  }, 600);
+}
+
+let _answering = false; // 防止重复回答
+function handleFollowUpResult(transcript) {
+  if (_answering || state.speaking) return; // 正在回答时不接受新问题
+  _answering = true;
+  console.log('[追问] 识别到:', transcript);
+  const matched = matchFollowUp(transcript);
+  listenMode = 'wake';
+  // 停止识别，防止TTS音频被识别为用户语音
+  try { recognition.stop(); } catch(e) {}
+  streamAnswer({
+    source: matched.source,
+    triggerType: 'voice',
+    question: transcript,
+    answer: matched.answer,
+    media: null
+  }, () => {
+    _answering = false;
+    // 回答完毕后等待一下再启动监听，避免TTS余音被识别
+    if (voiceWakeEnabled && state.expanded) {
+      setTimeout(() => startFollowUpListening(), 800);
+    }
+  });
+}
+
+function startVoiceWake() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    console.warn('[语音唤醒] 当前浏览器不支持 SpeechRecognition，请使用 Chrome 或 Edge');
+    return;
+  }
+  recognition = new SpeechRecognition();
+  recognition.lang = 'zh-CN';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 3;
+
+  recognition.onresult = (event) => {
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+      const isFinal = event.results[i].isFinal;
+
+      if (listenMode === 'wake') {
+        // 唤醒模式：检测"小安"
+        if (state.expanded || state.speaking) return;
+        if (/小安/.test(transcript)) {
+          console.log('[语音唤醒] 识别到唤醒词:', transcript);
+          wakeUpWithVoice();
+          recognition.stop();
+          return;
+        }
+      } else if (listenMode === 'followup') {
+        // 追问模式：实时展示识别中的文字，等待 final 结果
+        if (state.speaking) return;
+        // 实时展示用户正在说的内容（interim + final）
+        if (transcript.trim().length > 0) {
+          $('userQuestion').textContent = '🎤 正在听：' + transcript.trim() + (isFinal ? '' : '...');
+          $('userQuestion').classList.remove('hidden');
+        }
+        if (isFinal && transcript.trim().length > 1) {
+          if (/^小安+$/.test(transcript.trim())) return;
+          $('userQuestion').textContent = '🗣 我的提问：' + transcript.trim();
+          handleFollowUpResult(transcript.trim());
+          recognition.stop();
+          return;
+        }
+      }
+    }
+  };
+
+  recognition.onerror = (event) => {
+    if (event.error === 'not-allowed') {
+      console.warn('[语音唤醒] 麦克风权限被拒绝');
+      voiceWakeEnabled = false;
+      return;
+    }
+  };
+
+  recognition.onend = () => {
+    if (!voiceWakeEnabled) return;
+    // 正在播报或正在回答时不自动重启，避免TTS被识别为用户语音
+    if (state.speaking || _answering) return;
+    if (!state.expanded) {
+      listenMode = 'wake';
+      try { recognition.start(); } catch(e) {}
+    }
+    // 展开时不自动重启，由 startFollowUpListening 控制
+  };
+
+  try {
+    recognition.start();
+    voiceWakeEnabled = true;
+    console.log('[语音唤醒] 已启动，说"小安小安"唤醒，唤醒后可直接提问');
+  } catch(e) {
+    console.warn('[语音唤醒] 启动失败:', e);
+  }
+}
+
+// 页面加载后自动开启语音唤醒
+setTimeout(() => {
+  startVoiceWake();
+}, 1500);
+
+// 启动提示
+setTimeout(() => {
+  setStatus(voiceWakeEnabled ? '在线 · 语音待命（说"小安小安"唤醒）' : '在线 · 待命中（点击或使用控制台）', 'text-blue-300/80');
+}, 2000);
+
+// ===== 背景场景切换 =====
+document.querySelectorAll('.bg-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const sceneIdx = dot.dataset.scene;
+    document.querySelectorAll('.bg-dot').forEach(d => d.classList.remove('active'));
+    dot.classList.add('active');
+    document.querySelectorAll('.scene-layer').forEach(layer => layer.classList.add('hidden-scene'));
+    const target = document.getElementById('scene-' + sceneIdx);
+    if (target) target.classList.remove('hidden-scene');
+  });
+});
+
+</script>
+</body>
+</html>

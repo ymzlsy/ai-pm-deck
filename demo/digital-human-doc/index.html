@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数字人「小安」智慧实训能力演示</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #2563eb;
+    --blue-700: #1d4ed8;
+    --blue-light: #eff6ff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-900: #111827;
+  }
+  * { font-family: 'Noto Sans SC', system-ui, sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background: #fff; color: var(--gray-900); }
+
+  /* TOC sidebar */
+  .toc-sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 280px;
+    background: var(--gray-50); border-right: 1px solid #e5e7eb;
+    padding: 24px 18px; overflow-y: auto; z-index: 50;
+    transition: transform 0.3s ease;
+  }
+  .toc-sidebar a {
+    display: block; padding: 6px 12px; margin: 2px 0; border-radius: 6px;
+    color: var(--gray-600); text-decoration: none; font-size: 13px; line-height: 1.5;
+    transition: all 0.15s;
+  }
+  .toc-sidebar a:hover, .toc-sidebar a.active {
+    background: var(--blue-light); color: var(--blue);
+  }
+  .toc-sidebar .section-label {
+    font-size: 11px; font-weight: 600; color: #9ca3af; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 12px 12px 4px; margin-top: 8px;
+  }
+  .main-content { margin-left: 280px; }
+
+  @media (max-width: 1024px) {
+    .toc-sidebar { transform: translateX(-100%); }
+    .toc-sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; }
+    .mobile-menu-btn { display: flex !important; }
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 58%, #0f766e 100%);
+    color: #fff; padding: 72px clamp(28px, 5vw, 72px) 56px; position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.08), transparent 60%);
+  }
+  .hero h1 { font-size: clamp(2.1rem, 3.2vw, 3.25rem); font-weight: 700; position: relative; z-index: 1; letter-spacing: 0; }
+  .hero p { font-size: 1.05rem; opacity: 0.9; position: relative; z-index: 1; margin-top: 14px; max-width: 980px; line-height: 1.75; }
+  .hero .meta { font-size: 0.85rem; opacity: 0.6; position: relative; z-index: 1; margin-top: 20px; }
+
+  /* Section */
+  .doc-section {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 46px clamp(32px, 4.5vw, 72px);
+  }
+  .doc-section h2 {
+    font-size: 1.55rem; font-weight: 700; color: var(--gray-900);
+    border-bottom: 3px solid var(--blue); padding-bottom: 10px; margin-bottom: 22px;
+  }
+  .doc-section h3 {
+    font-size: 1.15rem; font-weight: 600; color: var(--gray-900); margin: 28px 0 12px;
+  }
+  .doc-section p, .doc-section li { color: var(--gray-600); line-height: 1.8; font-size: 0.96rem; }
+  .doc-section ul { padding-left: 20px; }
+  .doc-section li { margin: 4px 0; }
+
+  .leader-brief {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  }
+  .brief-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 14px;
+    margin-top: 18px;
+  }
+  .brief-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 16px 18px;
+    background: #fff;
+  }
+  .brief-card strong {
+    display: block;
+    color: var(--gray-900);
+    font-size: 0.98rem;
+    margin-bottom: 8px;
+  }
+  .brief-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+  .quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .quick-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 7px 12px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    color: var(--blue-700);
+    font-size: 0.88rem;
+    text-decoration: none;
+  }
+  .quick-links a:hover {
+    border-color: #bfdbfe;
+    background: var(--blue-light);
+  }
+
+  /* Table */
+  .table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    margin: 16px 0 24px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+  }
+  .table-scroll .doc-table { margin: 0; min-width: 760px; }
+  .doc-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+  .doc-table th {
+    background: var(--gray-50); font-weight: 600; text-align: left;
+    padding: 11px 14px; border-bottom: 2px solid #e5e7eb;
+  }
+  .doc-table td { padding: 11px 14px; border-bottom: 1px solid #f3f4f6; color: var(--gray-600); vertical-align: top; }
+  .doc-table tr:hover td { background: #fafbfc; }
+
+  /* Card */
+  .info-card {
+    background: var(--blue-light); border-left: 4px solid var(--blue);
+    padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0;
+  }
+  .info-card p { color: #1e40af; margin: 0; font-size: 0.9rem; }
+
+  /* Mermaid container */
+  .mermaid-wrap {
+    background: var(--gray-50); border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 18px; margin: 16px 0 24px; overflow: auto;
+    max-height: 560px;
+  }
+  .mermaid-wrap .mermaid { display: flex; justify-content: center; min-width: 760px; }
+  .mermaid-wrap svg {
+    max-width: 100% !important;
+    max-height: 520px !important;
+  }
+  .mode-detail .mermaid-wrap {
+    max-height: 680px;
+  }
+  .mode-detail .mermaid-wrap svg {
+    max-height: 640px !important;
+  }
+  .split-flow-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin: 18px 0 28px;
+  }
+  .split-flow-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    background: var(--gray-50);
+    padding: 14px;
+    overflow: auto;
+    min-height: 640px;
+  }
+  .split-flow-card h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+  }
+  .split-flow-card .mermaid {
+    display: flex;
+    justify-content: center;
+    min-width: 360px;
+  }
+  .split-flow-card svg {
+    max-width: 100% !important;
+    max-height: 590px !important;
+  }
+  .mode-detail .split-flow-card {
+    min-height: 700px;
+  }
+  .mode-detail .split-flow-card svg {
+    max-height: 650px !important;
+  }
+  .sequence-flow {
+    max-height: 720px;
+  }
+  .sequence-flow .mermaid {
+    min-width: 920px;
+  }
+  .sequence-flow svg {
+    max-height: 680px !important;
+  }
+  .mode-detail .sequence-flow {
+    max-height: 820px;
+  }
+  .mode-detail .sequence-flow svg {
+    max-height: 780px !important;
+  }
+  .simple-flow {
+    display: none;
+  }
+  /* Visual step flow for external version */
+  .visual-step-flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 20px 0 28px;
+    overflow-x: auto;
+    padding: 8px 0;
+  }
+  .visual-step-flow .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 130px;
+    flex: 1;
+    position: relative;
+  }
+  .visual-step-flow .step-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .visual-step-flow .step-label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    text-align: center;
+  }
+  .visual-step-flow .step-desc {
+    font-size: 0.78rem;
+    color: var(--gray-600);
+    text-align: center;
+    margin-top: 4px;
+    max-width: 120px;
+  }
+  .visual-step-flow .arrow {
+    flex: 0 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #93c5fd;
+    font-size: 22px;
+    margin-bottom: 28px;
+  }
+  /* Timeline for training flow */
+  .visual-timeline {
+    position: relative;
+    margin: 24px 0;
+    padding-left: 36px;
+  }
+  .visual-timeline::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #3b82f6, #06b6d4, #10b981);
+    border-radius: 2px;
+  }
+  .visual-timeline .tl-item {
+    position: relative;
+    padding: 12px 0 20px 24px;
+  }
+  .visual-timeline .tl-dot {
+    position: absolute;
+    left: -28px;
+    top: 14px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    z-index: 2;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .visual-timeline .tl-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--gray-900);
+  }
+  .visual-timeline .tl-body {
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    margin-top: 4px;
+    line-height: 1.6;
+  }
+  .visual-timeline .tl-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+  /* Hint pyramid */
+  .hint-pyramid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 20px auto;
+    max-width: 520px;
+  }
+  .hint-pyramid .level {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+    width: 100%;
+    transition: transform 0.15s;
+  }
+  .hint-pyramid .level:hover {
+    transform: translateX(4px);
+  }
+  .hint-pyramid .level-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .hint-pyramid .level-num {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  /* Three-layer display */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .layer-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 18px;
+    background: #fff;
+    transition: box-shadow 0.15s;
+  }
+  .layer-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .layer-card .layer-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .layer-card .layer-info strong {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+  }
+  .layer-card .layer-info span {
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+  }
+  .mode-detail .simple-only { display: none !important; }
+  .mode-detail .simple-flow { display: none !important; }
+  .mode-detail .toc-simple { display: none !important; }
+  .mode-simple .detail-only { display: none !important; }
+  .mode-simple .simple-only { display: block !important; }
+  .mode-simple .simple-flow { display: block !important; }
+  .mode-simple .toc-detail { display: none !important; }
+  .solution-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin: 20px 0 26px;
+  }
+  .solution-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 18px;
+    background: #fff;
+  }
+  .solution-card .num {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--blue-light);
+    color: var(--blue-700);
+    font-weight: 700;
+    font-size: 0.82rem;
+    margin-bottom: 12px;
+  }
+  .solution-card strong {
+    display: block;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+  }
+  .solution-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+  .highlight-band {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .highlight-item {
+    background: #f8fafc;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .highlight-item strong { display: block; margin-bottom: 6px; color: var(--gray-900); }
+  .highlight-item span { color: var(--gray-600); font-size: 0.9rem; line-height: 1.6; }
+  .scene-figure {
+    margin: 18px 0 24px;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .scene-figure img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .scene-figure figcaption {
+    padding: 10px 14px;
+    color: var(--gray-600);
+    font-size: 0.86rem;
+    background: #f8fafc;
+    border-top: 1px solid var(--gray-200);
+  }
+
+  /* Demo embed */
+  .demo-embed {
+    border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;
+    margin: 20px 0; box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    background: #fff;
+  }
+  .demo-embed-header {
+    background: var(--gray-50); padding: 10px 16px; border-bottom: 1px solid #e5e7eb;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .demo-embed-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .demo-embed iframe {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    height: auto;
+    min-height: 0;
+    border: none;
+    display: block;
+  }
+  .demo-link-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+  }
+  .demo-link-card {
+    display: block;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 16px;
+    background: #fff;
+    text-decoration: none;
+  }
+  .demo-link-card strong { display: block; color: var(--gray-900); margin-bottom: 6px; }
+  .demo-link-card span { display: block; color: var(--gray-600); font-size: 0.88rem; line-height: 1.6; }
+  .demo-link-card em { display: inline-block; margin-top: 10px; color: var(--blue-700); font-style: normal; font-size: 0.88rem; }
+  .demo-link-card:hover { border-color: #bfdbfe; background: var(--blue-light); }
+
+  /* Divider */
+  .section-divider {
+    border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+    margin: 0;
+  }
+
+  /* Status badge */
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;
+  }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-amber { background: #fef3c7; color: #92400e; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+
+  /* ASCII art box */
+  .ascii-box {
+    background: #1e293b; color: #e2e8f0; padding: 20px 24px; border-radius: 8px;
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.86rem; line-height: 1.7;
+    overflow-x: auto; margin: 16px 0;
+    white-space: pre;
+  }
+
+  /* Back to top */
+  .back-top {
+    position: fixed; bottom: 24px; right: 24px; width: 40px; height: 40px;
+    background: var(--blue); color: #fff; border-radius: 50%; border: none;
+    cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3); transition: opacity 0.3s; z-index: 100;
+  }
+  .simple-nav {
+    display: none !important;
+  }
+  .mode-simple .compact-hide {
+    display: none !important;
+  }
+  .mode-detail .compact-hide {
+    display: revert;
+  }
+  .mode-detail .compact-summary {
+    display: none !important;
+  }
+  .view-switch {
+    position: fixed;
+    left: 22px;
+    bottom: 22px;
+    z-index: 120;
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 8px 24px rgba(15,23,42,0.12);
+    backdrop-filter: blur(10px);
+  }
+  .view-switch button {
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .mode-simple #switchSimple,
+  .mode-detail #switchDetail {
+    background: var(--blue);
+    color: #fff;
+  }
+  @media (min-width: 1500px) {
+    .doc-section { max-width: 1360px; }
+    .hero { padding-left: 86px; padding-right: 86px; }
+  }
+  @media (max-width: 1180px) {
+    .brief-grid, .demo-link-grid, .solution-grid, .highlight-band, .split-flow-grid { grid-template-columns: 1fr; }
+    .mermaid-wrap .mermaid { min-width: 720px; }
+    .simple-flow .mermaid { min-width: 0; }
+  }
+  @media (max-width: 720px) {
+    .hero { padding: 64px 24px 40px; }
+    .doc-section { padding: 36px 20px; }
+    .ascii-box { font-size: 0.74rem; }
+  }
+
+  /* 嵌入 PPT iframe：侧栏常开 + 正文让位，避免折叠菜单盖住内容 */
+  html.in-deck body {
+    background: #f8f6f1;
+  }
+  html.in-deck .mobile-menu-btn {
+    display: none !important;
+  }
+  html.in-deck .toc-sidebar {
+    width: var(--deck-nav-w, 168px);
+    padding: 14px 10px;
+    transform: translateX(0) !important;
+    box-shadow: none;
+  }
+  html.in-deck .toc-sidebar a {
+    font-size: 11px;
+    padding: 4px 8px;
+    line-height: 1.4;
+  }
+  html.in-deck .toc-sidebar .section-label {
+    font-size: 10px;
+    padding: 8px 8px 2px;
+  }
+  /* 详细版目录由 .mode-detail .toc-detail 控制显示，勿在 in-deck 下整段隐藏 */
+  html.in-deck .main-content {
+    margin-left: var(--deck-nav-w, 168px) !important;
+    max-width: none;
+  }
+  html.in-deck .hero {
+    padding: 32px 18px 24px;
+  }
+  html.in-deck .hero h1 {
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+  html.in-deck .hero p,
+  html.in-deck .hero .meta {
+    font-size: 0.82rem;
+  }
+  html.in-deck .doc-section {
+    padding: 28px 16px;
+  }
+  html.in-deck .view-switch {
+    left: calc(var(--deck-nav-w, 168px) + 12px);
+  }
+  html.in-deck.in-deck-focus {
+    --deck-nav-w: 196px;
+  }
+
+</style>
+<script>
+  (function () {
+    var inDeck = window.self !== window.top || /(?:\?|&)deck=1/.test(location.search);
+    if (!inDeck) return;
+    document.documentElement.classList.add('in-deck');
+  })();
+</script>
+</head>
+<body class="mode-simple">
+
+<!-- Mobile menu button -->
+<button class="mobile-menu-btn hidden fixed top-4 left-4 z-[60] bg-white border border-gray-200 rounded-lg p-2 shadow-sm" onclick="document.querySelectorAll('.toc-sidebar').forEach(s=>s.classList.toggle('open'))">
+  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+</button>
+
+<!-- TOC Sidebar — simple mode -->
+<nav class="toc-sidebar toc-simple">
+  <div style="font-weight:700;font-size:15px;color:#111827;margin-bottom:16px;">数字人「小安」</div>
+  <div class="section-label">总览</div>
+    <a href="#leader-brief">能力概览</a>
+    <a href="#simple-solution">能力闭环</a>
+    <a href="#simple-cr400">CR400 侧景窗陪练</a>
+    <a href="#simple-profile">训练复盘与画像</a>
+    <a href="#simple-modes">两种产品模式</a>
+    <a href="#simple-arch">能力架构</a>
+  <div class="section-label">场景详情</div>
+    <a href="#simple-tour">参观讲解路线</a>
+    <a href="#simple-hint">提示分级策略</a>
+    <a href="#simple-demo-script">典型演示流程</a>
+  <div class="section-label">价值与规划</div>
+    <a href="#simple-diff">差异化价值</a>
+    <a href="#simple-roadmap">能力路线</a>
+  <div class="section-label">在线体验</div>
+    <a href="#simple-experience">交互能力体验</a>
+</nav>
+
+<!-- TOC Sidebar — detail mode -->
+<nav class="toc-sidebar toc-detail">
+  <div style="font-weight:700;font-size:15px;color:#111827;margin-bottom:16px;">数字人「小安」</div>
+  <div class="section-label">总览</div>
+    <a href="#leader-brief">能力概览</a>
+    <a href="#overview">方案定位</a>
+    <a href="#modes">两类应用模式</a>
+    <a href="#scenarios">核心场景</a>
+    <a href="#architecture">能力架构</a>
+    <div class="section-label">场景一：参观讲解</div>
+    <a href="#tour-overview">导览总览</a>
+    <a href="#tour-route">参观路线</a>
+    <a href="#tour-value">智能增值点</a>
+    <div class="section-label">场景二：实训陪练</div>
+    <a href="#train-flow">完整流程设计</a>
+    <a href="#train-state">状态机</a>
+    <a href="#train-hint">提示分级策略</a>
+    <a href="#train-sequence">交互时序</a>
+    <a href="#train-demo-script">典型演示流程</a>
+    <div class="section-label">场景三：总结与画像</div>
+    <a href="#summary">实训总结</a>
+    <a href="#profile">技能画像闭环</a>
+    <a href="#data-flow">数据流全景</a>
+    <div class="section-label">在线体验</div>
+    <a href="#demo">交互能力体验</a>
+    <div class="section-label">附录</div>
+    <a href="#diff">差异化价值</a>
+    <a href="#next">能力路线</a>
+</nav>
+
+<!-- Main Content -->
+<div class="main-content">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>数字人「小安」智慧实训解决方案</h1>
+    <p class="compact-summary">面向轨道交通实训基地，融合智能导览、实训陪练、训练复盘和能力画像，构建可展示、可训练、可沉淀的数字人实训入口。</p>
+    <p class="compact-hide">面向轨道交通实训基地，提供智能导览讲解、实训过程陪练、训练结果复盘和学员能力画像等一体化能力。数字人不只是可见的虚拟形象，更是连接实训设备、业务知识库和培训管理平台的智能交互入口。</p>
+    <div class="meta">轨道交通智慧实训 · 智能导览 · 实训陪练 · 能力画像</div>
+  </div>
+
+  <!-- Leader Brief -->
+  <div class="doc-section leader-brief" id="leader-brief">
+    <h2>能力概览</h2>
+    <p class="compact-summary">围绕“看得懂、练得会、能复盘、可沉淀”，小安把讲解、陪练、总结和画像串成完整体验。</p>
+    <p class="compact-hide">数字人「小安」围绕实训基地“看得懂、练得会、能复盘、可沉淀”的核心目标，将导览讲解、过程陪练、训练总结和能力画像整合为连续的智慧实训体验。</p>
+
+    <div class="brief-grid">
+      <div class="brief-card">
+        <strong>智能实训入口</strong>
+        <p class="compact-summary">统一承载讲解、问答、提示和复盘。</p>
+        <p class="compact-hide">以数字人形象承载讲解、问答、提示和复盘能力，连接实训室导览、实训设备、业务知识库、训练结果和学员画像。</p>
+      </div>
+      <div class="brief-card">
+        <strong>业务融合能力</strong>
+        <p class="compact-summary">接入设备、任务、知识库和训练数据。</p>
+        <p class="compact-hide">支持复杂实训设备接入、关键节点提示、低打扰交互、训练数据沉淀和培训管理联动，帮助实训过程从“人工经验”走向“数据驱动”。</p>
+      </div>
+      <div class="brief-card">
+        <strong>典型展示路径</strong>
+        <p class="compact-summary">导览、陪练、复盘、提升一条线呈现。</p>
+        <p class="compact-hide">可依次体验实训基地导览、CR400 侧景窗陪练、训练总结与技能画像，完整呈现“导览、陪练、复盘、提升”的闭环。</p>
+      </div>
+    </div>
+
+    <div class="quick-links">
+      <a href="#tour-overview">实训基地导览</a>
+      <a href="#train-flow">CR400 侧景窗陪练</a>
+      <a href="#train-demo-script">典型演示流程</a>
+      <a href="#summary">训练总结与画像</a>
+      <a href="#demo">交互能力体验</a>
+      <a href="#next">能力路线</a>
+    </div>
+  </div>
+
+  <!-- Simple version -->
+  <div class="doc-section simple-only" id="simple-solution">
+    <h2>一、能力闭环</h2>
+    <p>小安将实训基地导览、训练过程陪练、训练结果复盘和能力画像串成一条连续链路，让实训从“看设备、听讲解”升级为“会练习、能纠错、可沉淀”。</p>
+
+    <div class="solution-grid">
+      <div class="solution-card">
+        <span class="num">1</span>
+        <strong>导览讲解</strong>
+        <p>结合大屏、三维/图片场景和设备状态，讲清楚实训区域、设备能力和培训价值。</p>
+      </div>
+      <div class="solution-card">
+        <span class="num">2</span>
+        <strong>实训陪练</strong>
+        <p>接入实训任务步骤，在关键节点、答错、超时和卡顿时提供低打扰提示。</p>
+      </div>
+      <div class="solution-card">
+        <span class="num">3</span>
+        <strong>训练复盘</strong>
+        <p>训练结束后输出错误点、薄弱项、优势项和下一步学习建议。</p>
+      </div>
+      <div class="solution-card">
+        <span class="num">4</span>
+        <strong>能力画像</strong>
+        <p>把多次实训数据沉淀为学员能力画像，支撑精准培训和班组分析。</p>
+      </div>
+    </div>
+
+    <div class="simple-flow">
+      <div class="visual-step-flow">
+        <div class="step">
+          <div class="step-icon" style="background:#dbeafe;color:#2563eb;">🏢</div>
+          <div class="step-label">基地导览</div>
+          <div class="step-desc">讲解实训区域与设备</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#e0e7ff;color:#4338ca;">🔗</div>
+          <div class="step-label">设备接入</div>
+          <div class="step-desc">对接仿真设备与任务</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#fef3c7;color:#d97706;">🎯</div>
+          <div class="step-label">陪练提示</div>
+          <div class="step-desc">关键节点低打扰辅助</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#dcfce7;color:#16a34a;">📊</div>
+          <div class="step-label">训练总结</div>
+          <div class="step-desc">错误分析与改进建议</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#fce7f3;color:#db2777;">👤</div>
+          <div class="step-label">能力画像</div>
+          <div class="step-desc">七维雷达持续追踪</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#f0fdf4;color:#15803d;">📋</div>
+          <div class="step-label">学习计划</div>
+          <div class="step-desc">精准推荐强化练习</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-section simple-only" id="simple-cr400">
+    <h2>二、CR400 侧景窗陪练</h2>
+    <p>在实训过程中，小安默认旁听，不抢扬声器、不抢麦克风、不遮挡题目；只在关键节点、错误、超时或学员求助时提供适度提示。</p>
+
+    <div class="simple-flow">
+      <div class="visual-timeline">
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#dbeafe;color:#2563eb;">▶</div>
+          <div class="tl-title">任务启动</div>
+          <div class="tl-body">培训师启动训练，小安显示欢迎和任务概要</div>
+          <span class="tl-tag" style="background:#dbeafe;color:#1d4ed8;">自动触发</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#e0e7ff;color:#4338ca;">🎧</div>
+          <div class="tl-title">题目播报 · 小安旁听</div>
+          <div class="tl-body">仿真设备播报题目，小安不说话、不出声、不遮挡</div>
+          <span class="tl-tag" style="background:#f3f4f6;color:#6b7280;">静默状态</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#fef3c7;color:#d97706;">👁</div>
+          <div class="tl-title">学员作答 · 小安观察</div>
+          <div class="tl-body">学员操作设备，小安默认静默；超时或求助时适度介入</div>
+          <span class="tl-tag" style="background:#fef3c7;color:#92400e;">按需介入</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#dcfce7;color:#16a34a;">✅</div>
+          <div class="tl-title">正确 → 正向反馈</div>
+          <div class="tl-body">回答正确时，小安竖起大拇指、给出轻量鼓励，进入下一题</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#fee2e2;color:#dc2626;">❌</div>
+          <div class="tl-title">错误 → 分级提示</div>
+          <div class="tl-body">答错时从方向提示逐步升级到关键词、步骤框架，不直接给答案</div>
+          <span class="tl-tag" style="background:#fee2e2;color:#991b1b;">逐级引导</span>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#f0fdf4;color:#15803d;">📖</div>
+          <div class="tl-title">题后讲解</div>
+          <div class="tl-body">练习态下答错后展开标准答案、依据规程和知识点</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot" style="background:#ede9fe;color:#7c3aed;">📊</div>
+          <div class="tl-title">任务总结</div>
+          <div class="tl-body">全部步骤完成后，30 秒侧景窗总结 + 语音复盘 + 画像更新</div>
+          <span class="tl-tag" style="background:#ede9fe;color:#6d28d9;">数据沉淀</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-band">
+      <div class="highlight-item">
+        <strong>低打扰</strong>
+        <span>题目播报和学员作答时保持静默，优先使用图标、短文字和肢体动作。</span>
+      </div>
+      <div class="highlight-item">
+        <strong>分级提示</strong>
+        <span>从方向提示、关键词提示到题后讲解逐级展开，避免直接给答案。</span>
+      </div>
+      <div class="highlight-item">
+        <strong>可配置</strong>
+        <span>通过任务节点、知识库和提示策略配置，可迁移到不同车型和实训项目。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-section simple-only" id="simple-profile">
+    <h2>三、训练复盘与能力画像</h2>
+    <p>小安把每次训练结果转化为可查看、可对比、可追踪的数据，让学员知道下一步练什么，也让培训师看到班组共性薄弱点。</p>
+
+    <div class="highlight-band">
+      <div class="highlight-item">
+        <strong>侧景窗速览</strong>
+        <span>训练结束后展示总分、错误点、薄弱项和下一步建议。</span>
+      </div>
+      <div class="highlight-item">
+        <strong>手机/PC 报告</strong>
+        <span>展示步骤时间线、错误详解、能力雷达图和历史对比。</span>
+      </div>
+      <div class="highlight-item">
+        <strong>教师端分析</strong>
+        <span>汇总班组成绩分布、共性薄弱点和需重点关注学员。</span>
+      </div>
+    </div>
+
+    <div class="simple-flow">
+      <div class="layer-stack">
+        <div class="layer-card">
+          <div class="layer-icon" style="background:#dbeafe;">📱</div>
+          <div class="layer-info">
+            <strong>第一层：侧景窗速览（30 秒）</strong>
+            <span>训练结束后立即展示总分、错误点、薄弱项和下一步建议</span>
+          </div>
+        </div>
+        <div class="layer-card">
+          <div class="layer-icon" style="background:#dcfce7;">📋</div>
+          <div class="layer-info">
+            <strong>第二层：手机/PC 详细报告</strong>
+            <span>步骤时间线、错误详解、七维能力雷达图、历史成绩对比</span>
+          </div>
+        </div>
+        <div class="layer-card">
+          <div class="layer-icon" style="background:#fef3c7;">👨‍🏫</div>
+          <div class="layer-info">
+            <strong>第三层：教师端班组分析</strong>
+            <span>成绩分布、共性薄弱点、需重点关注学员、教学建议</span>
+          </div>
+        </div>
+      </div>
+      <div class="visual-step-flow" style="margin-top:16px;">
+        <div class="step">
+          <div class="step-icon" style="background:#fee2e2;color:#dc2626;">📝</div>
+          <div class="step-label">步骤数据</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#fef3c7;color:#d97706;">🔍</div>
+          <div class="step-label">错误分析</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#e0e7ff;color:#4338ca;">🗂</div>
+          <div class="step-label">能力映射</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#dcfce7;color:#16a34a;">📈</div>
+          <div class="step-label">画像更新</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="step">
+          <div class="step-icon" style="background:#dbeafe;color:#2563eb;">🎯</div>
+          <div class="step-label">精准推荐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple: 两种模式 -->
+  <div class="doc-section simple-only" id="simple-modes">
+    <h2>四、两种产品模式</h2>
+    <table class="doc-table">
+      <tr><th>模式</th><th>面向对象</th><th>数字人角色</th><th>典型行为</th></tr>
+      <tr><td><strong>参观/讲解模式</strong></td><td>参观者、管理者、新学员</td><td>实训基地讲解员</td><td>主动介绍实训室、设备能力、平台亮点，引导能力体验</td></tr>
+      <tr><td><strong>实训/陪练模式</strong></td><td>正在训练的学员、培训师</td><td>旁听式教练</td><td>默认不打断，在关键节点、答错、卡顿和训练结束时适度帮助</td></tr>
+    </table>
+    <div class="info-card">
+      <p><strong>核心价值</strong>：参观模式讲清价值，让来访者快速理解实训基地能力；实训模式提升训练效果，让学员得到即时反馈，同时减轻培训师重复讲解负担。</p>
+    </div>
+  </div>
+
+  <!-- Simple: 能力架构 -->
+  <div class="doc-section simple-only" id="simple-arch">
+    <h2>五、能力架构</h2>
+    <p>小安的能力分六层，从可见的数字人形象到底层的数据闭环和管控配置，层层支撑。</p>
+    <div class="layer-stack">
+      <div class="layer-card">
+        <div class="layer-icon" style="background:#dbeafe;">🧑‍💻</div>
+        <div class="layer-info">
+          <strong>形象交互层</strong>
+          <span>数字人形象、语音、文字、肢体动作、表情状态 → 让用户"看得见、听得懂、愿意用"</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon" style="background:#e0e7ff;">🏗️</div>
+        <div class="layer-info">
+          <strong>场景呈现层</strong>
+          <span>三维导览、真实图片场景、设备介绍 → 用于能力展示和基地导览</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon" style="background:#fef3c7;">🎯</div>
+        <div class="layer-info">
+          <strong>实训陪练层</strong>
+          <span>题目旁听、关键节点提示、答题反馈 → 与实训设备深度结合</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon" style="background:#dcfce7;">📚</div>
+        <div class="layer-info">
+          <strong>知识理解层</strong>
+          <span>设备知识库、规程知识库、任务步骤知识 → 支撑提示内容准确性</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon" style="background:#fce7f3;">📊</div>
+        <div class="layer-info">
+          <strong>数据闭环层</strong>
+          <span>实训记录、错误点、薄弱项、技能画像 → 把训练沉淀为学习计划</span>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-icon" style="background:#f3f4f6;">⚙️</div>
+        <div class="layer-info">
+          <strong>管控配置层</strong>
+          <span>练习态/考试态、优先级、提示强度、展示模式 → 适配不同设备和教学安排</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>覆盖终端</h3>
+    <div class="highlight-band">
+      <div class="highlight-item">
+        <strong>🖥️ 大屏</strong>
+        <span>实训室导览、综控管理、数字人讲解，用于参观展示和数据可视化</span>
+      </div>
+      <div class="highlight-item">
+        <strong>🪟 侧景窗</strong>
+        <span>CR400 等仿真车厢实训陪练，用于低打扰提示和即时反馈</span>
+      </div>
+      <div class="highlight-item">
+        <strong>📱 手机 H5</strong>
+        <span>随身智能问答、训练前预习、训练后复盘，查看个人报告</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple: 参观路线 -->
+  <div class="doc-section simple-only" id="simple-tour">
+    <h2>六、参观讲解路线</h2>
+    <p>基于实训基地实际动线，数字人配合人工引导员完成 5 段 19 个点位的讲解，约 30 分钟。</p>
+
+    <figure class="scene-figure">
+      <img src="assets/digital-human-tour-guide-v5.png" alt="具身机器人在实训基地大屏前进行导览讲解" />
+      <figcaption>参观讲解模式示意：具身机器人联动大屏导览、设备状态和培训数据，为参观者讲解实训基地能力。</figcaption>
+    </figure>
+
+    <table class="doc-table">
+      <tr><th>段落</th><th>区域</th><th>关键模块</th><th>时长</th></tr>
+      <tr><td>序章</td><td>基地入口大屏</td><td>基地总览 + 三维布局图 + 当日实时数据</td><td>2 分钟</td></tr>
+      <tr><td>第一段</td><td>车站实训区</td><td>安检智能考评、站车管控平台、培训综合管理平台</td><td>10 分钟</td></tr>
+      <tr><td>第二段</td><td>列车乘务区</td><td>CR400 智能复兴号（核心）、25T、急救、MR、隧道、消防</td><td>12 分钟</td></tr>
+      <tr><td>第三段</td><td>教学办公区</td><td>智慧录播教室、报告厅、形体训练、微格教室</td><td>5 分钟</td></tr>
+      <tr><td>尾声</td><td>返回一楼</td><td>基地能力总结 + 平台数据总览</td><td>1 分钟</td></tr>
+    </table>
+
+    <h3>关键点位的智能增值</h3>
+    <table class="doc-table">
+      <tr><th>点位</th><th>人工引导员</th><th>数字人小安增值</th></tr>
+      <tr><td>基地入口</td><td>欢迎致辞</td><td>大屏展示当日培训班次、在训学员数、设备在线率</td></tr>
+      <tr><td>安检模块</td><td>介绍设备</td><td>展示手检热力图示例、历史评分分布；触发 15 秒演示</td></tr>
+      <tr><td>培训管理</td><td>介绍功能</td><td>调取示例学员画像，展示"薄弱点→自动强化练习"闭环</td></tr>
+      <tr><td>CR400</td><td>介绍车厢</td><td>说明侧景窗陪练能力，可展示能力片段</td></tr>
+      <tr><td>MR 模块</td><td>介绍混合现实</td><td>展示零风险低成本的高危场景训练优势</td></tr>
+    </table>
+  </div>
+
+  <!-- Simple: 提示分级 -->
+  <div class="doc-section simple-only" id="simple-hint">
+    <h2>七、提示分级策略</h2>
+    <p>练习态下，小安根据学员状态逐级升级提示深度，始终不直接给出标准答案。</p>
+    <div class="hint-pyramid">
+      <div class="level" style="background:#f0fdf4;border-left:4px solid #22c55e;">
+        <span class="level-num" style="background:#dcfce7;color:#16a34a;">1</span>
+        <span class="level-icon">🧭</span>
+        <span><strong>方向提示</strong> — "想想旅客安抚应该先做什么？" · 提示 3 秒后消失</span>
+      </div>
+      <div class="level" style="background:#fefce8;border-left:4px solid #eab308;">
+        <span class="level-num" style="background:#fef9c3;color:#a16207;">2</span>
+        <span class="level-icon">🔑</span>
+        <span><strong>关键词提示</strong> — "注意：区间 + 报告 + 调度" · 保留至学员操作</span>
+      </div>
+      <div class="level" style="background:#fff7ed;border-left:4px solid #f97316;">
+        <span class="level-num" style="background:#ffedd5;color:#c2410c;">3</span>
+        <span class="level-icon">📋</span>
+        <span><strong>步骤框架</strong> — 展示操作步骤大纲但不给具体答案</span>
+      </div>
+      <div class="level" style="background:#fef2f2;border-left:4px solid #ef4444;">
+        <span class="level-num" style="background:#fee2e2;color:#dc2626;">4</span>
+        <span class="level-icon">🤚</span>
+        <span><strong>暂停讲解 / 建议跳过</strong> — 小安主动介入完整讲解</span>
+      </div>
+    </div>
+    <div class="highlight-band">
+      <div class="highlight-item">
+        <strong>练习态</strong>
+        <span>允许所有提示，答错后可展开题后讲解，详细总结</span>
+      </div>
+      <div class="highlight-item">
+        <strong>考试态</strong>
+        <span>不提示、不唤醒、仅记录，考后统一复盘</span>
+      </div>
+      <div class="highlight-item">
+        <strong>可配置</strong>
+        <span>通过任务节点、知识库和策略配置迁移到不同车型和实训项目</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple: 典型演示流程 -->
+  <div class="doc-section simple-only" id="simple-demo-script">
+    <h2>八、典型演示流程（5-7 分钟）</h2>
+    <p>以下流程用于展示数字人在训练过程中如何完成旁听、提示、讲解和复盘。</p>
+    <div class="visual-timeline">
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#dbeafe;color:#2563eb;">1</div>
+        <div class="tl-title">启动 CR400 空调故障应急处置任务</div>
+        <div class="tl-body">小安显示欢迎 + 任务概要</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#dcfce7;color:#16a34a;">2</div>
+        <div class="tl-title">正常回答第 1-2 题</div>
+        <div class="tl-body">小安旁听 → 正确 → ✅ 竖起大拇指。第 2 题为关键节点，展示 ⚠️ 方向提醒</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#fee2e2;color:#dc2626;">3</div>
+        <div class="tl-title">模拟错误操作第 3 题（广播通知旅客）</div>
+        <div class="tl-body">小安 ❌ 摇头 → 给出关键词提示"注意用语规范"</div>
+        <span class="tl-tag" style="background:#fee2e2;color:#991b1b;">展示错误反馈</span>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#fef3c7;color:#d97706;">4</div>
+        <div class="tl-title">再次出现错误操作</div>
+        <div class="tl-body">小安 🤚 暂停 → "我来讲解一下" → 语音讲解 + 知识库引用</div>
+        <span class="tl-tag" style="background:#fef3c7;color:#92400e;">展示暂停讲解</span>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#dcfce7;color:#16a34a;">5</div>
+        <div class="tl-title">正常完成剩余步骤</div>
+        <div class="tl-body">恢复训练节奏，小安正常反馈</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:#ede9fe;color:#7c3aed;">6</div>
+        <div class="tl-title">任务总结</div>
+        <div class="tl-body">📊 30 秒侧景窗总结 + 语音复盘 + 能力画像更新</div>
+        <span class="tl-tag" style="background:#ede9fe;color:#6d28d9;">展示数据沉淀</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <p><strong>操作提示</strong>：安排操作人员在第 3 题故意答错即可展示完整的提示和讲解能力，全程约 5-7 分钟。</p>
+    </div>
+  </div>
+
+  <!-- Simple: 差异化价值 -->
+  <div class="doc-section simple-only" id="simple-diff">
+    <h2>九、差异化价值</h2>
+    <div class="solution-grid">
+      <div class="solution-card">
+        <span class="num">1</span>
+        <strong>深度业务结合</strong>
+        <p>嵌入实训设备、任务流程、考试和教学管理，不是外挂问答。</p>
+      </div>
+      <div class="solution-card">
+        <span class="num">2</span>
+        <strong>低打扰交互</strong>
+        <p>尊重实训流程中麦克风、扬声器、屏幕空间的优先级。</p>
+      </div>
+      <div class="solution-card">
+        <span class="num">3</span>
+        <strong>学习效果闭环</strong>
+        <p>答错提醒→复盘总结→技能画像→个性化学习计划。</p>
+      </div>
+      <div class="solution-card">
+        <span class="num">4</span>
+        <strong>可配置可迁移</strong>
+        <p>通过节点标记和知识库迁移到新设备，不用重做系统。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple: 能力路线 -->
+  <div class="doc-section simple-only" id="simple-roadmap">
+    <h2>十、能力路线</h2>
+    <div class="visual-step-flow">
+      <div class="step">
+        <div class="step-icon" style="background:#dbeafe;color:#2563eb;">🎤</div>
+        <div class="step-label">基础展示</div>
+        <div class="step-desc">形象、语音讲解、问答</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step">
+        <div class="step-icon" style="background:#fef3c7;color:#d97706;">🎯</div>
+        <div class="step-label">实训陪练</div>
+        <div class="step-desc">接入设备、关键节点提示</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step">
+        <div class="step-icon" style="background:#dcfce7;color:#16a34a;">📊</div>
+        <div class="step-label">训练复盘</div>
+        <div class="step-desc">总结报告、错误分析</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step">
+        <div class="step-icon" style="background:#fce7f3;color:#db2777;">👤</div>
+        <div class="step-label">画像推荐</div>
+        <div class="step-desc">技能画像、学习计划</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="step">
+        <div class="step-icon" style="background:#ede9fe;color:#7c3aed;">🔄</div>
+        <div class="step-label">可迁移底座</div>
+        <div class="step-desc">多基地、多车型扩展</div>
+      </div>
+    </div>
+
+    <h3>近期计划</h3>
+    <table class="doc-table">
+      <tr><th>时间</th><th>内容</th><th>优先级</th></tr>
+      <tr><td>本周</td><td>实训设备数字人演示最小版本（5/24 前随设备发出）</td><td><span class="badge badge-red">紧急</span></td></tr>
+      <tr><td>本周</td><td>大屏展示内容与数据源清单</td><td><span class="badge badge-amber">P0</span></td></tr>
+      <tr><td>本周</td><td>手机端 H5 智能问答验证</td><td><span class="badge badge-amber">P0</span></td></tr>
+      <tr><td>下周</td><td>设备接口协议草案 + 对齐会</td><td><span class="badge badge-amber">P0</span></td></tr>
+      <tr><td>6 月</td><td>三端 UI 走查 + 标准底座能力地图</td><td><span class="badge badge-blue">P1</span></td></tr>
+    </table>
+  </div>
+
+  <!-- Simple: 在线交互体验 -->
+  <div class="doc-section simple-only" id="simple-experience">
+    <h2>十一、在线交互体验</h2>
+    <p>下方可直接体验数字人唤醒、对话、媒体展示和控制条等基础交互能力。</p>
+
+    <div class="demo-embed">
+      <div class="demo-embed-header">
+        <div class="dot" style="background:#ff5f57;"></div>
+        <div class="dot" style="background:#febc2e;"></div>
+        <div class="dot" style="background:#28c840;"></div>
+        <span style="margin-left:8px;font-size:13px;color:#6b7280;">数字人「小安」交互体验</span>
+      </div>
+      <iframe src="../digital-human-xiaoan/index.html" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <!-- Section 1: Overview -->
+  <div class="doc-section detail-only" id="overview">
+    <h2>一、方案定位</h2>
+    <p class="compact-summary">小安是面向复杂实训设备的<strong>「智能实训陪练与讲解入口」</strong>，覆盖导览、提示、复盘和画像。</p>
+    <p class="compact-hide">数字人小安不是单纯的虚拟形象或语音播报工具，而是面向复杂实训设备的<strong>「智能实训陪练与讲解入口」</strong>。</p>
+    <p class="compact-hide">它能够导览实训基地、嵌入实训流程、在关键节点做低打扰提示，并在实训结束后形成复盘总结和学员技能画像。</p>
+
+    <div class="info-card">
+      <p class="compact-summary"><strong>核心价值</strong>：辅助老师、提醒学员、沉淀训练结果，让数字人真正进入实训流程。</p>
+      <p class="compact-hide"><strong>核心价值</strong>：解决"老师看不过来、学员卡住没人提醒、训练结果难沉淀"的问题。数字人能力依托设备事件、业务知识库、学员画像和多端展示，比通用问答机器人更贴近行业交付。</p>
+    </div>
+
+    <h3>覆盖终端</h3>
+    <table class="doc-table">
+      <tr><th>终端</th><th>典型场景</th><th>展示价值</th></tr>
+      <tr><td>大屏</td><td>实训室导览、综控管理、数字人讲解</td><td>用于参观讲解、能力总览和数据可视化展示</td></tr>
+      <tr><td>实训设备侧景窗</td><td>CR400 等仿真车厢实训陪练</td><td>用于训练过程中的低打扰提示和即时反馈</td></tr>
+      <tr><td>手机 H5</td><td>随身智能问答、训练前预习/训练后复盘</td><td>用于学员随时查询、复习和查看个人报告</td></tr>
+      <tr><td>教师端 PC</td><td>班组分析、学员画像、培训管理</td><td>用于培训师跟踪班组薄弱项和学员成长情况</td></tr>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Modes -->
+  <div class="doc-section detail-only" id="modes">
+    <h2>二、两类应用模式</h2>
+    <table class="doc-table">
+      <tr><th>模式</th><th>面向对象</th><th>数字人角色</th><th>典型行为</th></tr>
+      <tr><td><strong>参观/讲解模式</strong></td><td>参观者、管理者、新学员</td><td>实训基地讲解员 + 能力展示主持人</td><td>主动介绍实训室、设备能力、平台亮点，引导能力体验</td></tr>
+      <tr><td><strong>实训/陪练模式</strong></td><td>正在训练的学员、培训师</td><td>旁听式教练 + 训练复盘助手</td><td>默认不打断，在关键节点、答错、卡顿和训练结束时适度帮助</td></tr>
+    </table>
+    <p class="compact-summary">参观模式讲清价值，实训模式提升训练效果并沉淀数据。</p>
+    <p class="compact-hide">参观模式解决"看得懂、愿意听、能快速理解价值"的问题；实训模式解决"学员练得好、老师减负、数据能沉淀"的问题。</p>
+
+    <div class="split-flow-grid" id="scenarios">
+      <div class="split-flow-card">
+        <h3>参观讲解模式</h3>
+        <pre class="mermaid">
+flowchart TB
+    P1[引导员触发] --> P2[小安讲解区域]
+    P2 --> P3[大屏展示数据]
+    P3 --> P4[互动问答]
+    P4 --> P5[启动能力展示]
+    P5 --> P6[下一个点位]
+    P6 --> P2
+        </pre>
+      </div>
+      <div class="split-flow-card">
+        <h3>实训陪练模式</h3>
+        <pre class="mermaid">
+flowchart TB
+    T1["任务启动"] --> T2["设备就绪"]
+    T2 --> T3["题目播报 旁听"]
+    T3 --> T4["学员作答 观察"]
+    T4 --> T5{结果判定}
+    T5 -->|正确| T6["正向反馈"]
+    T5 -->|错误| T7["分级提示"]
+    T5 -->|异常| T8["异常处理"]
+    T6 --> T9{还有下一题}
+    T7 --> T9
+    T8 --> T9
+    T9 -->|是| T3
+    T9 -->|否| T10["任务总结"]
+    T10 --> T11["画像更新"]
+        </pre>
+      </div>
+    </div>
+
+    <h3>四类核心场景</h3>
+    <table class="doc-table">
+      <tr><th>场景</th><th>面向对象</th><th>目标</th></tr>
+      <tr><td>实训室导览讲解</td><td>参观者、管理者、学员</td><td>介绍基地整体能力、实训区域、设备价值</td></tr>
+      <tr><td>CR400 侧景窗陪练</td><td>学员</td><td>在实训步骤中进行低打扰提示</td></tr>
+      <tr><td>实训后复盘与画像</td><td>学员、培训师</td><td>汇总错误点、薄弱项、更新技能画像</td></tr>
+      <tr><td>手机 H5 随身问答</td><td>学员</td><td>训练前后私密提问、复习规程</td></tr>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Architecture -->
+  <div class="doc-section detail-only" id="architecture">
+    <h2>三、能力架构</h2>
+
+    <h3>分层能力模型</h3>
+    <table class="doc-table">
+      <tr><th>层级</th><th>能力</th><th>说明</th></tr>
+      <tr><td>形象交互层</td><td>数字人形象、语音、文字、肢体动作、表情状态</td><td>解决"看得见、听得懂、愿意用"</td></tr>
+      <tr><td>场景呈现层</td><td>三维导览、真实图片场景、设备介绍</td><td>用于能力展示和基地导览</td></tr>
+      <tr><td>实训陪练层</td><td>题目旁听、关键节点提示、答题反馈</td><td>与实训设备结合</td></tr>
+      <tr><td>知识理解层</td><td>设备知识库、规程知识库、任务步骤知识</td><td>支撑提示内容准确</td></tr>
+      <tr><td>数据闭环层</td><td>实训记录、错误点、薄弱项、技能画像</td><td>把训练沉淀为学习计划</td></tr>
+      <tr><td>管控配置层</td><td>练习态/考试态、优先级、提示强度、展示模式</td><td>适配不同设备和教学安排</td></tr>
+    </table>
+
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart TB
+    subgraph SGA ["用户触点"]
+        A1["大屏导览"]
+        A2["侧景窗 Overlay"]
+        A3["手机 H5"]
+        A4["教师端 PC"]
+    end
+    subgraph SGB ["数字人小安"]
+        B1["形象交互引擎"]
+        B2["场景管理"]
+        B3["对话管理"]
+        B4["提示策略"]
+        B5["总结生成"]
+    end
+    subgraph SGC ["后端服务"]
+        C1["AI Agent"]
+        C2["知识库"]
+        C3["学员画像"]
+        C4["培训管理平台"]
+    end
+    subgraph SGD ["外部系统"]
+        D1["仿真设备"]
+        D2["传感器网络"]
+        D3["摄像头"]
+    end
+    A1 --> B1
+    A2 --> B1
+    A3 --> B1
+    A4 --> B1
+    B1 --> B2
+    B1 --> B3
+    B1 --> B4
+    B1 --> B5
+    B3 --> C1
+    C1 --> C2
+    B5 --> C3
+    C3 --> C4
+    D1 --> B4
+    D2 --> B4
+    D3 -.-> B4
+      </pre>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Tour -->
+  <div class="doc-section detail-only" id="tour-overview">
+    <h2>四、参观讲解模式</h2>
+    <p class="compact-summary">小安配合人工引导员，完成区域讲解、数据展示、互动问答和能力联动。</p>
+    <p class="compact-hide">基于实训基地实际解说动线，数字人小安在人工引导员基础上叠加<strong>智能化增值</strong>——设备状态实时调取、培训数据可视化、互动问答、能力展示联动。</p>
+
+    <figure class="scene-figure">
+      <img src="assets/digital-human-tour-guide-v5.png" alt="具身机器人在实训基地大屏前进行导览讲解，展示三维实训区域、设备状态和培训数据" />
+      <figcaption>参观讲解模式示意：具身机器人联动大屏导览、设备状态和培训数据，为参观者讲解实训基地能力。</figcaption>
+    </figure>
+
+    <div class="info-card">
+      <p class="compact-summary"><strong>角色分工</strong>：引导员负责现场动线，小安负责讲解、问答和大屏联动。</p>
+      <p class="compact-hide"><strong>角色分工</strong>：人工引导员负责现场引路和礼仪接待；小安负责区域智能讲解、大屏联动和数据展示。两者配合，不替代。</p>
+    </div>
+
+    <h3 id="tour-route">参观路线（5 段 19 个点位，约 30 分钟）</h3>
+    <table class="doc-table">
+      <tr><th>段落</th><th>区域</th><th>关键模块</th><th>时长</th></tr>
+      <tr><td>序章</td><td>基地入口大屏</td><td>基地总览 + 三维布局图 + 当日实时数据</td><td>2 分钟</td></tr>
+      <tr><td>第一段</td><td>车站实训区</td><td>安检智能考评、站车管控平台、培训综合管理平台、候车组织、12306 服务台</td><td>10 分钟</td></tr>
+      <tr><td>第二段</td><td>列车乘务区</td><td>CR400 智能复兴号（核心）、25T 普速、急救、MR 混合现实、隧道、四车型、消防</td><td>12 分钟</td></tr>
+      <tr><td>第三段</td><td>教学办公区</td><td>智慧录播教室、微机室、报告厅、形体训练、微格教室</td><td>5 分钟</td></tr>
+      <tr><td>尾声</td><td>返回一楼</td><td>基地能力总结 + 平台数据总览</td><td>1 分钟</td></tr>
+    </table>
+
+    <h3 id="tour-value">关键点位的智能增值设计</h3>
+    <table class="doc-table">
+      <tr><th>点位</th><th>人工引导员</th><th>数字人小安增值</th></tr>
+      <tr><td>基地入口</td><td>欢迎致辞</td><td>大屏展示当日培训班次、在训学员数、设备在线率等实时数据</td></tr>
+      <tr><td>安检模块</td><td>介绍设备</td><td>展示手检热力图示例、历史评分分布；触发 15 秒智能评价演示</td></tr>
+      <tr><td>培训管理平台</td><td>介绍六大功能</td><td>实时调取示例学员画像，展示"薄弱点→自动安排强化练习"的闭环</td></tr>
+      <tr><td>CR400 复兴号</td><td>介绍车厢设备</td><td>说明数字人实训陪练能力，可展示侧景窗陪练能力片段</td></tr>
+      <tr><td>MR 模块</td><td>介绍混合现实</td><td>展示零风险低成本的高危场景训练优势</td></tr>
+      <tr><td>形体训练室</td><td>介绍设备</td><td>展示智能考评面镜的数字化捕捉与评分能力</td></tr>
+    </table>
+
+    <h3 class="compact-hide">与传统解说的区别</h3>
+    <table class="doc-table compact-hide">
+      <tr><th>维度</th><th>传统引导员</th><th>数字人小安</th></tr>
+      <tr><td>信息来源</td><td>固定文稿</td><td>固定讲解 + 实时数据调取</td></tr>
+      <tr><td>交互方式</td><td>单向讲解</td><td>可问答、可联动展示、可跳转</td></tr>
+      <tr><td>数据呈现</td><td>口头描述</td><td>大屏可视化、画像展示、设备状态实时展示</td></tr>
+      <tr><td>个性化</td><td>统一话术</td><td>可根据参观者身份调整重点</td></tr>
+      <tr><td>可复制性</td><td>依赖引导员熟练度</td><td>一次配置、多次复用、多基地迁移</td></tr>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Training Flow -->
+  <div class="doc-section detail-only" id="train-flow">
+    <h2>五、CR400 侧景窗实训陪练</h2>
+    <p class="compact-summary">小安以<strong>「旁听式教练」</strong>嵌入 CR400 侧景窗实训流程，默认观察，关键时刻介入。</p>
+    <p class="compact-hide">CR400 智能复兴号仿真车厢是实训区核心模块，全长 33 米，搭载智能车窗、传感器网络和人体动作语音识别系统。数字人小安以<strong>「旁听式教练」</strong>身份嵌入实训流程。</p>
+
+    <div class="info-card">
+      <p class="compact-summary"><strong>交互原则</strong>：设备优先、小安旁听；提示分级、题后复盘。</p>
+      <p class="compact-hide"><strong>交互原则</strong>：侧景窗空间有限，实训设备需要优先使用扬声器和麦克风。小安采用“默认观察、分级提示、题后复盘”的策略，既不打断训练节奏，也避免直接给出答案影响训练效果。</p>
+    </div>
+
+    <h3>完整流程（7 个阶段）</h3>
+    <table class="doc-table">
+      <tr><th>阶段</th><th>触发条件</th><th>数字人状态</th><th>行为</th></tr>
+      <tr><td>① 任务初始化</td><td>培训师启动任务</td><td>待机→就绪</td><td>显示欢迎和任务概要</td></tr>
+      <tr><td>② 设备就绪</td><td>仿真设备初始化完成</td><td>就绪</td><td>练习态显示注意事项，考试态仅显示"祝你顺利"</td></tr>
+      <tr><td>③ 题目播报</td><td>仿真设备播报题目</td><td>🎧 旁听</td><td>不说话、不出声、不遮挡题目</td></tr>
+      <tr><td>④ 学员作答</td><td>题目播完，学员操作中</td><td>👁️ 观察</td><td>默认静默；超时/求助时按策略介入</td></tr>
+      <tr><td>⑤ 结果判定</td><td>仿真设备返回结果</td><td>反馈</td><td>正确：✅+👍；错误：❌+分级提示</td></tr>
+      <tr><td>⑥ 题后复盘</td><td>练习态下答错</td><td>📖 复盘</td><td>展示标准答案、依据规程、知识点</td></tr>
+      <tr><td>⑦ 任务总结</td><td>全部步骤完成</td><td>📊 总结</td><td>30 秒侧景窗总结 + 语音复盘 + 画像更新</td></tr>
+    </table>
+
+    <h3 id="train-state">状态机</h3>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+stateDiagram-v2
+    state "待机" as S1
+    state "就绪" as S2
+    state "旁听" as S3
+    state "观察" as S4
+    state "反馈正确" as S5
+    state "反馈错误" as S6
+    state "异常处理" as S7
+    state "复盘" as S8
+    state "总结" as S9
+
+    [*] --> S1 : 系统启动
+    S1 --> S2 : task_start
+    S2 --> S3 : ready
+    S3 --> S4 : audio_done
+    S3 --> S3 : step_start
+    S4 --> S5 : correct
+    S4 --> S6 : wrong
+    S4 --> S7 : timeout
+    S5 --> S3 : next_step
+    S6 --> S8 : 练习态
+    S6 --> S3 : 考试态
+    S7 --> S3 : next_step
+    S8 --> S3 : next_step
+    S3 --> S9 : task_complete
+    S9 --> S1 : 总结结束
+      </pre>
+    </div>
+
+    <h3 id="train-hint">提示分级策略</h3>
+    <p class="compact-summary">练习态下，按事件类型逐级提示：</p>
+    <p class="compact-hide">练习态下，数字人根据事件类型和学员状态动态调整提示深度：</p>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart TD
+    A{当前模式} -->|考试态| B["不提示 仅记录"]
+    A -->|练习态| C{事件类型}
+    C -->|关键节点| D["方向提示 3秒"]
+    C -->|正常作答中| E["静默观察"]
+    C -->|超时| F["需要提示吗"]
+    C -->|第1次答错| I["关键词提示"]
+    C -->|第2次答错| J{允许暂停}
+    J -->|是| K["暂停讲解"]
+    J -->|否| L["步骤框架提示"]
+    C -->|学员主动唤醒| Q{第几次求助}
+    Q -->|第1次| R["方向提示"]
+    Q -->|第2次| S2["关键词提示"]
+    Q -->|第3次| T2["步骤框架"]
+    Q -->|第4次以上| M["转入题后讲解"]
+      </pre>
+    </div>
+
+    <h3>提示逐级升级示意</h3>
+    <div class="hint-pyramid">
+      <div class="level" style="background:#f0fdf4;border-left:4px solid #22c55e;">
+        <span class="level-num" style="background:#dcfce7;color:#16a34a;">1</span>
+        <span class="level-icon">🧭</span>
+        <span><strong>方向提示</strong> — "想想旅客安抚应该先做什么？" · 提示 3 秒后消失</span>
+      </div>
+      <div class="level" style="background:#fefce8;border-left:4px solid #eab308;">
+        <span class="level-num" style="background:#fef9c3;color:#a16207;">2</span>
+        <span class="level-icon">🔑</span>
+        <span><strong>关键词提示</strong> — "注意：区间 + 报告 + 调度" · 保留至学员操作</span>
+      </div>
+      <div class="level" style="background:#fff7ed;border-left:4px solid #f97316;">
+        <span class="level-num" style="background:#ffedd5;color:#c2410c;">3</span>
+        <span class="level-icon">📋</span>
+        <span><strong>步骤框架</strong> — 展示操作步骤大纲但不给具体答案</span>
+      </div>
+      <div class="level" style="background:#fef2f2;border-left:4px solid #ef4444;">
+        <span class="level-num" style="background:#fee2e2;color:#dc2626;">4</span>
+        <span class="level-icon">🤚</span>
+        <span><strong>暂停讲解 / 建议跳过</strong> — 小安主动介入完整讲解</span>
+      </div>
+    </div>
+
+    <h3 class="compact-hide">练习态 vs 考试态</h3>
+    <table class="doc-table compact-hide">
+      <tr><th>维度</th><th>练习态</th><th>考试态</th></tr>
+      <tr><td>任务概要</td><td>显示步骤数、能力项、注意事项</td><td>仅显示"考试即将开始"</td></tr>
+      <tr><td>关键节点提示</td><td>⚠️ 方向提示</td><td>不提示</td></tr>
+      <tr><td>答错反馈</td><td>分级提示（方向→关键词→框架）</td><td>❌，不提示</td></tr>
+      <tr><td>主动唤醒</td><td>允许，按次数升级提示深度</td><td>不允许</td></tr>
+      <tr><td>题后复盘</td><td>每题结束可展开讲解</td><td>全部结束后统一复盘</td></tr>
+      <tr><td>任务总结</td><td>详细总结 + 语音 + 建议</td><td>总分 + 正确率 + 错误列表</td></tr>
+    </table>
+
+    <h3 id="train-sequence">交互时序</h3>
+    <div class="mermaid-wrap sequence-flow">
+      <pre class="mermaid">
+sequenceDiagram
+    participant Teacher as 培训师
+    participant Device as 仿真设备
+    participant DH as 数字人小安
+    participant Agent as AI Agent
+    participant KB as 知识库
+    participant Profile as 学员画像
+    participant Student as 学员
+    Teacher->>Device: 启动实训任务
+    Device->>DH: task_start
+    DH-->>Student: 欢迎 + 任务概要
+    Device->>DH: ready
+    loop 每个步骤
+        Device->>DH: step_start
+        DH-->>Student: 🎧 旁听中
+        Device-->>Student: 播报题目
+        Student->>Device: 操作/回答
+        Device->>DH: step_result
+        alt 正确
+            DH-->>Student: ✅ 正向反馈
+        else 错误（练习态）
+            DH->>Agent: 请求提示
+            Agent->>KB: 检索知识
+            Agent-->>DH: 提示内容
+            DH-->>Student: 分级提示
+        end
+    end
+    Device->>DH: task_complete
+    DH->>Profile: 更新画像
+    DH-->>Student: 📊 总结复盘
+      </pre>
+    </div>
+
+    <h3 id="train-demo-script">典型演示流程</h3>
+    <p class="compact-summary">典型流程展示旁听、提示、讲解和复盘：</p>
+    <p class="compact-hide">以下流程用于展示数字人如何在训练过程中完成旁听、提示、讲解和复盘，预计 5-7 分钟：</p>
+    <table class="doc-table">
+      <tr><th>步骤</th><th>训练过程</th><th>数字人表现</th><th>展示价值</th></tr>
+      <tr><td>1</td><td>启动 CR400 空调故障应急处置任务</td><td>欢迎 + 任务概要</td><td>展示任务初始化</td></tr>
+      <tr><td>2</td><td>正常回答第 1 题（确认故障现象）</td><td>旁听 → ✅ → 👍</td><td>展示正确反馈</td></tr>
+      <tr><td>3</td><td>正常回答第 2 题（关键节点：联系调度）</td><td>⚠️ 关键节点提醒 → ✅ → 👍</td><td>展示关键节点提示</td></tr>
+      <tr><td>4</td><td><strong>模拟错误操作</strong>第 3 题（广播通知旅客）</td><td>❌ → 摇头 → 关键词提示</td><td>展示错误反馈</td></tr>
+      <tr><td>5</td><td><strong>再次出现错误操作</strong>第 3 题</td><td>🤚 暂停 → "我来讲解一下"</td><td>展示暂停讲解</td></tr>
+      <tr><td>6</td><td>小安展开讲解</td><td>语音讲解 + 知识库引用</td><td>展示知识库联动</td></tr>
+      <tr><td>7</td><td>正常完成剩余步骤</td><td>正常反馈</td><td>恢复训练节奏</td></tr>
+      <tr><td>8</td><td>任务结束</td><td>📊 30 秒总结 + 语音复盘</td><td>展示总结与画像</td></tr>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Summary & Profile -->
+  <div class="doc-section detail-only" id="summary">
+    <h2>六、实训总结与技能画像</h2>
+    <p class="compact-summary">训练结束后形成速览、报告、画像和学习建议。</p>
+    <p class="compact-hide">把每次实训从"练完就走"变成"练完能看、能比、能跟、能推"。</p>
+
+    <h3>三层展示</h3>
+    <table class="doc-table">
+      <tr><th>层级</th><th>展示位置</th><th>内容</th><th>时机</th></tr>
+      <tr><td>第一层：速览</td><td>实训设备侧景窗</td><td>总分、3 个错误点、2 个薄弱项、1 条建议</td><td>训练结束后 30 秒</td></tr>
+      <tr><td>第二层：详情</td><td>手机 H5 / PC</td><td>步骤时间线、错误详解、能力雷达图、历史对比</td><td>随时查看</td></tr>
+      <tr><td>第三层：班组</td><td>教师端 PC</td><td>成绩分布、共性薄弱点、需关注学员、教学建议</td><td>批次结束后</td></tr>
+    </table>
+
+    <h3>侧景窗总结卡片示例</h3>
+    <div class="ascii-box">📊 实训总结 · CR400空调故障应急
+
+总分 85    正确 12/15    用时 12:34
+━━━━━━━━━━━━━━━━━━━━ ▓▓▓▓▓▓▓░░░
+
+❌ 需改进
+  · 联系调度报告 — 未说明区间
+  · 广播通知旅客 — 用语不规范
+
+✅ 做得好
+  · 故障确认、旅客安抚、设备操作
+
+💡 建议复习《应急处置规程》第三章
+
+    [ 查看详情 ]     [ 再练一次 ]</div>
+
+    <h3 id="profile">技能画像闭环</h3>
+    <p class="compact-summary">技能画像由多次实训累计形成，覆盖 7 个能力维度：</p>
+    <p class="compact-hide">每个学员的技能画像由多次实训累计形成，包含 7 个能力维度：</p>
+    <table class="doc-table">
+      <tr><th>能力维度</th><th>覆盖内容</th><th>评分来源</th></tr>
+      <tr><td>设备认知</td><td>各车型设备识别</td><td>设备认知类步骤正确率</td></tr>
+      <tr><td>标准作业流程</td><td>各车型标准操作、服务流程</td><td>流程类步骤正确率 + 耗时</td></tr>
+      <tr><td>应急处置</td><td>空调故障、换乘、破窗、火灾、隧道疏散</td><td>应急类步骤 + 关键节点表现</td></tr>
+      <tr><td>调度通信</td><td>联系调度、报告格式、用语规范</td><td>通信类步骤正确率</td></tr>
+      <tr><td>旅客服务</td><td>候车服务、重点旅客、广播通知</td><td>服务类步骤正确率</td></tr>
+      <tr><td>安全规程</td><td>安检、消防、急救、安全检查</td><td>安全类步骤正确率</td></tr>
+      <tr><td>设备操作</td><td>车门、制动阀、消防器材等物理操作</td><td>操作正确率 + 传感器数据</td></tr>
+    </table>
+
+    <div class="mermaid-wrap" id="data-flow">
+      <pre class="mermaid">
+flowchart TD
+    A[学员入学] --> B[初始能力评估]
+    B --> C[生成初始画像]
+    C --> D[系统推荐培训计划]
+    D --> E[执行实训任务]
+    E --> F[数字人实时陪练]
+    F --> G[采集步骤级数据]
+    G --> H[错误分析 + 知识点映射]
+    H --> I[更新技能画像]
+    I --> J{是否达标}
+    J -->|未达标| K[标记薄弱点]
+    K --> L[推荐强化学习资料]
+    L --> M[推荐强化练习任务]
+    M --> E
+    J -->|已达标| N[标记达标维度]
+    N --> O{全部达标}
+    O -->|否| P[推荐新维度任务]
+    P --> E
+    O -->|是| Q[考试模式验证]
+    Q --> R[考试通过 · 结业]
+      </pre>
+    </div>
+
+    <h3 class="compact-hide">画像计算规则</h3>
+    <table class="doc-table compact-hide">
+      <tr><th>规则</th><th>说明</th></tr>
+      <tr><td>时间衰减</td><td>近 30 天实训权重高于更早记录</td></tr>
+      <tr><td>关键节点加权</td><td>关键节点对错对维度评分影响更大</td></tr>
+      <tr><td>提示惩罚</td><td>使用提示完成的步骤得分打折（练习态 0.8 倍）</td></tr>
+      <tr><td>连续趋势</td><td>连续 3 次同维度低于 70 → 自动标记薄弱点</td></tr>
+      <tr><td>达标判定</td><td>连续 2 次同维度高于 80 且关键节点全对 → 达标</td></tr>
+    </table>
+
+    <h3>数据流全景</h3>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">
+flowchart LR
+    subgraph SG1 ["数据采集"]
+        D1["仿真设备 步骤结果"]
+        D2["传感器 动作识别"]
+        D3["数字人 提示记录"]
+    end
+    subgraph SG2 ["数据处理"]
+        P1["步骤数据汇总"]
+        P2["错误分析"]
+        P3["能力项映射"]
+        P4["画像计算"]
+    end
+    subgraph SG3 ["数据消费"]
+        C1["侧景窗总结卡片"]
+        C2["手机/PC详细报告"]
+        C3["学员技能画像"]
+        C4["班组分析看板"]
+        C5["个性化学习计划"]
+    end
+    D1 --> P1
+    D2 --> P1
+    D3 --> P1
+    P1 --> P2 --> P3 --> P4
+    P4 --> C1
+    P4 --> C2
+    P4 --> C3
+    P4 --> C4
+    P4 --> C5
+      </pre>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Demo -->
+  <div class="doc-section detail-only" id="demo">
+    <h2>七、在线交互体验</h2>
+    <p class="compact-summary">体验唤醒、对话、媒体展示和控制条等交互能力。</p>
+    <p class="compact-hide">以下为数字人小安的交互能力展示，可直接体验唤醒、对话、媒体展示、控制条等核心交互。</p>
+
+    <div class="demo-embed">
+      <div class="demo-embed-header">
+        <div class="dot" style="background:#ff5f57;"></div>
+        <div class="dot" style="background:#febc2e;"></div>
+        <div class="dot" style="background:#28c840;"></div>
+        <span style="margin-left:8px;font-size:13px;color:#6b7280;">数字人「小安」交互体验</span>
+      </div>
+      <iframe src="../digital-human-xiaoan/index.html" loading="lazy"></iframe>
+    </div>
+    <p style="font-size:0.85rem;color:#9ca3af;margin-top:8px;">点击右下角唤醒按钮或输入文字，即可体验数字人交互流程。</p>
+
+    <h3 class="compact-hide">更多能力展示</h3>
+    <div class="demo-link-grid compact-hide">
+      <a class="demo-link-card" href="../digital-human-xiaoan/index.html" target="_self">
+        <strong>数字人小安交互</strong>
+        <span>唤醒、对话、媒体区、控制条、静默收起。</span>
+        <em>打开体验 →</em>
+      </a>
+      <a class="demo-link-card" href="../classroom-control/index.html" target="_self">
+        <strong>实训室全景管控</strong>
+        <span>教室/实训室设备状态、学员分布、实时监控。</span>
+        <em>打开体验 →</em>
+      </a>
+      <a class="demo-link-card" href="../digital-human-roadshow/index.html" target="_self">
+        <strong>能力全景展示</strong>
+        <span>数字人四类能力、技术架构、场景示意。</span>
+        <em>打开体验 →</em>
+      </a>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Differentiation -->
+  <div class="doc-section detail-only" id="diff">
+    <h2>八、差异化价值</h2>
+    <table class="doc-table">
+      <tr><th>角度</th><th>说明</th></tr>
+      <tr><td>深度业务结合</td><td>数字人不是外挂问答，而是嵌入实训设备、实训任务、考试流程和教学管理的训练助手</td></tr>
+      <tr><td>复杂设备适配</td><td>能处理仿真设备、侧景窗、大屏、手机 H5、实训室导览等多终端场景</td></tr>
+      <tr><td>低打扰交互</td><td>尊重实训流程中麦克风、扬声器、屏幕空间的优先级，通过静默提示和肢体动作减少干扰</td></tr>
+      <tr><td>学习效果闭环</td><td>从答错提醒延伸到复盘总结、技能画像、个性化学习计划</td></tr>
+      <tr><td>可配置与可迁移</td><td>通过任务节点标记、知识库标签、提示策略配置，迁移到新设备时不用重做系统</td></tr>
+      <tr><td>隐私与内网部署</td><td>支持私有化或内网部署，录音和训练数据按权限留存，适合轨道交通等高要求场景</td></tr>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Capability Roadmap -->
+  <div class="doc-section detail-only" id="next">
+    <h2>九、能力路线</h2>
+    <table class="doc-table">
+      <tr><th>能力层级</th><th>展示内容</th><th>适用场景</th><th>价值</th></tr>
+      <tr><td>基础展示能力</td><td>数字人形象、语音讲解、图文资料展示、问答交互</td><td>展厅讲解、实训室导览、设备介绍</td><td>让能力可视化、可讲解、可快速演示</td></tr>
+      <tr><td>实训陪练能力</td><td>接入任务步骤、关键节点、答题结果和异常事件，进行低打扰提示</td><td>CR400、动车组、普速车厢、安检、消防、急救等实训</td><td>提升训练过程中的指导效率，减少老师重复讲解</td></tr>
+      <tr><td>训练复盘能力</td><td>生成侧景窗总结、手机/PC 详细报告、错误点与薄弱项分析</td><td>单次实训结束、学员自查、培训师复盘</td><td>把一次训练沉淀为可追踪的数据</td></tr>
+      <tr><td>画像与推荐能力</td><td>形成技能画像、成长曲线、班组薄弱点和个性化学习计划</td><td>培训管理、班组分析、补强训练</td><td>支撑“缺什么补什么”的精准培训</td></tr>
+      <tr><td>可迁移能力</td><td>通过节点标记、知识库、提示策略和形象资源配置迁移到新设备</td><td>多基地、多车型、多专业实训区</td><td>降低复制成本，形成可持续扩展的智慧实训底座</td></tr>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <div style="background:#f9fafb;padding:40px;text-align:center;color:#9ca3af;font-size:0.85rem;border-top:1px solid #e5e7eb;">
+    轨道交通智慧实训 · 数字人讲解与陪练能力演示
+  </div>
+</div>
+
+<button class="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<div class="view-switch" aria-label="view switch">
+  <button id="switchSimple">概览版</button>
+  <button id="switchDetail">详细版</button>
+</div>
+
+<script>
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'default',
+  flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+  sequence: { useMaxWidth: true, showSequenceNumbers: false }
+});
+
+// Ensure all mermaid containers are visible before rendering, then restore view mode
+(async function() {
+  const inDeck = document.documentElement.classList.contains('in-deck');
+  try {
+    if (!inDeck) {
+      document.body.classList.remove('mode-simple');
+      document.body.classList.add('mode-detail');
+      await mermaid.run({ querySelector: '.mermaid' });
+      document.body.classList.remove('mode-detail');
+      document.body.classList.add('mode-simple');
+    } else {
+      await mermaid.run({ querySelector: '.mermaid' });
+    }
+  } catch (_e) { /* mermaid 失败也不阻塞展示 */ }
+})();
+
+// Active TOC tracking
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.toc-sidebar a').forEach(a => a.classList.remove('active'));
+      const link = document.querySelector(`.toc-sidebar a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -80% 0px' });
+
+document.querySelectorAll('[id]').forEach(el => observer.observe(el));
+
+const switchSimple = document.getElementById('switchSimple');
+const switchDetail = document.getElementById('switchDetail');
+function setView(mode) {
+  document.body.classList.toggle('mode-simple', mode === 'simple');
+  document.body.classList.toggle('mode-detail', mode === 'detail');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+switchSimple.addEventListener('click', () => setView('simple'));
+switchDetail.addEventListener('click', () => setView('detail'));
+
+// 嵌入幻灯片 iframe 时：体验链接在当前嵌入区内打开，不新开标签页
+(function() {
+  if (window.self === window.top) return;
+  document.querySelectorAll('a.demo-link-card').forEach((a) => { a.target = '_self'; });
+  const _open = window.open;
+  window.open = function(url, target, features) {
+    if (url && (!target || target === '_blank')) {
+      window.location.href = url;
+      return null;
+    }
+    return _open.call(window, url, target, features);
+  };
+})();
+
+window.addEventListener('message', (e) => {
+  if (!e.data || e.data.type !== 'ppt-deck') return;
+  document.documentElement.classList.toggle('in-deck-focus', !!e.data.focus);
+});
+</script>
+</body>
+</html>
