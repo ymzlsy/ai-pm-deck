@@ -472,6 +472,13 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 .slide.active .pls-diagram circle:nth-child(1) { animation:ring-pulse 3s ease-in-out infinite; }
 .slide.active .pls-diagram circle:nth-child(3) { animation:ring-pulse 3s ease-in-out infinite .4s; }
 @keyframes ring-pulse { 0%,100%{opacity:.5} 50%{opacity:.85} }
+@keyframes skills-flash { 0%{background:transparent;color:inherit} 20%{background:rgba(76,175,80,.25);color:#2e7d32} 50%{background:rgba(76,175,80,.45);color:#1b5e20} 80%{background:rgba(76,175,80,.18);color:#2e7d32} 100%{background:transparent;color:inherit} }
+.skills-custom.flash span{animation:skills-flash .9s ease-out;animation-fill-mode:forwards;}
+.skills-custom.flash span:nth-child(2){animation-delay:.08s}
+.skills-custom.flash span:nth-child(3){animation-delay:.16s}
+.skills-custom.flash span:nth-child(4){animation-delay:.24s}
+.skills-custom.flash span:nth-child(5){animation-delay:.32s}
+.skills-custom.flash span:nth-child(6){animation-delay:.40s}
 
 /* Danger callout */
 .callout-danger { display:flex; gap:clamp(10px,1.2vw,16px); align-items:flex-start; padding:clamp(10px,1.5vh,18px); background:var(--danger-light); border-left:3px solid var(--danger); }
@@ -1695,109 +1702,115 @@ img.cost-logo { display:block; }
       <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">-- / --</div>
     </div>
-    <div class="content" style="gap:var(--gap-md);">
+    <div class="content" style="gap:var(--gap-sm);">
 
       <div data-step="0" style="display:flex;align-items:baseline;gap:var(--gap-md);flex-wrap:wrap;">
         <div>
           <div class="kicker">Skill Library</div>
-          <h2 class="title-lg">我装了 <em>118</em> 个 Skills</h2>
+          <h2 class="title-lg">我安装的 <em>100+</em> Skills</h2>
         </div>
-        <p style="font-size:clamp(13px,1.2vw,17px);color:var(--ink-light);max-width:28em;line-height:1.5;">Skills = 预置的工作指令包，告诉 AI 在特定场景下该怎么做、用什么工具、按什么流程走。相当于给 AI 装上了"岗位手册"。</p>
+        <p style="font-size:clamp(13px,1.15vw,16px);color:var(--ink-light);max-width:32em;line-height:1.5;">Skills = AI 的岗位手册，告诉它在特定场景下该怎么做、用什么工具、按什么流程走。有些是直接拉取社区的，有些是在实际使用中自己编写并不断迭代的。</p>
       </div>
 
-      <div data-step="1" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gap-sm);">
-        <!-- 高频使用 -->
-        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+      <div data-step="1" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gap-xs);">
+        <!-- 高频·核心能力 -->
+        <div class="card" style="padding:clamp(12px,1.6vh,20px) clamp(10px,1.2vw,16px);display:flex;flex-direction:column;gap:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--danger);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
-            <span class="meta-text" style="color:var(--danger);">高频 · 几乎每天用</span>
+            <span style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);letter-spacing:.02em;">高频 · 几乎每天用</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
-            <span><strong>frontend-slides</strong> — 做 PPT / 演示页</span>
-            <span><strong>guizang-ppt-skill</strong> — 杂志风 PPT</span>
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:clamp(12px,1.05vw,15px);line-height:1.45;">
+            <span><strong>using-superpowers</strong> — 超级能力模式</span>
             <span><strong>autoplan</strong> — 自动拆解任务</span>
-            <span><strong>autoresearch</strong> — 自动调研</span>
+            <span><strong>autoresearch</strong> — 深度自动调研</span>
             <span><strong>browse / scrape</strong> — 浏览器采集</span>
-            <span><strong>context-save</strong> — 保存上下文</span>
+            <span><strong>context-save / restore</strong> — 上下文保存恢复</span>
+            <span><strong>dispatching-parallel-agents</strong> — 多 Agent 并发</span>
+            <span><strong>careful</strong> — 高精度审慎模式</span>
           </div>
         </div>
 
         <!-- 产品设计 -->
-        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+        <div class="card" style="padding:clamp(12px,1.6vh,20px) clamp(10px,1.2vw,16px);display:flex;flex-direction:column;gap:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-role);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
-            <span class="meta-text" style="color:var(--tab-role);">产品设计 · 从需求到原型</span>
+            <span style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);letter-spacing:.02em;">产品设计 · 从需求到原型</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
-            <span><strong>ai-prd-spec-writing</strong> — 写 PRD</span>
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:clamp(12px,1.05vw,15px);line-height:1.45;">
+            <span><strong>ui-ux-pro-max</strong> — UI/UX 深度评审</span>
+            <span><strong>ai-prd-spec-writing</strong> — 写 PRD / Spec</span>
             <span><strong>design-consultation</strong> — 设计咨询</span>
             <span><strong>figma</strong> — 读取 Figma 设计稿</span>
-            <span><strong>ui-ux-pro-max</strong> — UI/UX 评审</span>
             <span><strong>excalidraw-diagram</strong> — 画架构图</span>
-            <span><strong>graphviz</strong> — 画流程图</span>
+            <span><strong>graphviz</strong> — 画流程/关系图</span>
+            <span><strong>design-review</strong> — 设计稿 Review</span>
           </div>
         </div>
 
         <!-- 工程交付 -->
-        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+        <div class="card" style="padding:clamp(12px,1.6vh,20px) clamp(10px,1.2vw,16px);display:flex;flex-direction:column;gap:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-local);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
-            <span class="meta-text" style="color:var(--tab-local);">工程交付 · 写代码到上线</span>
+            <span style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);letter-spacing:.02em;">工程交付 · 写代码到上线</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:clamp(12px,1.05vw,15px);line-height:1.45;">
             <span><strong>code-review</strong> — 代码评审</span>
-            <span><strong>test-driven-development</strong> — TDD</span>
-            <span><strong>systematic-debugging</strong> — 调试</span>
+            <span><strong>test-driven-development</strong> — TDD 测试驱动</span>
+            <span><strong>systematic-debugging</strong> — 系统化调试</span>
             <span><strong>land-and-deploy</strong> — 部署上线</span>
-            <span><strong>playwright</strong> — 自动化测试</span>
+            <span><strong>playwright</strong> — E2E 自动化测试</span>
             <span><strong>qa</strong> — 质量保障</span>
+            <span><strong>security-review</strong> — 安全审查</span>
           </div>
         </div>
       </div>
 
-      <div data-step="2" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gap-sm);">
+      <div data-step="2" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gap-xs);">
         <!-- 知识管理 -->
-        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+        <div class="card" style="padding:clamp(12px,1.6vh,20px) clamp(10px,1.2vw,16px);display:flex;flex-direction:column;gap:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-global);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
-            <span class="meta-text" style="color:var(--tab-global);">知识沉淀 · 不让经验蒸发</span>
+            <span style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);letter-spacing:.02em;">知识沉淀 · 不让经验蒸发</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
-            <span><strong>secondbrain</strong> — 第二大脑</span>
-            <span><strong>obsidian-sync</strong> — Obsidian 同步</span>
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:clamp(12px,1.05vw,15px);line-height:1.45;">
+            <span><strong>secondbrain</strong> — 第二大脑系统</span>
+            <span><strong>obsidian-sync</strong> — Obsidian 知识库同步</span>
             <span><strong>document-generate</strong> — 自动生成文档</span>
             <span><strong>codebase-to-course</strong> — 代码→教程</span>
             <span><strong>learn</strong> — 学习新技术</span>
+            <span><strong>prompt-capture</strong> — 沉淀好用提示词</span>
           </div>
         </div>
 
         <!-- 协作沟通 -->
-        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+        <div class="card" style="padding:clamp(12px,1.6vh,20px) clamp(10px,1.2vw,16px);display:flex;flex-direction:column;gap:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-action);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
-            <span class="meta-text" style="color:var(--tab-action);">协作沟通 · 减少信息损耗</span>
+            <span style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);letter-spacing:.02em;">协作沟通 · 减少信息损耗</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
-            <span><strong>meeting-transcribe</strong> — 会议纪要</span>
-            <span><strong>brainstorming</strong> — 头脑风暴</span>
+          <div style="display:flex;flex-direction:column;gap:4px;font-size:clamp(12px,1.05vw,15px);line-height:1.45;">
+            <span><strong>meeting-transcribe</strong> — 会议录音→纪要</span>
+            <span><strong>brainstorming</strong> — 头脑风暴引导</span>
             <span><strong>retro / post-mortem</strong> — 复盘</span>
-            <span><strong>prompt-capture</strong> — 记录好用提示词</span>
             <span><strong>office-hours</strong> — 答疑会</span>
+            <span><strong>johari-window</strong> — 团队认知对齐</span>
+            <span><strong>changelog</strong> — 变更日志生成</span>
           </div>
         </div>
 
-        <!-- 项目定制 -->
-        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+        <!-- 项目定制（自己写的） -->
+        <div class="card" style="padding:clamp(12px,1.6vh,20px) clamp(10px,1.2vw,16px);display:flex;flex-direction:column;gap:6px;">
           <div style="display:flex;align-items:center;gap:8px;">
-            <span style="width:8px;height:8px;background:var(--ink-muted);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
-            <span class="meta-text">项目定制 · 为公司业务写的</span>
+            <span style="width:8px;height:8px;background:var(--tab-global);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
+            <span style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);letter-spacing:.02em;">项目定制 · 自己写的 ✍️</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
-            <span><strong>捷安速赛</strong> — 速赛竞赛流程</span>
+          <div class="skills-custom" style="display:flex;flex-direction:column;gap:4px;font-size:clamp(12px,1.05vw,15px);line-height:1.45;">
+            <span><strong>捷安速赛</strong> — AI Coding 竞赛流程</span>
             <span><strong>karaithy-site-ops</strong> — 站点运维</span>
             <span><strong>skillify</strong> — 把经验变成新 Skill</span>
             <span><strong>writing-skills</strong> — 写 Skill 本身</span>
             <span><strong>use-findskill</strong> — 找合适的 Skill</span>
+            <span><strong>捷安 FDE</strong> — FDE 落地方法论</span>
           </div>
         </div>
       </div>
@@ -3838,6 +3851,12 @@ $ claude "分析这份需求文档，提取功能清单和验收标准"</div>
       root.querySelectorAll(`[data-step="${i}"]`).forEach(el=>{
         i<=n?el.classList.add('visible'):el.classList.remove('visible');
       });
+    }
+    /* green flash for self-written skills */
+    const sc=root.querySelector('.skills-custom');
+    if(sc){
+      if(n>=2&&!sc.dataset.flashed){sc.classList.add('flash');sc.dataset.flashed='1';}
+      if(n<2){sc.classList.remove('flash');delete sc.dataset.flashed;}
     }
   }
   function markDocShellReady(shell,frame){
