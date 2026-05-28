@@ -28,6 +28,12 @@
   --tab-local: rgba(244,184,197,.45);
   --tab-global: rgba(168,216,234,.5);
   --tab-action: rgba(255,230,167,.55);
+  /* text-safe versions — saturated & opaque for readable font color */
+  --tab-role-text: #6b5a9e;
+  --tab-local-text: #b8566e;
+  --tab-global-text: #3d7f99;
+  --tab-action-text: #a07618;
+  --ink-mid: #444; /* between ink-light and ink for secondary text */
   --tab-ink: rgba(26,26,26,.72);
   --text-caption: clamp(12px, 1.2vw, 16px);
   --text-small: clamp(13px, 1.3vw, 17px);
@@ -558,7 +564,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
   border:1px solid var(--rule); border-radius:6px;
   border-left:3px solid var(--accent);
 }
-.slide-hermes .hermes-use-row span:nth-child(1) { border-left-color:var(--tab-role); }
+.slide-hermes .hermes-use-row span:nth-child(1) { border-left-color:var(--tab-role-text); }
 .slide-hermes .hermes-use-row span:nth-child(3) { border-left-color:var(--tab-bg); }
 .slide-hermes .hermes-use-row strong { color:var(--ink); font-weight:600; }
 .slide-hermes .hermes-flow {
@@ -571,7 +577,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
   padding:2px 0; list-style:none;
 }
 .slide-hermes .hermes-flow li em { font-style:normal; color:var(--ink-muted); font-size:.92em; }
-.slide-hermes .hermes-flow li.is-core { font-weight:600; color:var(--tab-role); }
+.slide-hermes .hermes-flow li.is-core { font-weight:600; color:var(--tab-role-text); }
 .slide-hermes .hermes-foot {
   font-size:clamp(12px,1.05vw,15px); color:var(--ink-muted); line-height:1.4;
   margin-top:4px;
@@ -1372,7 +1378,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header" style="position:absolute;top:clamp(18px,3vh,36px);left:clamp(52px,5.5vw,88px);right:clamp(56px,6vw,96px);">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">-- / --</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-lg);text-align:center;max-width:680px;">
@@ -1404,7 +1410,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">06 / --</div>
     </div>
     <div class="content">
@@ -1494,7 +1500,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">07 / --</div>
     </div>
     <div class="content" style="justify-content:center;">
@@ -1587,7 +1593,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">08 / --</div>
     </div>
     <div class="content">
@@ -1699,7 +1705,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">-- / --</div>
     </div>
     <div class="content" style="gap:var(--gap-sm);">
@@ -1855,7 +1861,7 @@ img.cost-logo { display:block; }
         <div class="tab" data-tab="5">行动</div>
       </div>
       <div class="header">
-        <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+        <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
         <div class="header-right">09 / --</div>
       </div>
       <div class="content">
@@ -1940,7 +1946,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">10 / --</div>
     </div>
     <div class="content">
@@ -2065,7 +2071,7 @@ img.cost-logo { display:block; }
         <div class="tab" data-tab="5">行动</div>
       </div>
       <div class="header">
-        <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+        <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
         <div class="header-right">11 / --</div>
       </div>
       <div class="content">
@@ -2113,7 +2119,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">12 / --</div>
     </div>
     <div class="content">
@@ -2170,7 +2176,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">13 / --</div>
     </div>
     <div class="content">
@@ -2244,7 +2250,7 @@ img.cost-logo { display:block; }
         <div class="tab" data-tab="5">行动</div>
       </div>
       <div class="header">
-        <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+        <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
         <div class="header-right">14 / --</div>
       </div>
       <div class="content">
@@ -2300,7 +2306,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-left"><span style="color:var(--tab-role-text);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">-- / --</div>
     </div>
     <div class="content">
@@ -2401,7 +2407,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">-- / --</div>
     </div>
     <div class="content" style="gap:var(--gap-sm);justify-content:center;">
@@ -2415,7 +2421,7 @@ img.cost-logo { display:block; }
           </div>
         </div>
         <div class="callout" style="background:rgba(244,184,197,.08);border-left:3px solid var(--tab-local);padding:clamp(12px,1.5vh,20px) clamp(14px,1.5vw,24px);margin-top:var(--gap-xs);">
-          <p style="font-size:clamp(13px,1.2vw,17px);color:var(--ink);line-height:1.7;">Part 2 里看到的变化——自己写代码、自己做调研、自己出原型——其实有一个成熟的名字：<strong style="color:var(--tab-local);">Forward Deployed Engineer（FDE）</strong>。这不是一个新发明，而是硅谷已经跑通的岗位模式。</p>
+          <p style="font-size:clamp(13px,1.2vw,17px);color:var(--ink);line-height:1.7;">Part 2 里看到的变化——自己写代码、自己做调研、自己出原型——其实有一个成熟的名字：<strong style="color:var(--tab-local-text);">Forward Deployed Engineer（FDE）</strong>。这不是一个新发明，而是硅谷已经跑通的岗位模式。</p>
         </div>
       </div>
       <!-- Step 1: What is FDE -->
@@ -2457,15 +2463,15 @@ img.cost-logo { display:block; }
           <h3 style="font-size:clamp(15px,1.4vw,20px);font-weight:700;color:var(--ink);margin-bottom:var(--gap-xs);">需要什么能力</h3>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             <div style="padding:clamp(8px,1vh,14px) clamp(10px,1vw,16px);background:rgba(244,184,197,.1);border-radius:6px;">
-              <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-local);">业务理解力</div>
+              <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-local-text);">业务理解力</div>
               <div style="font-size:clamp(11px,.95vw,14px);color:var(--ink-light);margin-top:4px;">能跟客户业务专家平等对话</div>
             </div>
             <div style="padding:clamp(8px,1vh,14px) clamp(10px,1vw,16px);background:rgba(124,106,173,.08);border-radius:6px;">
-              <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-role);">工程能力</div>
+              <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-role-text);">工程能力</div>
               <div style="font-size:clamp(11px,.95vw,14px);color:var(--ink-light);margin-top:4px;">能独立从 0 搭出可用系统</div>
             </div>
             <div style="padding:clamp(8px,1vh,14px) clamp(10px,1vw,16px);background:rgba(152,212,187,.12);border-radius:6px;">
-              <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-global);">沟通力</div>
+              <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-global-text);">沟通力</div>
               <div style="font-size:clamp(11px,.95vw,14px);color:var(--ink-light);margin-top:4px;">技术/业务/管理三层都聊得通</div>
             </div>
             <div style="padding:clamp(8px,1vh,14px) clamp(10px,1vw,16px);background:rgba(124,106,173,.06);border-radius:6px;">
@@ -2485,7 +2491,7 @@ img.cost-logo { display:block; }
               <div style="color:var(--ink-light);padding:4px 0;">售前 SE</div><div style="color:var(--ink-light);">✗</div><div style="color:var(--ink-light);">短期</div><div style="color:var(--ink-light);">✗</div>
               <div style="color:var(--ink-light);padding:4px 0;">解决方案</div><div style="color:var(--ink-light);">画图</div><div style="color:var(--ink-light);">出差</div><div style="color:var(--ink-light);">设计层</div>
               <div style="color:var(--ink-light);padding:4px 0;">咨询顾问</div><div style="color:var(--ink-light);">✗</div><div style="color:var(--ink-light);">长期</div><div style="color:var(--ink-light);">✗</div>
-              <div style="font-weight:700;color:var(--tab-local);padding:4px 0;">FDE</div><div style="font-weight:700;color:var(--tab-local);">✓ 生产</div><div style="font-weight:700;color:var(--tab-local);">长期嵌入</div><div style="font-weight:700;color:var(--tab-local);">✓ 核心</div>
+              <div style="font-weight:700;color:var(--tab-local-text);padding:4px 0;">FDE</div><div style="font-weight:700;color:var(--tab-local-text);">✓ 生产</div><div style="font-weight:700;color:var(--tab-local-text);">长期嵌入</div><div style="font-weight:700;color:var(--tab-local-text);">✓ 核心</div>
             </div>
           </div>
         </div>
@@ -2516,7 +2522,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">-- / --</div>
     </div>
     <div class="content" style="gap:var(--gap-xs);justify-content:center;">
@@ -2529,17 +2535,17 @@ img.cost-logo { display:block; }
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gap-xs);">
           <!-- Card 1: Business -->
           <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1vw,16px);background:rgba(244,184,197,.1);border-radius:8px;border-top:3px solid var(--tab-local);display:flex;flex-direction:column;gap:4px;">
-            <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-size:clamp(20px,2.4vw,32px);font-weight:700;color:var(--tab-local);font-family:var(--font-display);">01</span><span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">懂业务</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-size:clamp(20px,2.4vw,32px);font-weight:700;color:var(--tab-local-text);font-family:var(--font-display);">01</span><span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">懂业务</span></div>
             <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);line-height:1.5;">理解客户业务逻辑和决策链路，能跟一线业务专家平等对话，不需要销售翻译。</p>
           </div>
           <!-- Card 2: AI -->
           <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1vw,16px);background:rgba(124,106,173,.08);border-radius:8px;border-top:3px solid var(--tab-role);display:flex;flex-direction:column;gap:4px;">
-            <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-size:clamp(20px,2.4vw,32px);font-weight:700;color:var(--tab-role);font-family:var(--font-display);">02</span><span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">AI 应用能力</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-size:clamp(20px,2.4vw,32px);font-weight:700;color:var(--tab-role-text);font-family:var(--font-display);">02</span><span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">AI 应用能力</span></div>
             <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);line-height:1.5;">熟练使用 AI Coding 工具（Codex / Claude Code），客户现场 30 分钟出 Demo。</p>
           </div>
           <!-- Card 3: Engineering -->
           <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1vw,16px);background:rgba(152,212,187,.12);border-radius:8px;border-top:3px solid var(--tab-global);display:flex;flex-direction:column;gap:4px;">
-            <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-size:clamp(20px,2.4vw,32px);font-weight:700;color:var(--tab-global);font-family:var(--font-display);">03</span><span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">工程编码能力</span></div>
+            <div style="display:flex;align-items:baseline;gap:8px;"><span style="font-size:clamp(20px,2.4vw,32px);font-weight:700;color:var(--tab-global-text);font-family:var(--font-display);">03</span><span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">工程编码能力</span></div>
             <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);line-height:1.5;">写出来的不是 PPT，而是能跑生产的代码。从 Demo 到交付，一个人闭环。</p>
           </div>
         </div>
@@ -2552,19 +2558,19 @@ img.cost-logo { display:block; }
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap-xs);">
           <div style="padding:clamp(8px,1vh,14px) clamp(8px,.8vw,14px);border:1px solid var(--rule);border-radius:6px;text-align:center;">
-            <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-local);">产品经理</div>
+            <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-local-text);">产品经理</div>
             <div style="font-size:clamp(10px,.9vw,13px);color:var(--ink-light);margin-top:2px;">天然懂业务 + 需求拆解</div>
-            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-local);margin-top:4px;font-weight:600;">+AI Coding → FDE</div>
+            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-local-text);margin-top:4px;font-weight:600;">+AI Coding → FDE</div>
           </div>
           <div style="padding:clamp(8px,1vh,14px) clamp(8px,.8vw,14px);border:1px solid var(--rule);border-radius:6px;text-align:center;">
-            <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-role);">研发工程师</div>
+            <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-role-text);">研发工程师</div>
             <div style="font-size:clamp(10px,.9vw,13px);color:var(--ink-light);margin-top:2px;">天然有工程能力</div>
-            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-role);margin-top:4px;font-weight:600;">+业务理解 → FDE</div>
+            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-role-text);margin-top:4px;font-weight:600;">+业务理解 → FDE</div>
           </div>
           <div style="padding:clamp(8px,1vh,14px) clamp(8px,.8vw,14px);border:1px solid var(--rule);border-radius:6px;text-align:center;">
-            <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-global);">市场/售前</div>
+            <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--tab-global-text);">市场/售前</div>
             <div style="font-size:clamp(10px,.9vw,13px);color:var(--ink-light);margin-top:2px;">天然贴近客户现场</div>
-            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-global);margin-top:4px;font-weight:600;">+技术深度 → FDE</div>
+            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-global-text);margin-top:4px;font-weight:600;">+技术深度 → FDE</div>
           </div>
           <div style="padding:clamp(8px,1vh,14px) clamp(8px,.8vw,14px);border:1px solid var(--rule);border-radius:6px;text-align:center;">
             <div style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--ink);">解决方案架构</div>
@@ -2573,39 +2579,51 @@ img.cost-logo { display:block; }
           </div>
         </div>
       </div>
-      <!-- Step 2: Company examples — global -->
+      <!-- Step 2: Company examples — who uses FDE -->
       <div data-step="2">
         <div style="display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-xs);">
-          <h3 style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--ink);">全球：谁在用 FDE 模式</h3>
-          <span style="font-size:clamp(10px,.85vw,12px);color:var(--ink-muted);font-family:var(--font-mono);">2025–2026 行业巨头集体押注</span>
+          <h3 style="font-size:clamp(13px,1.2vw,17px);font-weight:700;color:var(--ink);">谁在用 FDE 模式</h3>
+          <span style="font-size:clamp(10px,.85vw,12px);color:var(--ink-mid);font-family:var(--font-mono);">硅谷原创 × 国内落地</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-xs);">
           <!-- Palantir -->
-          <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1.2vw,18px);background:#fff;border:1px solid var(--rule);border-radius:8px;display:flex;flex-direction:column;gap:6px;">
+          <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1.2vw,18px);background:#fff;border:1px solid var(--rule);border-radius:8px;display:flex;flex-direction:column;gap:5px;">
             <div style="display:flex;align-items:center;justify-content:space-between;">
               <span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">Palantir</span>
-              <span style="font-size:clamp(10px,.8vw,12px);color:var(--tab-local);font-weight:600;">模式发明者</span>
+              <span style="font-size:clamp(10px,.8vw,12px);color:var(--tab-local-text);font-weight:600;">模式发明者</span>
             </div>
-            <p style="font-size:clamp(11px,.95vw,14px);color:var(--ink-light);line-height:1.5;">Echo + Delta 双人小队嵌入客户。2026 Q1 营收同比 +85%，Boot Camp 客户转化率 75%，市值超 3500 亿美元。</p>
-            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-local);font-weight:600;">FDE 岗位发布量同比增长 800%</div>
+            <div style="font-size:clamp(10px,.85vw,12px);color:var(--ink-mid);font-family:var(--font-mono);">2003 年创立 · FDE 写入公司 DNA</div>
+            <p style="font-size:clamp(11px,.95vw,14px);color:var(--ink-mid);line-height:1.5;">Echo + Delta 双人小队嵌入客户，当场写生产代码。Boot Camp 3 天验证客户价值，转化率 75%。</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:clamp(10px,.85vw,12px);background:rgba(244,184,197,.15);color:var(--tab-local-text);padding:2px 8px;border-radius:3px;font-weight:600;">Q1 营收 +85%</span>
+              <span style="font-size:clamp(10px,.85vw,12px);background:rgba(244,184,197,.15);color:var(--tab-local-text);padding:2px 8px;border-radius:3px;font-weight:600;">市值 3500 亿美元</span>
+            </div>
           </div>
-          <!-- OpenAI -->
-          <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1.2vw,18px);background:#fff;border:1px solid var(--rule);border-radius:8px;display:flex;flex-direction:column;gap:6px;">
+          <!-- 第四范式 -->
+          <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1.2vw,18px);background:#fff;border:1px solid var(--rule);border-radius:8px;display:flex;flex-direction:column;gap:5px;">
             <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">OpenAI</span>
-              <span style="font-size:clamp(10px,.8vw,12px);color:var(--tab-role);font-weight:600;">最大押注</span>
+              <span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">第四范式</span>
+              <span style="font-size:clamp(10px,.8vw,12px);color:var(--tab-role-text);font-weight:600;">国内最像 Palantir</span>
             </div>
-            <p style="font-size:clamp(11px,.95vw,14px);color:var(--ink-light);line-height:1.5;">投入 $40 亿成立独立 FDE 部署公司（估值 $100 亿），收购英国 Tomoro（150 名 FDE），覆盖金融/制造/医疗。</p>
-            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-role);font-weight:600;">从模型公司转型为部署公司</div>
+            <div style="font-size:clamp(10px,.85vw,12px);color:var(--ink-mid);font-family:var(--font-mono);">2014 年创立 · 「算法工程师+PM」双人嵌入</div>
+            <p style="font-size:clamp(11px,.95vw,14px);color:var(--ink-mid);line-height:1.5;">先知平台 + 驻场团队，覆盖金融/能源/制造。驻场写生产模型，项目经验反哺「先知」标准化。</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:clamp(10px,.85vw,12px);background:rgba(199,184,234,.15);color:var(--tab-role-text);padding:2px 8px;border-radius:3px;font-weight:600;">服务 200+ 头部企业</span>
+              <span style="font-size:clamp(10px,.85vw,12px);background:rgba(199,184,234,.15);color:var(--tab-role-text);padding:2px 8px;border-radius:3px;font-weight:600;">2023 港股上市</span>
+            </div>
           </div>
-          <!-- Anthropic -->
-          <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1.2vw,18px);background:#fff;border:1px solid var(--rule);border-radius:8px;display:flex;flex-direction:column;gap:6px;">
+          <!-- 商汤科技 -->
+          <div style="padding:clamp(10px,1.4vh,18px) clamp(10px,1.2vw,18px);background:#fff;border:1px solid var(--rule);border-radius:8px;display:flex;flex-direction:column;gap:5px;">
             <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">Anthropic</span>
-              <span style="font-size:clamp(10px,.8vw,12px);color:var(--tab-global);font-weight:600;">合资模式</span>
+              <span style="font-size:clamp(14px,1.3vw,18px);font-weight:700;color:var(--ink);">商汤科技</span>
+              <span style="font-size:clamp(10px,.8vw,12px);color:var(--tab-global-text);font-weight:600;">行业方案团队</span>
             </div>
-            <p style="font-size:clamp(11px,.95vw,14px);color:var(--ink-light);line-height:1.5;">联合黑石、高盛投入 $15 亿成立合资 FDE 咨询公司，先攻金融行业，工程师驻场帮企业把 Claude 跑进核心业务。</p>
-            <div style="font-size:clamp(10px,.85vw,12px);color:var(--tab-global);font-weight:600;">Google · Salesforce · Deloitte 同步扩招</div>
+            <div style="font-size:clamp(10px,.85vw,12px);color:var(--ink-mid);font-family:var(--font-mono);">2014 年创立 · 行业解决方案长期驻场</div>
+            <p style="font-size:clamp(11px,.95vw,14px);color:var(--ink-mid);line-height:1.5;">AI 大装置 + 行业方案团队，在智慧城市/医疗/汽车领域长期嵌入客户，写生产级算法和系统集成。</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span style="font-size:clamp(10px,.85vw,12px);background:rgba(168,216,234,.15);color:var(--tab-global-text);padding:2px 8px;border-radius:3px;font-weight:600;">覆盖 30+ 城市</span>
+              <span style="font-size:clamp(10px,.85vw,12px);background:rgba(168,216,234,.15);color:var(--tab-global-text);padding:2px 8px;border-radius:3px;font-weight:600;">日日新大模型赋能</span>
+            </div>
           </div>
         </div>
       </div>
@@ -2624,11 +2642,11 @@ img.cost-logo { display:block; }
           <div style="font-weight:600;color:var(--ink-muted);font-size:clamp(10px,.85vw,12px);padding:6px 0;border-bottom:2px solid var(--rule);text-align:center;">反哺平台</div>
           <div style="font-weight:600;color:var(--ink-muted);font-size:clamp(10px,.85vw,12px);padding:6px 0;border-bottom:2px solid var(--rule);text-align:center;">相似度</div>
           <!-- Palantir baseline -->
-          <div style="font-weight:700;color:var(--tab-local);padding:5px 0;border-bottom:1px solid var(--rule);">Palantir（基准）</div>
+          <div style="font-weight:700;color:var(--tab-local-text);padding:5px 0;border-bottom:1px solid var(--rule);">Palantir（基准）</div>
           <div style="text-align:center;padding:5px 0;border-bottom:1px solid var(--rule);">长期驻场</div>
-          <div style="text-align:center;padding:5px 0;border-bottom:1px solid var(--rule);color:var(--tab-global);">✓</div>
-          <div style="text-align:center;padding:5px 0;border-bottom:1px solid var(--rule);color:var(--tab-global);">✓</div>
-          <div style="text-align:center;padding:5px 0;border-bottom:1px solid var(--rule);color:var(--tab-global);">✓ 强</div>
+          <div style="text-align:center;padding:5px 0;border-bottom:1px solid var(--rule);color:var(--tab-global-text);">✓</div>
+          <div style="text-align:center;padding:5px 0;border-bottom:1px solid var(--rule);color:var(--tab-global-text);">✓</div>
+          <div style="text-align:center;padding:5px 0;border-bottom:1px solid var(--rule);color:var(--tab-global-text);">✓ 强</div>
           <div style="text-align:center;padding:5px 0;border-bottom:1px solid var(--rule);">—</div>
           <!-- 飞书 -->
           <div style="color:var(--ink);padding:5px 0;border-bottom:1px solid var(--rule);">飞书 · 解决方案架构师</div>
@@ -2636,21 +2654,21 @@ img.cost-logo { display:block; }
           <div style="text-align:center;color:var(--danger);padding:5px 0;border-bottom:1px solid var(--rule);">✗ 配置为主</div>
           <div style="text-align:center;color:var(--ink-light);padding:5px 0;border-bottom:1px solid var(--rule);">使用深度</div>
           <div style="text-align:center;color:var(--danger);padding:5px 0;border-bottom:1px solid var(--rule);">低</div>
-          <div style="text-align:center;color:var(--ink-muted);padding:5px 0;border-bottom:1px solid var(--rule);">★★☆☆☆</div>
+          <div style="text-align:center;color:var(--ink-mid);padding:5px 0;border-bottom:1px solid var(--rule);">★★☆☆☆</div>
           <!-- 商汤 -->
           <div style="color:var(--ink);padding:5px 0;border-bottom:1px solid var(--rule);">商汤 · 行业方案团队</div>
           <div style="text-align:center;color:var(--ink-light);padding:5px 0;border-bottom:1px solid var(--rule);">长期</div>
-          <div style="text-align:center;color:var(--tab-global);padding:5px 0;border-bottom:1px solid var(--rule);">✓</div>
+          <div style="text-align:center;color:var(--tab-global-text);padding:5px 0;border-bottom:1px solid var(--rule);">✓</div>
           <div style="text-align:center;color:var(--ink-light);padding:5px 0;border-bottom:1px solid var(--rule);">部分</div>
           <div style="text-align:center;color:var(--ink-light);padding:5px 0;border-bottom:1px solid var(--rule);">低</div>
-          <div style="text-align:center;color:var(--ink-muted);padding:5px 0;border-bottom:1px solid var(--rule);">★★★☆☆</div>
+          <div style="text-align:center;color:var(--ink-mid);padding:5px 0;border-bottom:1px solid var(--rule);">★★★☆☆</div>
           <!-- 第四范式 -->
           <div style="color:var(--ink);padding:5px 0;">第四范式 · 算法+PM</div>
           <div style="text-align:center;color:var(--ink-light);padding:5px 0;">长期</div>
-          <div style="text-align:center;color:var(--tab-global);padding:5px 0;">✓</div>
+          <div style="text-align:center;color:var(--tab-global-text);padding:5px 0;">✓</div>
           <div style="text-align:center;color:var(--ink-light);padding:5px 0;">部分</div>
           <div style="text-align:center;color:var(--ink-light);padding:5px 0;">中</div>
-          <div style="text-align:center;color:var(--tab-role);padding:5px 0;">★★★★☆</div>
+          <div style="text-align:center;color:var(--tab-role-text);padding:5px 0;">★★★★☆</div>
         </div>
         <p style="font-size:clamp(11px,.9vw,13px);color:var(--ink-muted);margin-top:6px;line-height:1.5;">国内不缺驻场能力，缺的是把驻场经验<strong>系统性沉淀为产品资产</strong>的机制——项目 50 和项目 10 花的时间一样长，飞轮转不起来。</p>
       </div>
@@ -2676,7 +2694,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">15 / --</div>
     </div>
     <div class="content" style="display:grid;grid-template-columns:clamp(220px,24vw,340px) 1fr;gap:var(--gap-md);align-items:stretch;">
@@ -2726,7 +2744,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">16 / --</div>
     </div>
     <div class="content" style="gap:var(--gap-sm);">
@@ -2789,7 +2807,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">17 / --</div>
     </div>
     <div class="content">
@@ -2828,9 +2846,9 @@ img.cost-logo { display:block; }
         </div>
       </div>
       <div data-step="3" class="stat-row" style="margin-top:var(--gap-xs);">
-        <div class="stat-item"><div class="stat-num" style="color:var(--tab-local);">高</div><div class="stat-label">交付粘性</div></div>
-        <div class="stat-item"><div class="stat-num" style="color:var(--tab-local);">厚</div><div class="stat-label">平台复利</div></div>
-        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-local);">ROI</div><div class="stat-label">定价对标结果</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--tab-local-text);">高</div><div class="stat-label">交付粘性</div></div>
+        <div class="stat-item"><div class="stat-num" style="color:var(--tab-local-text);">厚</div><div class="stat-label">平台复利</div></div>
+        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-local-text);">ROI</div><div class="stat-label">定价对标结果</div></div>
       </div>
     </div>
     <div class="foot">
@@ -2854,7 +2872,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">18 / --</div>
     </div>
     <div class="content">
@@ -2907,7 +2925,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">19 / --</div>
     </div>
     <div class="content" style="display:grid;grid-template-columns:1fr clamp(260px,26vw,340px);gap:var(--gap-md);align-items:stretch;">
@@ -2997,7 +3015,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-local);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
       <div class="header-right">20 / --</div>
     </div>
     <div class="content" style="display:grid;grid-template-columns:1fr clamp(280px,32vw,420px);gap:var(--gap-md);align-items:start;">
@@ -3110,7 +3128,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header" style="position:absolute;top:clamp(18px,3vh,36px);left:clamp(52px,5.5vw,88px);right:clamp(56px,6vw,96px);">
-      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-left"><span style="color:var(--tab-global-text);">Part 4</span> &nbsp;全局角度</div>
       <div class="header-right">-- / --</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-lg);text-align:center;max-width:680px;">
@@ -3142,7 +3160,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-left"><span style="color:var(--tab-global-text);">Part 4</span> &nbsp;全局角度</div>
       <div class="header-right">19 / --</div>
     </div>
     <div class="content">
@@ -3176,7 +3194,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-left"><span style="color:var(--tab-global-text);">Part 4</span> &nbsp;全局角度</div>
       <div class="header-right">20 / --</div>
     </div>
     <div class="content">
@@ -3211,9 +3229,9 @@ img.cost-logo { display:block; }
         <p style="font-size:clamp(15px,1.35vw,19px);color:var(--ink);line-height:1.5;"><strong>结论：</strong>交付物比 Palantir 典型客户更复杂，却用更长的远程瀑布链路——<strong>结构与业务本质错配</strong>，这正是 FDE 模式在捷安「反而更贴切」的原因。</p>
       </div>
       <div data-step="3" class="stat-row">
-        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global);">必须</div><div class="stat-label">深入现场</div></div>
-        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global);">极高</div><div class="stat-label">定制化</div></div>
-        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global);">机会</div><div class="stat-label">前移 + 沉淀</div></div>
+        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global-text);">必须</div><div class="stat-label">深入现场</div></div>
+        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global-text);">极高</div><div class="stat-label">定制化</div></div>
+        <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-global-text);">机会</div><div class="stat-label">前移 + 沉淀</div></div>
       </div>
     </div>
     <div class="foot">
@@ -3237,7 +3255,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-left"><span style="color:var(--tab-global-text);">Part 4</span> &nbsp;全局角度</div>
       <div class="header-right">21 / --</div>
     </div>
     <div class="content">
@@ -3290,7 +3308,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-left"><span style="color:var(--tab-global-text);">Part 4</span> &nbsp;全局角度</div>
       <div class="header-right">22 / --</div>
     </div>
     <div class="content">
@@ -3341,7 +3359,7 @@ img.cost-logo { display:block; }
       <div class="tab" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-global);">Part 4</span> &nbsp;全局角度</div>
+      <div class="header-left"><span style="color:var(--tab-global-text);">Part 4</span> &nbsp;全局角度</div>
       <div class="header-right">23 / --</div>
     </div>
     <div class="content">
@@ -3367,15 +3385,15 @@ img.cost-logo { display:block; }
       </div>
       <div data-step="2" class="grid-3" style="gap:var(--gap-sm);">
         <div class="card" style="padding:clamp(12px,1.5vh,18px);text-align:center;">
-          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global);font-family:var(--font-display);">粘</p>
+          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global-text);font-family:var(--font-display);">粘</p>
           <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.4;">业务流程长在平台上，换供应商成本高</p>
         </div>
         <div class="card" style="padding:clamp(12px,1.5vh,18px);text-align:center;">
-          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global);font-family:var(--font-display);">厚</p>
+          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global-text);font-family:var(--font-display);">厚</p>
           <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.4;">每次交付让平台/modules 变厚，边际成本下降</p>
         </div>
         <div class="card" style="padding:clamp(12px,1.5vh,18px);text-align:center;">
-          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global);font-family:var(--font-display);">准</p>
+          <p style="font-size:clamp(28px,3vw,40px);font-weight:700;color:var(--tab-global-text);font-family:var(--font-display);">准</p>
           <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.4;">定价可对齐 ROI，而非功能清单比价</p>
         </div>
       </div>
@@ -3404,7 +3422,7 @@ img.cost-logo { display:block; }
       <div class="tab active" data-tab="5">行动</div>
     </div>
     <div class="header" style="position:absolute;top:clamp(18px,3vh,36px);left:clamp(52px,5.5vw,88px);right:clamp(56px,6vw,96px);">
-      <div class="header-left"><span style="color:var(--tab-action);">Part 5</span> &nbsp;行动</div>
+      <div class="header-left"><span style="color:var(--tab-action-text);">Part 5</span> &nbsp;行动</div>
       <div class="header-right">-- / --</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-lg);text-align:center;max-width:680px;">
@@ -3436,7 +3454,7 @@ img.cost-logo { display:block; }
       <div class="tab active" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-action);">行动</span></div>
+      <div class="header-left"><span style="color:var(--tab-action-text);">行动</span></div>
       <div class="header-right">24 / --</div>
     </div>
     <div class="content">
@@ -3470,7 +3488,7 @@ img.cost-logo { display:block; }
       <div class="tab active" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-action);">行动</span></div>
+      <div class="header-left"><span style="color:var(--tab-action-text);">行动</span></div>
       <div class="header-right">25 / --</div>
     </div>
     <div class="content">
@@ -3495,9 +3513,9 @@ img.cost-logo { display:block; }
           <p style="font-size:var(--text-small);color:var(--ink-light);margin-top:6px;line-height:1.5;">v1「客户需求语义图谱」· 频次 ≥3 的 patterns 推产品 roadmap · 1–2 个内部分享案例 · 评估是否在 AI 提效项目里铺开</p>
         </div>
         <div class="stat-row" style="margin-top:var(--gap-xs);">
-          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action);">1–2</div><div class="stat-label">可量化成功案例</div></div>
-          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action);">1 份</div><div class="stat-label">独家客户洞察资产</div></div>
-          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action);">1 条</div><div class="stat-label">协作模式验证结论</div></div>
+          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action-text);">1–2</div><div class="stat-label">可量化成功案例</div></div>
+          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action-text);">1 份</div><div class="stat-label">独家客户洞察资产</div></div>
+          <div class="stat-item"><div class="stat-num stat-num-text" style="color:var(--tab-action-text);">1 条</div><div class="stat-label">协作模式验证结论</div></div>
         </div>
       </div>
       <div data-step="3" class="card card-danger" style="padding:clamp(12px,1.4vh,16px);">
@@ -3525,7 +3543,7 @@ img.cost-logo { display:block; }
       <div class="tab active" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-action);">行动</span></div>
+      <div class="header-left"><span style="color:var(--tab-action-text);">行动</span></div>
       <div class="header-right">26 / --</div>
     </div>
     <div class="content">
@@ -3580,7 +3598,7 @@ img.cost-logo { display:block; }
       <div class="tab active" data-tab="5">行动</div>
     </div>
     <div class="header">
-      <div class="header-left"><span style="color:var(--tab-action);">行动</span></div>
+      <div class="header-left"><span style="color:var(--tab-action-text);">行动</span></div>
       <div class="header-right">27 / --</div>
     </div>
     <div class="content" style="justify-content:center;align-items:stretch;text-align:center;">
