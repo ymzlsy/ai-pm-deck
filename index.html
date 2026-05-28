@@ -388,6 +388,7 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
   max-width:min(38vw, 480px); pointer-events:none;
   justify-content:flex-start;
   overflow-x:hidden; overflow-y:auto; min-height:0;
+  overscroll-behavior:contain;
   position:relative; z-index:1;
 }
 .page-case .content > [data-step] { pointer-events:auto; }
@@ -900,31 +901,31 @@ img.cost-logo { display:block; }
       <div class="header-left">捷安高科 · 内部分享</div>
       <div class="header-right">01 / --</div>
     </div>
-    <div class="content" style="gap:var(--gap-lg);">
-      <!-- Left-right layout: text + stats -->
-      <div class="grid-2-1" style="align-items:end;">
+    <div class="content" style="gap:var(--gap-lg);justify-content:center;">
+      <!-- Left-right layout: text + outline -->
+      <div class="grid-2-1" style="align-items:center;">
         <div style="display:flex;flex-direction:column;gap:var(--gap-md);">
           <div class="eyebrow reveal">From Receiver to Builder</div>
           <h1 class="title-hero reveal" style="transition-delay:.1s">AI时代<br>产品经理的<em>工作模式</em></h1>
           <div class="divider reveal" style="transition-delay:.2s"></div>
           <p class="subtitle reveal" style="transition-delay:.28s">如何从需求接收者变成前线构建者</p>
         </div>
-        <div class="reveal" style="transition-delay:.35s; display:flex; flex-direction:column; gap:var(--gap-sm); padding-bottom:clamp(4px,1vh,12px);">
-          <div class="meta-text" style="margin-bottom:var(--gap-xs);">Framework</div>
+        <div class="reveal" style="transition-delay:.35s; display:flex; flex-direction:column; gap:var(--gap-sm);">
+          <div class="meta-text" style="margin-bottom:var(--gap-xs);">今天聊三件事</div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-role);display:inline-block;flex-shrink:0;"></span>
-            <span style="font-size:clamp(11px,1.1vw,15px);color:var(--ink-light);">一个人 · 岗位角度</span>
+            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">我的工作方式怎么变了</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-local);display:inline-block;flex-shrink:0;"></span>
-            <span style="font-size:clamp(11px,1.1vw,15px);color:var(--ink-light);">一条链 · 局部角度</span>
+            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">团队协作可以怎么优化</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-global);display:inline-block;flex-shrink:0;"></span>
-            <span style="font-size:clamp(11px,1.1vw,15px);color:var(--ink-light);">一盘棋 · 全局角度</span>
+            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">对公司可能意味着什么</span>
           </div>
           <div style="margin-top:var(--gap-xs);padding-top:var(--gap-xs);border-top:1px solid var(--rule);">
-            <span class="meta-text">问题 → 思考 → 方案 → 沉淀 → 泛化</span>
+            <span class="meta-text">问题 → 实践 → 方案 → 沉淀 → 泛化</span>
           </div>
         </div>
       </div>
@@ -958,7 +959,7 @@ img.cost-logo { display:block; }
       <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-sm);">
         <div style="width:40px;height:3px;background:var(--tab-bg);border-radius:2px;"></div>
         <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;"><em>背景和思路</em></h2>
-        <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">为什么今天聊这个话题，我的思考框架是什么</p>
+        <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">为什么聊这个话题，我是怎么想的</p>
       </div>
     </div>
     <div class="foot" style="position:absolute;bottom:clamp(18px,3vh,36px);left:clamp(52px,5.5vw,88px);right:clamp(56px,6vw,96px);">
@@ -1096,8 +1097,8 @@ img.cost-logo { display:block; }
         </div>
         <div class="pain-stat-row">
           <div class="stat-item" style="flex:1;">
-            <div class="stat-num" style="color:var(--danger);">9</div>
-            <div class="stat-label">经手工位</div>
+            <div class="stat-num stat-num-text" style="color:var(--danger);">多</div>
+            <div class="stat-label">部门岗位协作</div>
           </div>
           <div class="stat-item" style="flex:1;border-left:1px solid var(--rule);">
             <div class="stat-num" style="color:var(--danger);">N+</div>
@@ -1312,59 +1313,37 @@ img.cost-logo { display:block; }
     </div>
     <div class="content">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
-        <div class="kicker">Framework</div>
-        <h2 class="title-lg">我的思考框架：<em class="title-nowrap">一个人 · 一条链 · 一盘棋</em></h2>
+        <div class="kicker">今天聊什么</div>
+        <h2 class="title-lg">三个角度看<em class="title-nowrap">这件事</em></h2>
         <div class="divider"></div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr clamp(120px,18vw,220px);gap:var(--gap-md);align-items:center;">
-        <!-- Left: 3 PLS cards -->
-        <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
-          <div class="pls-card">
-            <div class="pls-badge dot">人</div>
-            <div style="flex:1;min-width:0;">
-              <p class="pls-title">一个人 — 我自己怎么变了</p>
-              <p class="pls-desc">AI时代产品经理的工作模式转变 + 实际案例演示</p>
-            </div>
-            <svg viewBox="0 0 24 24" style="width:22px;height:22px;flex-shrink:0;opacity:.5;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gap-md);align-items:start;">
+        <div class="pls-card" style="flex-direction:column;align-items:center;text-align:center;padding:clamp(16px,2.5vh,28px) clamp(12px,1.5vw,20px);gap:var(--gap-sm);">
+          <div class="pls-badge dot" style="width:clamp(48px,5vw,64px);height:clamp(48px,5vw,64px);font-size:clamp(18px,2vw,26px);">人</div>
+          <div>
+            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">我的工作方式怎么变了</p>
+            <p class="pls-desc" style="margin-top:6px;">AI 工具让产品经理能直接写代码、做 Demo、出方案</p>
           </div>
-
-          <div class="pls-card">
-            <div class="pls-badge line">链</div>
-            <div style="flex:1;min-width:0;">
-              <p class="pls-title">一条链 — FDE 模式的可行性</p>
-              <p class="pls-desc">借鉴 Palantir 的 FDE 理念解决信息损失问题</p>
-            </div>
-            <svg viewBox="0 0 24 24" style="width:22px;height:22px;flex-shrink:0;opacity:.5;" fill="none" stroke="var(--tab-local)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-
-          <div class="pls-card">
-            <div class="pls-badge surface">棋</div>
-            <div style="flex:1;min-width:0;">
-              <p class="pls-title">一盘棋 — 对公司意味着什么</p>
-              <p class="pls-desc">从业务链条和公司战略出发的组织升级思考</p>
-            </div>
-            <svg viewBox="0 0 24 24" style="width:22px;height:22px;flex-shrink:0;opacity:.5;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;opacity:.35;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
 
-        <!-- Right: visual concentric diagram -->
-        <div class="pls-diagram" style="display:flex;align-items:center;justify-content:center;">
-          <svg viewBox="0 0 160 160" style="width:100%;max-width:200px;">
-            <!-- Surface (outer) -->
-            <circle cx="80" cy="80" r="72" fill="none" stroke="var(--tab-global)" stroke-width="1.5" stroke-dasharray="4 3" opacity=".5"/>
-            <text x="80" y="18" text-anchor="middle" font-family="var(--font-display)" font-size="11" fill="var(--tab-global)" font-style="italic">棋</text>
-            <!-- Line (middle) -->
-            <circle cx="80" cy="80" r="48" fill="none" stroke="var(--tab-local)" stroke-width="1.5" opacity=".6"/>
-            <text x="132" y="56" text-anchor="middle" font-family="var(--font-display)" font-size="11" fill="var(--tab-local)" font-style="italic">链</text>
-            <!-- Dot (center) -->
-            <circle cx="80" cy="80" r="24" fill="var(--tab-role)" opacity=".25"/>
-            <circle cx="80" cy="80" r="6" fill="var(--tab-role)"/>
-            <text x="80" y="68" text-anchor="middle" font-family="var(--font-display)" font-size="11" fill="var(--tab-role)" font-weight="700" font-style="italic">人</text>
-            <!-- Connecting lines -->
-            <line x1="80" y1="56" x2="80" y2="32" stroke="var(--ink)" stroke-width=".5" opacity=".2" stroke-dasharray="2 2"/>
-            <line x1="80" y1="32" x2="80" y2="8" stroke="var(--ink)" stroke-width=".5" opacity=".15" stroke-dasharray="2 2"/>
-          </svg>
+        <div class="pls-card" style="flex-direction:column;align-items:center;text-align:center;padding:clamp(16px,2.5vh,28px) clamp(12px,1.5vw,20px);gap:var(--gap-sm);">
+          <div class="pls-badge line" style="width:clamp(48px,5vw,64px);height:clamp(48px,5vw,64px);font-size:clamp(18px,2vw,26px);">链</div>
+          <div>
+            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">团队协作可以怎么优化</p>
+            <p class="pls-desc" style="margin-top:6px;">借鉴 Palantir 的 FDE 做法，减少信息在链条上的损耗</p>
+          </div>
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;opacity:.35;" fill="none" stroke="var(--tab-local)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+
+        <div class="pls-card" style="flex-direction:column;align-items:center;text-align:center;padding:clamp(16px,2.5vh,28px) clamp(12px,1.5vw,20px);gap:var(--gap-sm);">
+          <div class="pls-badge surface" style="width:clamp(48px,5vw,64px);height:clamp(48px,5vw,64px);font-size:clamp(18px,2vw,26px);">棋</div>
+          <div>
+            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">对公司可能意味着什么</p>
+            <p class="pls-desc" style="margin-top:6px;">从业务链条出发，看这套做法能不能推广</p>
+          </div>
+          <svg viewBox="0 0 24 24" style="width:22px;height:22px;opacity:.35;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
     </div>
@@ -1397,8 +1376,8 @@ img.cost-logo { display:block; }
       <div style="font-family:var(--font-display);font-size:clamp(72px,12vw,140px);font-weight:700;line-height:.85;color:rgba(199,184,234,.2);letter-spacing:-.04em;">02</div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-sm);">
         <div style="width:40px;height:3px;background:var(--tab-role);border-radius:2px;"></div>
-        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">一个人 · <em>岗位角度</em></h2>
-        <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">AI 如何改变产品经理的日常工作方式</p>
+        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">我的工作方式<em>怎么变了</em></h2>
+        <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">AI 工具让产品经理能直接做更多事</p>
       </div>
     </div>
     <div class="foot" style="position:absolute;bottom:clamp(18px,3vh,36px);left:clamp(52px,5.5vw,88px);right:clamp(56px,6vw,96px);">
@@ -1715,13 +1694,12 @@ img.cost-logo { display:block; }
         <div class="bg-photo" data-index="1"><img src="images/case-2.png" alt="方案界面截图 2" loading="lazy"></div>
         <div class="bg-photo" data-index="2"><img src="images/case-3.png" alt="方案流程截图" loading="lazy"></div>
         <div class="bg-photo" data-index="3"><img src="images/case-4.png" alt="文档结构截图" loading="lazy"></div>
-        <div class="bg-photo" data-index="4"><img src="images/case-doc-1.png" alt="讨论底稿截图" loading="lazy"></div>
-        <div class="bg-photo" data-index="5"><img src="images/case-doc-2.gif" alt="Demo 动图" loading="lazy"></div>
+        <div class="bg-photo" data-index="4"><img src="images/case-doc-2.gif" alt="Demo 动图" loading="lazy"></div>
         <div class="bg-nav">
           <button type="button" class="bg-nav-prev" aria-label="上一张"></button>
           <button type="button" class="bg-nav-next" aria-label="下一张"></button>
         </div>
-        <div class="bg-pager"><span data-pager-current>1</span> / 6 · 悬浮放大 · 点击左右切换</div>
+        <div class="bg-pager"><span data-pager-current>1</span> / 5 · 悬浮放大 · 点击左右切换</div>
       </div>
       <div class="bg-shade"></div>
     </div>
@@ -1856,87 +1834,77 @@ img.cost-logo { display:block; }
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
         <div class="kicker">Tool Deep-dive</div>
         <h2 class="title-lg">关键工具：<em class="title-nowrap">飞书 CLI</em></h2>
+        <p class="caption-sm">一句话：让 AI 能直接读写飞书里的数据，不用你手动复制粘贴</p>
       </div>
 
-      <!-- Step 1: 左侧 — 是什么 + 能力 -->
+      <!-- Step 1: 核心价值 — 为什么用它 -->
       <div data-step="1">
-        <div style="display:flex;flex-direction:column;gap:var(--gap-sm);max-width:min(48vw,560px);">
-            <div class="card card-accent">
-              <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">让 AI Agent 操作飞书的命令行接口</p>
-              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink-light);margin-top:2px;">Codex / Claude Code 通过 CLI 直接读写飞书数据，实现办公自动化</p>
-            </div>
-            <div class="meta-text" style="margin-top:var(--gap-xs);">核心能力</div>
-            <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
-              <div class="card card-h" style="border-left:3px solid var(--tab-bg);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
-                <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--tab-bg)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);">读取 / 创建 / 更新飞书文档</span>
-              </div>
-              <div class="card card-h" style="border-left:3px solid var(--tab-role);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
-                <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);">抓取群消息和会议纪要</span>
-              </div>
-              <div class="card card-h" style="border-left:3px solid var(--tab-local);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
-                <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--tab-local)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);">日程和任务管理</span>
-              </div>
-              <div class="card card-h" style="border-left:3px solid var(--tab-global);padding:clamp(6px,.8vh,10px) clamp(10px,1.2vw,16px);">
-                <svg viewBox="0 0 24 24" style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);">被 Agent Coding 工具直接调用</span>
-              </div>
-            </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">
+          <div class="card card-accent" style="padding:clamp(10px,1.4vh,16px);">
+            <p style="font-size:clamp(13px,1.2vw,17px);font-weight:600;color:var(--ink);">不需要打开飞书 App</p>
+            <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink-light);margin-top:4px;">在终端里一行命令就能抓到群消息、文档内容、日程——AI Agent 也能自己调用</p>
+          </div>
+          <div class="card card-accent" style="padding:clamp(10px,1.4vh,16px);">
+            <p style="font-size:clamp(13px,1.2vw,17px);font-weight:600;color:var(--ink);">信息直接变成结构化数据</p>
+            <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink-light);margin-top:4px;">群里聊了 200 条消息，CLI 一键导出成 JSON/Markdown，AI 直接分析</p>
+          </div>
+          <div class="card" style="padding:clamp(10px,1.4vh,16px);border-left:3px solid var(--tab-bg);">
+            <p style="font-size:clamp(13px,1.2vw,17px);font-weight:600;color:var(--ink);">按项目隔离上下文</p>
+            <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink-light);margin-top:4px;">不像智能体把所有群混在一起——一个项目一个工作区，信息不串</p>
+          </div>
+          <div class="card" style="padding:clamp(10px,1.4vh,16px);border-left:3px solid var(--tab-role);">
+            <p style="font-size:clamp(13px,1.2vw,17px);font-weight:600;color:var(--ink);">能跟其他工具串起来</p>
+            <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink-light);margin-top:4px;">CLI 输出的数据可以直接喂给 Claude Code、Codex，形成自动化链条</p>
+          </div>
         </div>
       </div>
 
-      <!-- Step 2: 右侧 — 对比表 -->
+      <!-- Step 2: 实际用法示例 -->
       <div data-step="2">
-          <div style="display:flex;flex-direction:column;gap:var(--gap-sm);">
-            <div class="meta-text">为什么用 CLI，而不是飞书智能体？</div>
-            <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
-              <!-- Comparison table -->
-              <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:0;border:1px solid var(--rule);font-size:clamp(10px,.95vw,13px);">
-                <div style="padding:clamp(6px,.8vh,10px) clamp(8px,1vw,14px);background:var(--paper-shadow);font-weight:700;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);"></div>
-                <div style="padding:clamp(6px,.8vh,10px) clamp(8px,1vw,14px);background:var(--paper-shadow);font-weight:700;text-align:center;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);color:var(--accent);">CLI</div>
-                <div style="padding:clamp(6px,.8vh,10px) clamp(8px,1vw,14px);background:var(--paper-shadow);font-weight:700;text-align:center;border-bottom:1px solid var(--rule);">智能体</div>
-
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);font-weight:500;">项目隔离</div>
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);color:var(--accent);font-weight:600;">分项目管理</div>
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);color:var(--ink-muted);">全局共享</div>
-
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);font-weight:500;">上下文</div>
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);color:var(--accent);font-weight:600;">相对隔离</div>
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);color:var(--ink-muted);">混合上下文</div>
-
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);font-weight:500;">扩展性</div>
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);border-right:1px solid var(--rule);color:var(--accent);font-weight:600;">接入外部工具链</div>
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-bottom:1px solid var(--rule);color:var(--ink-muted);">飞书生态内</div>
-
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);border-right:1px solid var(--rule);font-weight:500;">定位</div>
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;border-right:1px solid var(--rule);color:var(--accent);font-weight:600;">生产力工具</div>
-                <div style="padding:clamp(5px,.6vh,8px) clamp(8px,1vw,14px);text-align:center;color:var(--ink-muted);">协作自动化</div>
-              </div>
+        <div class="meta-text" style="margin-bottom:var(--gap-xs);">实际怎么用？——两个真实场景</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">
+          <div style="background:var(--ink);padding:clamp(10px,1.4vh,16px) clamp(12px,1.2vw,18px);overflow:hidden;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:clamp(4px,.6vh,8px);">
+              <span style="width:7px;height:7px;border-radius:50%;background:#ff5f57;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#febc2e;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#28c840;"></span>
+              <span style="font-family:var(--font-mono);font-size:clamp(8px,.7vw,10px);color:rgba(255,255,255,.4);margin-left:6px;">场景1：抓群消息做方案</span>
             </div>
-            <div class="card detail-trigger" data-detail="detail-cli-mcp-skills" data-detail-title="CLI / MCP / Skills 详解" style="border-left:3px solid var(--tab-bg);margin-top:var(--gap-xs);">
-              <p style="font-size:clamp(11px,1vw,14px);color:var(--ink);">
-                <strong>互补关系：</strong>CLI 做"从 0 到 1 写出可用东西"，智能体做流程自动化和团队协作。
-              </p>
-            </div>
+            <pre style="font-family:var(--font-mono);font-size:clamp(9px,.9vw,12px);color:rgba(255,255,255,.85);line-height:1.55;white-space:pre-wrap;margin:0;"><span style="color:#28c840;">$</span> lark-cli im +chat-messages-list \
+  --chat-id oc_xxx --page-size 50
+<span style="color:rgba(255,255,255,.35);"># 拉最近50条群消息</span>
+<span style="color:rgba(255,255,255,.35);"># 输出 JSON → 喂给 Claude 分析需求</span></pre>
           </div>
+          <div style="background:var(--ink);padding:clamp(10px,1.4vh,16px) clamp(12px,1.2vw,18px);overflow:hidden;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:clamp(4px,.6vh,8px);">
+              <span style="width:7px;height:7px;border-radius:50%;background:#ff5f57;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#febc2e;"></span>
+              <span style="width:7px;height:7px;border-radius:50%;background:#28c840;"></span>
+              <span style="font-family:var(--font-mono);font-size:clamp(8px,.7vw,10px);color:rgba(255,255,255,.4);margin-left:6px;">场景2：搜索特定消息</span>
+            </div>
+            <pre style="font-family:var(--font-mono);font-size:clamp(9px,.9vw,12px);color:rgba(255,255,255,.85);line-height:1.55;white-space:pre-wrap;margin:0;"><span style="color:#28c840;">$</span> lark-cli im +messages-search \
+  --query "电子班牌" --format pretty
+<span style="color:rgba(255,255,255,.35);"># 跨群搜索关键词</span>
+<span style="color:rgba(255,255,255,.35);"># 找出所有讨论过这个话题的消息</span></pre>
+          </div>
+        </div>
       </div>
 
-      <!-- Step 3: 终端示例 -->
+      <!-- Step 3: CLI vs 智能体 -->
       <div data-step="3">
-        <div style="background:var(--ink);padding:clamp(10px,1.5vh,18px) clamp(14px,1.5vw,22px);overflow:hidden;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:clamp(6px,.8vh,10px);">
-            <span style="width:8px;height:8px;border-radius:50%;background:#ff5f57;"></span>
-            <span style="width:8px;height:8px;border-radius:50%;background:#febc2e;"></span>
-            <span style="width:8px;height:8px;border-radius:50%;background:#28c840;"></span>
-            <span style="font-family:var(--font-mono);font-size:clamp(9px,.8vw,11px);color:rgba(255,255,255,.4);margin-left:8px;">terminal</span>
+        <div class="meta-text" style="margin-bottom:var(--gap-xs);">跟飞书智能体是什么关系？</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-sm);">
+          <div class="card" style="padding:clamp(10px,1.4vh,16px);border-left:3px solid var(--accent);">
+            <p style="font-size:clamp(13px,1.2vw,17px);font-weight:600;color:var(--accent);">CLI — 做从 0 到 1 的事</p>
+            <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink-light);margin-top:4px;">抓数据 → 分析 → 出方案 → 写代码，适合个人深度工作</p>
           </div>
-          <pre style="font-family:var(--font-mono);font-size:clamp(10px,1vw,13px);color:rgba(255,255,255,.85);line-height:1.6;white-space:pre-wrap;margin:0;"><span style="color:#28c840;">$</span> lark-cli docs +fetch --doc "沈阳南项目文档" --format markdown
-<span style="color:rgba(255,255,255,.4);"># 自动提取飞书文档内容，输出结构化 Markdown</span>
-
-<span style="color:#28c840;">$</span> lark-cli chat +read --group "沈阳南项目群" --since 7d
-<span style="color:rgba(255,255,255,.4);"># 读取项目群最近 7 天消息</span></pre>
+          <div class="card" style="padding:clamp(10px,1.4vh,16px);border-left:3px solid var(--tab-bg);">
+            <p style="font-size:clamp(13px,1.2vw,17px);font-weight:600;color:var(--ink);">智能体 — 做流程自动化</p>
+            <p style="font-size:clamp(11px,1.05vw,14px);color:var(--ink-light);margin-top:4px;">自动整理纪要、定时汇总、团队协作流转，适合日常协同</p>
+          </div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--tab-bg);margin-top:var(--gap-sm);padding:clamp(8px,1vh,12px);">
+          <p style="font-size:clamp(12px,1.1vw,15px);color:var(--ink);"><strong>两者互补：</strong>我用 CLI 做深度分析和方案产出，用智能体做日常通知和流程自动化。不是选一个，是配合用。</p>
         </div>
       </div>
     </div>
@@ -2327,8 +2295,8 @@ img.cost-logo { display:block; }
       <div style="font-family:var(--font-display);font-size:clamp(72px,12vw,140px);font-weight:700;line-height:.85;color:rgba(244,184,197,.2);letter-spacing:-.04em;">03</div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-sm);">
         <div style="width:40px;height:3px;background:var(--tab-local);border-radius:2px;"></div>
-        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">一条链 · <em>局部角度</em></h2>
-        <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">从单个岗位到业务链条，FDE 模式的可能性</p>
+        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">团队协作<em>怎么优化</em></h2>
+        <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">从单个岗位到整条业务链，FDE 模式的可能性</p>
       </div>
     </div>
     <div class="foot" style="position:absolute;bottom:clamp(18px,3vh,36px);left:clamp(52px,5.5vw,88px);right:clamp(56px,6vw,96px);">
@@ -2793,8 +2761,8 @@ img.cost-logo { display:block; }
       <div style="font-family:var(--font-display);font-size:clamp(72px,12vw,140px);font-weight:700;line-height:.85;color:rgba(168,216,234,.22);letter-spacing:-.04em;">04</div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-sm);">
         <div style="width:40px;height:3px;background:var(--tab-global);border-radius:2px;"></div>
-        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">一盘棋 · <em>全局角度</em></h2>
-        <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">站在公司层面，这件事意味着什么</p>
+        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">对公司<em>意味着什么</em></h2>
+        <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">站在公司层面看，这套做法能不能推广</p>
       </div>
     </div>
     <div class="foot" style="position:absolute;bottom:clamp(18px,3vh,36px);left:clamp(52px,5.5vw,88px);right:clamp(56px,6vw,96px);">
@@ -3265,7 +3233,7 @@ img.cost-logo { display:block; }
         <h2 class="title-lg" style="font-size:clamp(24px,3.2vw,44px);">抛砖引玉，<em>欢迎交流</em></h2>
         <p style="font-size:clamp(16px,1.5vw,22px);color:var(--ink-light);max-width:26em;line-height:1.55;">入职两个月的观察与实践，不一定对，但愿意用真实项目继续验证。</p>
         <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:var(--gap-sm);margin-top:var(--gap-sm);">
-          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">一个人 · 岗位工作模式变了</span>
+          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">我的工作方式变了</span>
           <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">一条链 · FDE 解决前半段损耗</span>
           <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">一盘棋 · 对公司意味着协作升级</span>
         </div>
