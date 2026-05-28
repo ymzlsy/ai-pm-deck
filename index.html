@@ -1679,6 +1679,138 @@ img.cost-logo { display:block; }
 </div>
 
 <!-- =============================================
+     SLIDE: Skills 技能库概览
+     ============================================= -->
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab active" data-tab="2">岗位</div>
+      <div class="tab" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
+      <div class="header-right">-- / --</div>
+    </div>
+    <div class="content" style="gap:var(--gap-md);">
+
+      <div data-step="0" style="display:flex;align-items:baseline;gap:var(--gap-md);flex-wrap:wrap;">
+        <div>
+          <div class="kicker">Skill Library</div>
+          <h2 class="title-lg">我装了 <em>118</em> 个 Skills</h2>
+        </div>
+        <p style="font-size:clamp(13px,1.2vw,17px);color:var(--ink-light);max-width:28em;line-height:1.5;">Skills = 预置的工作指令包，告诉 AI 在特定场景下该怎么做、用什么工具、按什么流程走。相当于给 AI 装上了"岗位手册"。</p>
+      </div>
+
+      <div data-step="1" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gap-sm);">
+        <!-- 高频使用 -->
+        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--danger);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
+            <span class="meta-text" style="color:var(--danger);">高频 · 几乎每天用</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
+            <span><strong>frontend-slides</strong> — 做 PPT / 演示页</span>
+            <span><strong>guizang-ppt-skill</strong> — 杂志风 PPT</span>
+            <span><strong>autoplan</strong> — 自动拆解任务</span>
+            <span><strong>autoresearch</strong> — 自动调研</span>
+            <span><strong>browse / scrape</strong> — 浏览器采集</span>
+            <span><strong>context-save</strong> — 保存上下文</span>
+          </div>
+        </div>
+
+        <!-- 产品设计 -->
+        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--tab-role);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
+            <span class="meta-text" style="color:var(--tab-role);">产品设计 · 从需求到原型</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
+            <span><strong>ai-prd-spec-writing</strong> — 写 PRD</span>
+            <span><strong>design-consultation</strong> — 设计咨询</span>
+            <span><strong>figma</strong> — 读取 Figma 设计稿</span>
+            <span><strong>ui-ux-pro-max</strong> — UI/UX 评审</span>
+            <span><strong>excalidraw-diagram</strong> — 画架构图</span>
+            <span><strong>graphviz</strong> — 画流程图</span>
+          </div>
+        </div>
+
+        <!-- 工程交付 -->
+        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--tab-local);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
+            <span class="meta-text" style="color:var(--tab-local);">工程交付 · 写代码到上线</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
+            <span><strong>code-review</strong> — 代码评审</span>
+            <span><strong>test-driven-development</strong> — TDD</span>
+            <span><strong>systematic-debugging</strong> — 调试</span>
+            <span><strong>land-and-deploy</strong> — 部署上线</span>
+            <span><strong>playwright</strong> — 自动化测试</span>
+            <span><strong>qa</strong> — 质量保障</span>
+          </div>
+        </div>
+      </div>
+
+      <div data-step="2" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--gap-sm);">
+        <!-- 知识管理 -->
+        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--tab-global);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
+            <span class="meta-text" style="color:var(--tab-global);">知识沉淀 · 不让经验蒸发</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
+            <span><strong>secondbrain</strong> — 第二大脑</span>
+            <span><strong>obsidian-sync</strong> — Obsidian 同步</span>
+            <span><strong>document-generate</strong> — 自动生成文档</span>
+            <span><strong>codebase-to-course</strong> — 代码→教程</span>
+            <span><strong>learn</strong> — 学习新技术</span>
+          </div>
+        </div>
+
+        <!-- 协作沟通 -->
+        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--tab-action);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
+            <span class="meta-text" style="color:var(--tab-action);">协作沟通 · 减少信息损耗</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
+            <span><strong>meeting-transcribe</strong> — 会议纪要</span>
+            <span><strong>brainstorming</strong> — 头脑风暴</span>
+            <span><strong>retro / post-mortem</strong> — 复盘</span>
+            <span><strong>prompt-capture</strong> — 记录好用提示词</span>
+            <span><strong>office-hours</strong> — 答疑会</span>
+          </div>
+        </div>
+
+        <!-- 项目定制 -->
+        <div class="card" style="padding:clamp(14px,2vh,22px) clamp(12px,1.5vw,18px);display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span style="width:8px;height:8px;background:var(--ink-muted);display:inline-block;flex-shrink:0;border-radius:2px;"></span>
+            <span class="meta-text">项目定制 · 为公司业务写的</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:clamp(13px,1.1vw,16px);line-height:1.5;">
+            <span><strong>捷安速赛</strong> — 速赛竞赛流程</span>
+            <span><strong>karaithy-site-ops</strong> — 站点运维</span>
+            <span><strong>skillify</strong> — 把经验变成新 Skill</span>
+            <span><strong>writing-skills</strong> — 写 Skill 本身</span>
+            <span><strong>use-findskill</strong> — 找合适的 Skill</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
      SLIDE 8: 案例展示-1
      ============================================= -->
 <div class="slide" data-part="2" data-chapter="岗位角度" data-steps="4" data-gallery-persistent>
