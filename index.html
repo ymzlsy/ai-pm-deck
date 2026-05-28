@@ -3002,6 +3002,170 @@ img.cost-logo { display:block; }
 </div>
 
 <!-- =============================================
+     SLIDE 19.5: FDE 实践案例-1b — 导览开发过程
+     ============================================= -->
+<div class="slide" data-part="3" data-chapter="局部角度" data-steps="2">
+  <div class="page">
+    <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
+    <div class="tabs">
+      <div class="tab" data-tab="1">背景</div>
+      <div class="tab" data-tab="2">岗位</div>
+      <div class="tab active" data-tab="3">局部</div>
+      <div class="tab" data-tab="4">全局</div>
+      <div class="tab" data-tab="5">行动</div>
+    </div>
+    <div class="header">
+      <div class="header-left"><span style="color:var(--tab-local-text);">Part 3</span> &nbsp;局部角度</div>
+      <div class="header-right">-- / --</div>
+    </div>
+    <div class="content" style="display:grid;grid-template-columns:1fr clamp(220px,22vw,300px);gap:var(--gap-sm);align-items:stretch;">
+      <!-- Left: development process -->
+      <div style="display:flex;flex-direction:column;gap:clamp(6px,.6vh,10px);">
+        <div data-step="0" style="display:flex;flex-direction:column;gap:clamp(4px,.4vh,6px);">
+          <div style="display:flex;align-items:baseline;gap:var(--gap-xs);">
+            <div class="kicker" style="font-size:clamp(10px,.85vw,12px);">开发过程</div>
+            <h2 class="title-lg" style="font-size:clamp(16px,2vw,26px);">从需求到上线<em>全链路</em></h2>
+          </div>
+
+          <!-- Step 1: Create project -->
+          <div style="display:grid;grid-template-columns:clamp(32px,3.2vw,44px) 1fr;gap:clamp(8px,.8vw,12px);align-items:start;padding:clamp(8px,1vh,14px) clamp(8px,1vw,14px);background:rgba(244,184,197,.06);border-radius:8px;border-left:3px solid var(--tab-local-text);">
+            <div style="width:clamp(32px,3.2vw,44px);height:clamp(32px,3.2vw,44px);background:var(--tab-local);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);line-height:1.3;">
+                <span style="font-family:var(--font-mono);font-size:clamp(10px,.85vw,12px);color:var(--tab-local-text);margin-right:6px;">01</span>创建 Claude Code 项目
+              </div>
+              <div style="font-size:clamp(10px,.9vw,13px);color:var(--ink-mid);line-height:1.4;margin-top:2px;font-family:var(--font-mono);background:var(--paper-tint);padding:3px 8px;border-radius:4px;display:inline-block;">
+                mkdir shenyang-tour && cd shenyang-tour
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Feishu CLI -->
+          <div style="display:grid;grid-template-columns:clamp(32px,3.2vw,44px) 1fr;gap:clamp(8px,.8vw,12px);align-items:start;padding:clamp(8px,1vh,14px) clamp(8px,1vw,14px);background:rgba(124,106,173,.05);border-radius:8px;border-left:3px solid var(--tab-role-text);">
+            <div style="width:clamp(32px,3.2vw,44px);height:clamp(32px,3.2vw,44px);background:var(--tab-role);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);line-height:1.3;">
+                <span style="font-family:var(--font-mono);font-size:clamp(10px,.85vw,12px);color:var(--tab-role-text);margin-right:6px;">02</span>飞书 CLI 整理需求
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:3px;">
+                <span style="font-size:clamp(10px,.85vw,12px);background:rgba(124,106,173,.1);color:var(--tab-role-text);padding:2px 8px;border-radius:3px;">会议录音</span>
+                <span style="font-size:clamp(10px,.85vw,12px);background:rgba(124,106,173,.1);color:var(--tab-role-text);padding:2px 8px;border-radius:3px;">语音转写</span>
+                <span style="font-size:clamp(10px,.85vw,12px);background:rgba(124,106,173,.1);color:var(--tab-role-text);padding:2px 8px;border-radius:3px;">需求提取</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div data-step="1" style="display:flex;flex-direction:column;gap:clamp(4px,.4vh,6px);">
+          <!-- Step 3: Data collection -->
+          <div style="display:grid;grid-template-columns:clamp(32px,3.2vw,44px) 1fr;gap:clamp(8px,.8vw,12px);align-items:start;padding:clamp(8px,1vh,14px) clamp(8px,1vw,14px);background:rgba(152,212,187,.06);border-radius:8px;border-left:3px solid var(--tab-global-text);">
+            <div style="width:clamp(32px,3.2vw,44px);height:clamp(32px,3.2vw,44px);background:var(--tab-global);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);line-height:1.3;">
+                <span style="font-family:var(--font-mono);font-size:clamp(10px,.85vw,12px);color:var(--tab-global-text);margin-right:6px;">03</span>数据汇总到项目文件夹
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:3px;">
+                <span style="font-size:clamp(10px,.85vw,12px);background:var(--paper-tint);color:var(--ink-mid);padding:3px 8px;border-radius:3px;display:flex;align-items:center;gap:4px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                  飞书妙记转写
+                </span>
+                <span style="font-size:clamp(10px,.85vw,12px);background:var(--paper-tint);color:var(--ink-mid);padding:3px 8px;border-radius:3px;display:flex;align-items:center;gap:4px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  场地实拍图
+                </span>
+                <span style="font-size:clamp(10px,.85vw,12px);background:var(--paper-tint);color:var(--ink-mid);padding:3px 8px;border-radius:3px;display:flex;align-items:center;gap:4px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  需求文档
+                </span>
+                <span style="font-size:clamp(10px,.85vw,12px);background:var(--paper-tint);color:var(--ink-mid);padding:3px 8px;border-radius:3px;display:flex;align-items:center;gap:4px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                  讲解稿
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Prompt + Skills -->
+          <div style="display:grid;grid-template-columns:clamp(32px,3.2vw,44px) 1fr;gap:clamp(8px,.8vw,12px);align-items:start;padding:clamp(8px,1vh,14px) clamp(8px,1vw,14px);background:rgba(255,230,167,.08);border-radius:8px;border-left:3px solid var(--tab-action-text);">
+            <div style="width:clamp(32px,3.2vw,44px);height:clamp(32px,3.2vw,44px);background:var(--tab-action);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#886a00" stroke-width="2" stroke-linecap="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);line-height:1.3;">
+                <span style="font-family:var(--font-mono);font-size:clamp(10px,.85vw,12px);color:var(--tab-action-text);margin-right:6px;">04</span>提示词 + Skills 分析需求
+              </div>
+              <div style="font-size:clamp(10px,.9vw,13px);color:var(--ink-mid);line-height:1.4;margin-top:2px;font-family:var(--font-mono);background:var(--paper-tint);padding:3px 8px;border-radius:4px;display:inline-block;">
+                /autoresearch → /ai-prd-spec-writing
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div data-step="2" style="display:flex;flex-direction:column;gap:clamp(4px,.4vh,6px);">
+          <!-- Step 5: AI Coding & Deploy -->
+          <div style="display:grid;grid-template-columns:clamp(32px,3.2vw,44px) 1fr;gap:clamp(8px,.8vw,12px);align-items:start;padding:clamp(8px,1vh,14px) clamp(8px,1vw,14px);background:rgba(244,184,197,.08);border-radius:8px;border-left:3px solid var(--tab-local-text);">
+            <div style="width:clamp(32px,3.2vw,44px);height:clamp(32px,3.2vw,44px);background:var(--tab-local);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div>
+              <div style="font-size:clamp(12px,1.1vw,15px);font-weight:700;color:var(--ink);line-height:1.3;">
+                <span style="font-family:var(--font-mono);font-size:clamp(10px,.85vw,12px);color:var(--tab-local-text);margin-right:6px;">05</span>AI Coding → 调试 → 上线
+              </div>
+              <div style="display:flex;gap:clamp(4px,.4vw,8px);margin-top:4px;align-items:center;flex-wrap:wrap;">
+                <span style="font-size:clamp(10px,.85vw,12px);background:var(--ink);color:#fff;padding:2px 8px;border-radius:3px;font-family:var(--font-mono);">claude code</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span style="font-size:clamp(10px,.85vw,12px);background:var(--paper-tint);color:var(--ink-mid);padding:2px 8px;border-radius:3px;">本地调试</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span style="font-size:clamp(10px,.85vw,12px);background:var(--paper-tint);color:var(--ink-mid);padding:2px 8px;border-radius:3px;">多轮迭代</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span style="font-size:clamp(10px,.85vw,12px);background:var(--tab-local-text);color:#fff;padding:2px 8px;border-radius:3px;font-weight:600;">Cloudflare 发布</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result summary -->
+          <div style="display:flex;gap:clamp(8px,.8vw,12px);margin-top:clamp(2px,.3vh,4px);">
+            <div style="flex:1;text-align:center;padding:clamp(6px,.8vh,10px);background:var(--paper-tint);border-radius:6px;">
+              <div style="font-family:var(--font-display);font-size:clamp(18px,2vw,26px);font-weight:700;color:var(--tab-local-text);">1 人</div>
+              <div style="font-size:clamp(10px,.85vw,12px);color:var(--ink-mid);">全栈开发</div>
+            </div>
+            <div style="flex:1;text-align:center;padding:clamp(6px,.8vh,10px);background:var(--paper-tint);border-radius:6px;">
+              <div style="font-family:var(--font-display);font-size:clamp(18px,2vw,26px);font-weight:700;color:var(--tab-local-text);">3 天</div>
+              <div style="font-size:clamp(10px,.85vw,12px);color:var(--ink-mid);">需求到上线</div>
+            </div>
+            <div style="flex:1;text-align:center;padding:clamp(6px,.8vh,10px);background:var(--paper-tint);border-radius:6px;">
+              <div style="font-family:var(--font-display);font-size:clamp(18px,2vw,26px);font-weight:700;color:var(--tab-local-text);">0 元</div>
+              <div style="font-size:clamp(10px,.85vw,12px);color:var(--ink-mid);">外部开发成本</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: phone mockup (same as previous slide) -->
+      <div data-step="0" style="display:flex;align-items:stretch;gap:clamp(4px,.4vw,8px);">
+        <div class="phone-mockup" style="width:100%;height:auto;flex:1;">
+          <iframe src="https://show.karaithy.com/shenyang-tour/" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups" style="pointer-events:auto;"></iframe>
+        </div>
+        <a href="https://show.karaithy.com/shenyang-tour/" target="_blank" rel="noopener" style="writing-mode:vertical-rl;display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--text-mini);color:var(--accent);text-decoration:none;padding:6px 4px;border:1px solid var(--accent);border-radius:6px;transition:all .2s;white-space:nowrap;letter-spacing:.08em;" onmouseenter="this.style.background='var(--accent)';this.style.color='#fff'" onmouseleave="this.style.background='transparent';this.style.color='var(--accent)'">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          体验
+        </a>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
+      <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
      SLIDE 20: FDE 实践案例-2 — 个人能力图谱
      ============================================= -->
 <div class="slide" data-part="3" data-chapter="局部角度" data-steps="3">
