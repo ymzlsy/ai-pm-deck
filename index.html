@@ -914,15 +914,15 @@ img.cost-logo { display:block; }
           <div class="meta-text" style="margin-bottom:var(--gap-xs);">今天聊三件事</div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-role);display:inline-block;flex-shrink:0;"></span>
-            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">我的打法</span>
+            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">一个人 · 岗位角度</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-local);display:inline-block;flex-shrink:0;"></span>
-            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">团队配合</span>
+            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">一条链 · 局部角度</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span style="width:8px;height:8px;background:var(--tab-global);display:inline-block;flex-shrink:0;"></span>
-            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">公司落地</span>
+            <span style="font-size:clamp(13px,1.3vw,17px);color:var(--ink-light);">一盘棋 · 全局角度</span>
           </div>
           <div style="margin-top:var(--gap-xs);padding-top:var(--gap-xs);border-top:1px solid var(--rule);">
             <span class="meta-text">问题 → 实践 → 方案 → 沉淀 → 泛化</span>
@@ -1177,7 +1177,7 @@ img.cost-logo { display:block; }
 <!-- =============================================
      SLIDE 3: 业务链条 + 信息衰减
      ============================================= -->
-<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="4">
+<div class="slide" data-part="1" data-chapter="背景和思路" data-steps="3">
   <div class="page">
     <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
     <div class="tabs">
@@ -1267,23 +1267,19 @@ img.cost-logo { display:block; }
         </div>
       </div>
 
-      <!-- Step 3: 根因 1 -->
-      <div data-step="3">
-          <div class="card card-accent" style="text-align:center;max-width:min(40vw,420px);">
+      <!-- Step 3: 根因 1 + 根因 2 并排 -->
+      <div data-step="3" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-md);">
+          <div class="card card-accent" style="text-align:center;">
             <p class="meta-text" style="margin-bottom:2px;">根因 1</p>
             <svg viewBox="0 0 24 24" style="width:clamp(24px,2.5vw,36px);height:clamp(24px,2.5vw,36px);margin:var(--gap-xs) auto;" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-            <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">定制化程度高</p>
-            <p style="font-size:clamp(10px,.9vw,13px);color:var(--ink-muted);">无法快速开发部署</p>
+            <p style="font-size:clamp(14px,1.3vw,18px);font-weight:600;color:var(--ink);">定制化程度高</p>
+            <p style="font-size:clamp(12px,1.05vw,15px);color:var(--ink-muted);margin-top:4px;">每个客户的需求都不同，无法快速复制开发部署</p>
           </div>
-      </div>
-
-      <!-- Step 4: 根因 2 -->
-      <div data-step="4">
-          <div class="card card-accent" style="text-align:center;max-width:min(40vw,420px);">
+          <div class="card card-accent" style="text-align:center;">
             <p class="meta-text" style="margin-bottom:2px;">根因 2</p>
             <svg viewBox="0 0 24 24" style="width:clamp(24px,2.5vw,36px);height:clamp(24px,2.5vw,36px);margin:var(--gap-xs) auto;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            <p style="font-size:clamp(12px,1.15vw,16px);font-weight:600;color:var(--ink);">业务链条过长</p>
-            <p style="font-size:clamp(10px,.9vw,13px);color:var(--ink-muted);">信息逐层衰减</p>
+            <p style="font-size:clamp(14px,1.3vw,18px);font-weight:600;color:var(--ink);">业务链条过长</p>
+            <p style="font-size:clamp(12px,1.05vw,15px);color:var(--ink-muted);margin-top:4px;">从销售到验收经过多个部门，信息逐层衰减</p>
           </div>
       </div>
     </div>
@@ -1322,7 +1318,7 @@ img.cost-logo { display:block; }
         <div class="pls-card" style="flex-direction:column;align-items:center;text-align:center;padding:clamp(16px,2.5vh,28px) clamp(12px,1.5vw,20px);gap:var(--gap-sm);">
           <div class="pls-badge dot" style="width:clamp(48px,5vw,64px);height:clamp(48px,5vw,64px);font-size:clamp(18px,2vw,26px);">人</div>
           <div>
-            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">我的打法</p>
+            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">一个人 · 岗位角度</p>
             <p class="pls-desc" style="margin-top:6px;">AI 工具让产品经理能直接写代码、做 Demo、出方案</p>
           </div>
           <svg viewBox="0 0 24 24" style="width:22px;height:22px;opacity:.35;" fill="none" stroke="var(--tab-role)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1331,7 +1327,7 @@ img.cost-logo { display:block; }
         <div class="pls-card" style="flex-direction:column;align-items:center;text-align:center;padding:clamp(16px,2.5vh,28px) clamp(12px,1.5vw,20px);gap:var(--gap-sm);">
           <div class="pls-badge line" style="width:clamp(48px,5vw,64px);height:clamp(48px,5vw,64px);font-size:clamp(18px,2vw,26px);">链</div>
           <div>
-            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">团队配合</p>
+            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">一条链 · 局部角度</p>
             <p class="pls-desc" style="margin-top:6px;">借鉴 Palantir 的 FDE 做法，减少信息在链条上的损耗</p>
           </div>
           <svg viewBox="0 0 24 24" style="width:22px;height:22px;opacity:.35;" fill="none" stroke="var(--tab-local)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1340,7 +1336,7 @@ img.cost-logo { display:block; }
         <div class="pls-card" style="flex-direction:column;align-items:center;text-align:center;padding:clamp(16px,2.5vh,28px) clamp(12px,1.5vw,20px);gap:var(--gap-sm);">
           <div class="pls-badge surface" style="width:clamp(48px,5vw,64px);height:clamp(48px,5vw,64px);font-size:clamp(18px,2vw,26px);">棋</div>
           <div>
-            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">公司落地</p>
+            <p class="pls-title" style="font-size:clamp(14px,1.4vw,19px);">一盘棋 · 全局角度</p>
             <p class="pls-desc" style="margin-top:6px;">从业务链条出发，看这套做法能不能推广</p>
           </div>
           <svg viewBox="0 0 24 24" style="width:22px;height:22px;opacity:.35;" fill="none" stroke="var(--tab-global)" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1376,7 +1372,7 @@ img.cost-logo { display:block; }
       <div style="font-family:var(--font-display);font-size:clamp(72px,12vw,140px);font-weight:700;line-height:.85;color:rgba(199,184,234,.2);letter-spacing:-.04em;">02</div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-sm);">
         <div style="width:40px;height:3px;background:var(--tab-role);border-radius:2px;"></div>
-        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">我的<em>打法</em></h2>
+        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">一个人 · <em>岗位角度</em></h2>
         <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">AI 工具让产品经理能直接做更多事</p>
       </div>
     </div>
@@ -2295,7 +2291,7 @@ img.cost-logo { display:block; }
       <div style="font-family:var(--font-display);font-size:clamp(72px,12vw,140px);font-weight:700;line-height:.85;color:rgba(244,184,197,.2);letter-spacing:-.04em;">03</div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-sm);">
         <div style="width:40px;height:3px;background:var(--tab-local);border-radius:2px;"></div>
-        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">团队<em>配合</em></h2>
+        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">一条链 · <em>局部角度</em></h2>
         <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">从单个岗位到整条业务链，FDE 模式的可能性</p>
       </div>
     </div>
@@ -2761,7 +2757,7 @@ img.cost-logo { display:block; }
       <div style="font-family:var(--font-display);font-size:clamp(72px,12vw,140px);font-weight:700;line-height:.85;color:rgba(168,216,234,.22);letter-spacing:-.04em;">04</div>
       <div style="display:flex;flex-direction:column;align-items:center;gap:var(--gap-sm);">
         <div style="width:40px;height:3px;background:var(--tab-global);border-radius:2px;"></div>
-        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">公司<em>落地</em></h2>
+        <h2 style="font-family:var(--font-display);font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;">一盘棋 · <em>全局角度</em></h2>
         <p style="font-size:clamp(14px,1.6vw,20px);color:var(--ink-light);margin-top:var(--gap-xs);max-width:420px;line-height:1.5;">站在公司层面看，这套做法能不能推广</p>
       </div>
     </div>
@@ -2773,7 +2769,7 @@ img.cost-logo { display:block; }
 </div>
 
 <!-- =============================================
-     SLIDE: Part 4 — 公司落地
+     SLIDE: Part 4 — 一盘棋 · 全局角度
      ============================================= -->
 <div class="slide" data-part="4" data-chapter="全局角度" data-steps="1">
   <div class="page">
@@ -3233,9 +3229,9 @@ img.cost-logo { display:block; }
         <h2 class="title-lg" style="font-size:clamp(24px,3.2vw,44px);">抛砖引玉，<em>欢迎交流</em></h2>
         <p style="font-size:clamp(16px,1.5vw,22px);color:var(--ink-light);max-width:26em;line-height:1.55;">入职两个月的观察与实践，不一定对，但愿意用真实项目继续验证。</p>
         <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:var(--gap-sm);margin-top:var(--gap-sm);">
-          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">我的打法</span>
-          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">团队配合</span>
-          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">公司落地</span>
+          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">一个人 · 岗位工作模式变了</span>
+          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">一条链 · FDE 解决前半段损耗</span>
+          <span class="card card-h" style="padding:10px 18px;font-size:var(--text-small);">一盘棋 · 对公司意味着协作升级</span>
         </div>
         <p style="font-family:var(--font-display);font-size:clamp(18px,1.8vw,28px);color:var(--accent);font-style:italic;margin-top:var(--gap-md);">从需求接收者 → 前线构建者</p>
         <p style="font-size:var(--text-caption);color:var(--ink-muted);">杨明哲 · 产品经理 — 培训服务产品线 · 捷安高科</p>
