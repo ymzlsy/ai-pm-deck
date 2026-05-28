@@ -1191,7 +1191,7 @@ img.cost-logo { display:block; }
       <div class="header-left"><span style="color:var(--tab-bg);">Part 1</span> &nbsp;背景和思路</div>
       <div class="header-right">04 / --</div>
     </div>
-    <div class="content" style="gap:var(--gap-sm);">
+    <div class="content" style="gap:var(--gap-md);justify-content:center;">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-xs);">
         <div class="kicker">Business Chain</div>
         <h2 class="title-lg" style="font-size:clamp(18px,2.6vw,36px);">公司的<em class="title-nowrap">业务链条与信息衰减</em></h2>
@@ -1476,7 +1476,7 @@ img.cost-logo { display:block; }
 <!-- =============================================
      SLIDE 6: AI 时代 PM 工作模式
      ============================================= -->
-<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="3">
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="2">
   <div class="page">
     <div class="binder"><div class="hole"></div><div class="hole"></div><div class="hole"></div></div>
     <div class="tabs">
@@ -1490,70 +1490,70 @@ img.cost-logo { display:block; }
       <div class="header-left"><span style="color:var(--tab-role);">Part 2</span> &nbsp;岗位角度</div>
       <div class="header-right">07 / --</div>
     </div>
-    <div class="content">
+    <div class="content" style="justify-content:center;">
       <div data-step="0" style="display:flex;flex-direction:column;gap:var(--gap-sm);">
         <div class="kicker">Shift</div>
         <h2 class="title-lg"><span class="title-nowrap">AI 时代的</span><em>新模式</em></h2>
       </div>
 
-      <!-- Step 1: Before -->
-      <div data-step="1">
-          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);max-width:min(46vw,520px);">
+      <!-- Step 1: Before vs After 左右对比 -->
+      <div data-step="1" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-lg);align-items:start;">
+          <!-- Before -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--gap-xs);">
               <span style="width:10px;height:10px;background:var(--danger);display:inline-block;opacity:.6;"></span>
               <span class="meta-text" style="color:var(--danger);">Before · 传统模式</span>
             </div>
-            <div class="card" style="border-left:3px solid var(--rule);gap:var(--gap-xs);">
+            <div class="card" style="border-left:3px solid var(--rule);gap:clamp(8px,1.2vh,14px);">
               <div style="display:flex;align-items:center;gap:8px;">
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">写 Word PRD → 画 Axure 原型</span>
+                <span style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);">写 Word PRD → 画 Axure 原型</span>
               </div>
               <div style="display:flex;align-items:center;gap:8px;">
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">多轮评审会议对齐</span>
+                <span style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);">多轮评审会议对齐</span>
               </div>
               <div style="display:flex;align-items:center;gap:8px;">
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--ink-muted)" stroke-width="1.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15A9 9 0 115.64 5.64L1 10"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">开发拿到文档还得反复确认</span>
+                <span style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);">开发拿到文档还得反复确认</span>
               </div>
               <div style="display:flex;align-items:center;gap:8px;">
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--danger)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--danger);font-weight:600;">周期：数周 ~ 数月</span>
+                <span style="font-size:clamp(12px,1.15vw,16px);color:var(--danger);font-weight:600;">周期：数周 ~ 数月</span>
               </div>
             </div>
           </div>
-      </div>
-
-      <!-- Step 2: After -->
-      <div data-step="2">
-          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);max-width:min(46vw,520px);">
+          <!-- After -->
+          <div style="display:flex;flex-direction:column;gap:var(--gap-xs);">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:var(--gap-xs);">
               <span style="width:10px;height:10px;background:var(--accent);display:inline-block;"></span>
               <span class="meta-text" style="color:var(--accent);">After · AI 驱动模式</span>
             </div>
-            <div class="card card-accent" style="gap:var(--gap-xs);">
+            <div class="card card-accent" style="gap:clamp(8px,1.2vh,14px);">
               <div style="display:flex;align-items:center;gap:8px;">
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">AI Agent 直接生成可交互 Demo</span>
+                <span style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);">AI Agent 直接生成可交互 Demo</span>
               </div>
               <div style="display:flex;align-items:center;gap:8px;">
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">PRD / 验收标准 / 代码同步产出</span>
+                <span style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);">PRD / 验收标准 / 代码同步产出</span>
               </div>
               <div style="display:flex;align-items:center;gap:8px;">
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--accent)" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--ink);">开发拿到的是可运行代码，不是纯文档</span>
+                <span style="font-size:clamp(12px,1.15vw,16px);color:var(--ink);">开发拿到的是可运行代码，不是纯文档</span>
               </div>
               <div style="display:flex;align-items:center;gap:8px;">
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="var(--accent)" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <span style="font-size:clamp(11px,1.05vw,14px);color:var(--accent);font-weight:600;">周期：数小时 ~ 数天</span>
+                <span style="font-size:clamp(12px,1.15vw,16px);color:var(--accent);font-weight:600;">周期：数小时 ~ 数天</span>
               </div>
             </div>
           </div>
       </div>
 
-      <!-- Step 3: 核心转变 -->
-      <div data-step="3">
+      <!-- Step 2: After (kept for step reveal, but now empty — merged above) -->
+
+      <!-- Step 2: 核心转变 -->
+      <div data-step="2">
         <div class="quote-block">
           <p>产品经理的核心产出，从"描述需求的文档"变成"可运行的解决方案"。</p>
         </div>
@@ -1813,7 +1813,7 @@ img.cost-logo { display:block; }
 <!-- =============================================
      SLIDE 8: 案例展示-1
      ============================================= -->
-<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="4" data-gallery-persistent>
+<div class="slide" data-part="2" data-chapter="岗位角度" data-steps="3" data-gallery-persistent>
   <div class="page page-case page-case--gallery">
     <!-- 图库常驻右侧适中窗口；悬浮放大；点击左右切换 -->
     <div class="page-bg" data-photo-gallery>
@@ -1852,83 +1852,55 @@ img.cost-logo { display:block; }
           <p class="caption-sm">朗星电子班牌 · 教室设备预约 · 显示逻辑 — 1 天内产出可评审底稿</p>
         </div>
 
-        <div data-step="1" class="frost-panel" style="padding:clamp(12px,1.6vh,18px);border-radius:12px;">
-          <div class="meta-text" style="margin-bottom:var(--gap-xs);">案例工作流（与 Part2 主链条一致）</div>
-          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:clamp(4px,.6vw,8px);font-size:clamp(11px,1.05vw,14px);">
-            <span class="card card-h" style="padding:6px 10px;border-left:3px solid var(--tab-role);"><strong>飞书群</strong><span class="caption-sm" style="margin-left:6px;">纪要/讨论</span></span>
+        <!-- Step 1: 工作流 (横向紧凑) -->
+        <div data-step="1" class="frost-panel" style="padding:clamp(10px,1.4vh,16px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:6px;">工作流</div>
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:clamp(4px,.5vw,6px);font-size:clamp(11px,1vw,13px);">
+            <span class="card card-h" style="padding:4px 8px;border-left:3px solid var(--tab-role);"><strong>飞书群</strong> <span class="caption-sm">纪要</span></span>
             <span style="color:var(--ink-faint);">→</span>
-            <span class="card card-h" style="padding:6px 10px;border-left:3px solid var(--accent);"><strong>飞书 CLI</strong><span class="caption-sm" style="margin-left:6px;">结构化提取</span></span>
+            <span class="card card-h" style="padding:4px 8px;border-left:3px solid var(--accent);"><strong>飞书 CLI</strong> <span class="caption-sm">结构化</span></span>
             <span style="color:var(--ink-faint);">→</span>
-            <span class="card card-h" style="padding:6px 10px;border-left:3px solid var(--accent);"><strong>Claude Code</strong><span class="caption-sm" style="margin-left:6px;">方案+Demo</span></span>
+            <span class="card card-h" style="padding:4px 8px;border-left:3px solid var(--accent);"><strong>Claude Code</strong> <span class="caption-sm">方案</span></span>
             <span style="color:var(--ink-faint);">→</span>
-            <span class="card card-h" style="padding:6px 10px;border-left:3px solid var(--tab-bg);"><strong>讨论底稿</strong><span class="caption-sm" style="margin-left:6px;">客户/评审</span></span>
+            <span class="card card-h" style="padding:4px 8px;border-left:3px solid var(--tab-bg);"><strong>底稿</strong> <span class="caption-sm">评审</span></span>
           </div>
-          <p class="caption-sm" style="margin-top:var(--gap-xs);color:var(--ink-muted);">右侧图库：群聊截图 · 界面原型 · 流程图 · 讨论底稿 · Demo 动图（悬浮放大浏览）</p>
         </div>
 
-        <div data-step="2" class="frost-panel" style="padding:clamp(14px,2vh,22px);border-radius:12px;">
-          <div class="meta-text" style="margin-bottom:var(--gap-sm);">分步执行</div>
-          <div style="display:flex;flex-direction:column;gap:0;border-left:2px solid var(--accent);margin-left:8px;padding-left:clamp(14px,1.6vw,22px);">
-            <div class="timeline-item" style="position:relative;padding:var(--gap-sm) 0;">
-              <div style="position:absolute;left:calc(-1 * clamp(14px,1.6vw,22px) - 5px);top:clamp(8px,.9vh,12px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
-              <p>飞书群沟通记录</p>
-              <p class="caption-sm">客户需求讨论、会议纪要</p>
+        <!-- Step 2: 产出物 2x2 -->
+        <div data-step="2" class="frost-panel" style="padding:clamp(10px,1.4vh,16px);border-radius:12px;">
+          <div class="meta-text" style="margin-bottom:6px;">产出物</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(4px,.5vh,8px);">
+            <div class="card" style="padding:clamp(6px,.8vh,10px) 8px;border-left:3px solid var(--tab-role);">
+              <p style="font-size:clamp(11px,1vw,14px);font-weight:600;">设备预约冲突方案</p>
             </div>
-            <div class="timeline-item" style="position:relative;padding:var(--gap-sm) 0;">
-              <div style="position:absolute;left:calc(-1 * clamp(14px,1.6vw,22px) - 5px);top:clamp(8px,.9vh,12px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
-              <p>飞书 CLI 提取结构化信息</p>
-              <p class="caption-sm">自动抓取群消息和文档</p>
+            <div class="card" style="padding:clamp(6px,.8vh,10px) 8px;border-left:3px solid var(--accent);">
+              <p style="font-size:clamp(11px,1vw,14px);font-weight:600;">电子班牌显示逻辑</p>
             </div>
-            <div class="timeline-item" style="position:relative;padding:var(--gap-sm) 0;">
-              <div style="position:absolute;left:calc(-1 * clamp(14px,1.6vw,22px) - 5px);top:clamp(8px,.9vh,12px);width:8px;height:8px;border-radius:50%;background:var(--accent);"></div>
-              <p>Claude Code 生成方案底稿</p>
-              <p class="caption-sm">PRD + 技术方案 + Demo</p>
+            <div class="card" style="padding:clamp(6px,.8vh,10px) 8px;border-left:3px solid var(--tab-local);">
+              <p style="font-size:clamp(11px,1vw,14px);font-weight:600;">PRD + 技术说明</p>
             </div>
-            <div class="timeline-item" style="position:relative;padding:var(--gap-sm) 0;">
-              <div style="position:absolute;left:calc(-1 * clamp(14px,1.6vw,22px) - 5px);top:clamp(8px,.9vh,12px);width:8px;height:8px;border-radius:50%;background:var(--tab-bg);"></div>
-              <p>输出完整讨论底稿</p>
-              <p class="caption-sm">直接用于客户对接和内部评审</p>
+            <div class="card" style="padding:clamp(6px,.8vh,10px) 8px;border-left:3px solid var(--tab-bg);">
+              <p style="font-size:clamp(11px,1vw,14px);font-weight:600;">可交互 Demo</p>
             </div>
           </div>
         </div>
 
-        <div data-step="3" class="frost-panel" style="padding:clamp(12px,1.6vh,18px);border-radius:12px;">
-          <div class="meta-text" style="margin-bottom:var(--gap-sm);">产出物（飞书讨论底稿 + 附图）</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-xs);">
-            <div class="card" style="padding:clamp(8px,1vh,12px);border-left:3px solid var(--tab-role);">
-              <p style="font-size:var(--text-small);font-weight:600;">设备预约冲突方案</p>
-              <p class="caption-sm">业务规则与重叠处理</p>
-            </div>
-            <div class="card" style="padding:clamp(8px,1vh,12px);border-left:3px solid var(--accent);">
-              <p style="font-size:var(--text-small);font-weight:600;">电子班牌显示逻辑</p>
-              <p class="caption-sm">状态 / 课表 / 预约联动</p>
-            </div>
-            <div class="card" style="padding:clamp(8px,1vh,12px);border-left:3px solid var(--tab-local);">
-              <p style="font-size:var(--text-small);font-weight:600;">PRD + 技术说明</p>
-              <p class="caption-sm">研发可直接对照开发</p>
-            </div>
-            <div class="card" style="padding:clamp(8px,1vh,12px);border-left:3px solid var(--tab-bg);">
-              <p style="font-size:var(--text-small);font-weight:600;">可交互 Demo</p>
-              <p class="caption-sm">客户现场演示与确认</p>
-            </div>
-          </div>
-        </div>
-
-        <div data-step="4">
+        <!-- Step 3: 数据条 -->
+        <div data-step="3">
           <div class="stat-bar frost-panel" style="border-radius:12px;overflow:hidden;">
             <div class="stat-item">
-              <div class="stat-num">1</div>
-              <div class="stat-label">天内完成底稿</div>
+              <div class="stat-num" style="font-size:clamp(20px,2.5vw,32px);">1</div>
+              <div class="stat-label">天内完成</div>
             </div>
             <div class="stat-divider"></div>
             <div class="stat-item">
-              <div class="stat-num">4+</div>
-              <div class="stat-label">类产出文档</div>
+              <div class="stat-num" style="font-size:clamp(20px,2.5vw,32px);">4+</div>
+              <div class="stat-label">类产出</div>
             </div>
             <div class="stat-divider"></div>
             <div class="stat-item">
-              <div class="stat-num stat-num-text">可直接用</div>
-              <div class="stat-label">研发无需二次翻译</div>
+              <div class="stat-num stat-num-text" style="font-size:clamp(14px,1.4vw,20px);">可直接用</div>
+              <div class="stat-label">无需二次翻译</div>
             </div>
           </div>
         </div>
