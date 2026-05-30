@@ -879,6 +879,9 @@ img.cost-logo { display:block; }
 @media (prefers-reduced-motion: reduce) {
   .pres-cursor, .pres-cursor-trail { display: none !important; }
 }
+/* Lark CLI sidebar */
+.lark-cli-sidebar.open{transform:translateX(0)!important;}
+.lark-cli-sidebar.open+.foot{z-index:0;}
 </style>
 </head>
 <body>
@@ -2028,6 +2031,32 @@ img.cost-logo { display:block; }
         </div>
       </div>
     </div>
+    <!-- Sidebar toggle button -->
+    <div class="lark-cli-toggle" onclick="this.closest('.page').querySelector('.lark-cli-sidebar').classList.toggle('open')" style="
+      position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:50;
+      writing-mode:vertical-rl;display:flex;align-items:center;gap:6px;
+      font-size:clamp(10px,.85vw,12px);color:var(--accent);background:rgba(255,255,255,.85);backdrop-filter:blur(6px);
+      padding:12px 6px;border-radius:8px 0 0 8px;border:1px solid var(--accent);border-right:none;
+      cursor:pointer;letter-spacing:.06em;transition:all .2s;
+    " onmouseenter="this.style.background='var(--accent)';this.style.color='#fff'" onmouseleave="this.style.background='rgba(255,255,255,.85)';this.style.color='var(--accent)'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      文档
+    </div>
+
+    <!-- Sidebar panel -->
+    <div class="lark-cli-sidebar" style="
+      position:absolute;top:0;right:0;bottom:0;width:66.6%;z-index:60;
+      background:#fff;border-left:1px solid var(--rule);box-shadow:-4px 0 24px rgba(0,0,0,.1);
+      transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+      display:flex;flex-direction:column;
+    ">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--rule);flex-shrink:0;">
+        <span style="font-family:var(--font-mono);font-size:clamp(10px,.85vw,12px);color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;">Lark CLI 使用文档</span>
+        <div style="cursor:pointer;padding:4px 10px;font-size:clamp(11px,.95vw,13px);color:var(--ink-muted);border:1px solid var(--rule);border-radius:4px;" onclick="this.closest('.lark-cli-sidebar').classList.remove('open')" onmouseenter="this.style.color='var(--ink)'" onmouseleave="this.style.color='var(--ink-muted)'">✕ 关闭</div>
+      </div>
+      <iframe src="https://wiki.karaithy.com/lark-cli/" style="flex:1;width:100%;border:none;" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+    </div>
+
     <div class="foot">
       <div class="foot-left"><strong>杨明哲</strong>产品经理 — 培训服务产品线</div>
       <div class="foot-right"><span class="date">2026.05</span>Space 下一步</div>
