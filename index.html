@@ -62,9 +62,9 @@ html { scroll-snap-type:y mandatory; scroll-behavior:smooth; }
 /* === PAGE (fullscreen) === */
 .page { background:var(--paper); width:100%; height:100%; position:relative; display:grid; grid-template-rows:auto 1fr auto; padding:clamp(18px,3vh,36px) clamp(56px,6vw,96px) clamp(18px,3vh,36px) clamp(52px,5.5vw,88px); overflow:hidden; }
 
-/* === BINDER === */
-.binder { position:absolute; left:clamp(12px,1.5vw,22px); top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:clamp(22px,3.5vh,42px); }
-.hole { width:clamp(10px,1.2vw,14px); height:clamp(10px,1.2vw,14px); border-radius:50%; border:2px solid #ccc; background:var(--paper-shadow); }
+/* === BINDER (hidden, keep spacing) === */
+.binder { display:none; }
+.hole { display:none; }
 
 /* Left decorative rule line */
 .page::before { content:''; position:absolute; left:clamp(38px,4vw,64px); top:0; bottom:0; width:1px; background:rgba(200,180,180,.2); }
@@ -880,8 +880,8 @@ img.cost-logo { display:block; }
   .pres-cursor, .pres-cursor-trail { display: none !important; }
 }
 /* Lark CLI sidebar */
-.lark-cli-sidebar.open{transform:translateX(0)!important;}
-.lark-cli-sidebar.open+.foot{z-index:0;}
+.lark-cli-sidebar.open{pointer-events:auto!important;opacity:1!important;}
+.lark-cli-sidebar.open .lark-cli-panel{transform:translateX(0)!important;}
 </style>
 </head>
 <body>
@@ -2031,30 +2031,35 @@ img.cost-logo { display:block; }
         </div>
       </div>
     </div>
-    <!-- Sidebar toggle button -->
-    <div class="lark-cli-toggle" onclick="this.closest('.page').querySelector('.lark-cli-sidebar').classList.toggle('open')" style="
-      position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:50;
-      writing-mode:vertical-rl;display:flex;align-items:center;gap:6px;
-      font-size:clamp(10px,.85vw,12px);color:var(--accent);background:rgba(255,255,255,.85);backdrop-filter:blur(6px);
-      padding:12px 6px;border-radius:8px 0 0 8px;border:1px solid var(--accent);border-right:none;
-      cursor:pointer;letter-spacing:.06em;transition:all .2s;
-    " onmouseenter="this.style.background='var(--accent)';this.style.color='#fff'" onmouseleave="this.style.background='rgba(255,255,255,.85)';this.style.color='var(--accent)'">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      文档
+    <!-- Sidebar toggle button — full-height right edge bar -->
+    <div class="lark-cli-toggle" onclick="var sb=this.closest('.page').querySelector('.lark-cli-sidebar');sb.classList.toggle('open')" style="
+      position:absolute;right:0;top:0;bottom:0;width:clamp(28px,2.6vw,38px);z-index:50;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(var(--accent-rgb,180,130,100),.06);cursor:pointer;transition:background .2s;
+    " onmouseenter="this.style.background='rgba(var(--accent-rgb,180,130,100),.14)'" onmouseleave="this.style.background='rgba(var(--accent-rgb,180,130,100),.06)'">
+      <div style="writing-mode:vertical-rl;display:flex;align-items:center;gap:8px;font-size:clamp(11px,.95vw,13px);color:var(--accent);letter-spacing:.1em;opacity:.7;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        文档
+      </div>
     </div>
 
-    <!-- Sidebar panel -->
-    <div class="lark-cli-sidebar" style="
-      position:absolute;top:0;right:0;bottom:0;width:66.6%;z-index:60;
-      background:#fff;border-left:1px solid var(--rule);box-shadow:-4px 0 24px rgba(0,0,0,.1);
-      transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
-      display:flex;flex-direction:column;
-    ">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--rule);flex-shrink:0;">
-        <span style="font-family:var(--font-mono);font-size:clamp(10px,.85vw,12px);color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;">Lark CLI 使用文档</span>
-        <div style="cursor:pointer;padding:4px 10px;font-size:clamp(11px,.95vw,13px);color:var(--ink-muted);border:1px solid var(--rule);border-radius:4px;" onclick="this.closest('.lark-cli-sidebar').classList.remove('open')" onmouseenter="this.style.color='var(--ink)'" onmouseleave="this.style.color='var(--ink-muted)'">✕ 关闭</div>
+    <!-- Sidebar: backdrop overlay + panel -->
+    <div class="lark-cli-sidebar" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:60;pointer-events:none;opacity:0;transition:opacity .3s;">
+      <!-- Backdrop: click to close -->
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.15);pointer-events:auto;" onclick="this.closest('.lark-cli-sidebar').classList.remove('open')"></div>
+      <!-- Panel -->
+      <div style="
+        position:absolute;top:0;right:0;bottom:0;width:66.6%;
+        background:#fff;border-left:1px solid var(--rule);box-shadow:-4px 0 24px rgba(0,0,0,.12);
+        transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);
+        display:flex;flex-direction:column;pointer-events:auto;
+      " class="lark-cli-panel">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--rule);flex-shrink:0;">
+          <span style="font-family:var(--font-mono);font-size:clamp(10px,.85vw,12px);color:var(--ink-muted);text-transform:uppercase;letter-spacing:.05em;">Lark CLI 使用文档</span>
+          <div style="cursor:pointer;padding:4px 10px;font-size:clamp(11px,.95vw,13px);color:var(--ink-muted);border:1px solid var(--rule);border-radius:4px;" onclick="this.closest('.lark-cli-sidebar').classList.remove('open')" onmouseenter="this.style.color='var(--ink)'" onmouseleave="this.style.color='var(--ink-muted)'">✕ 关闭</div>
+        </div>
+        <iframe src="https://wiki.karaithy.com/lark-cli/" style="flex:1;width:100%;border:none;" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
       </div>
-      <iframe src="https://wiki.karaithy.com/lark-cli/" style="flex:1;width:100%;border:none;" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
     </div>
 
     <div class="foot">
